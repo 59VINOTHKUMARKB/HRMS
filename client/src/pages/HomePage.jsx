@@ -1,15 +1,31 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FiUsers, FiClock, FiDollarSign, FiBarChart2 } from "react-icons/fi";
+import {
+  FiUsers,
+  FiClock,
+  FiDollarSign,
+  FiBarChart2,
+  FiShield,
+  FiAward,
+  FiCheckCircle,
+  FiSettings,
+  FiSmile,
+  FiTrendingUp,
+} from "react-icons/fi";
 
 const HomePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Hero Section */}
-      <nav className="bg-white shadow-sm">
+      {/* Enhanced Navigation */}
+      <nav className="shadow-sm sticky top-0 z-50 backdrop-blur-sm bg-white/90">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold text-blue-600">HRMS</div>
+            <div className="flex items-center space-x-2">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-xl font-bold text-white">HR</span>
+              </div>
+              <span className="text-2xl font-bold text-blue-600">HRMS</span>
+            </div>
             <div className="hidden md:flex space-x-8">
               <a
                 href="#features"
@@ -34,7 +50,7 @@ const HomePage = () => {
               <button className="px-4 py-2 text-blue-600 hover:text-blue-700 transition-colors">
                 Login
               </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-200">
                 Get Started
               </button>
             </div>
@@ -43,89 +59,180 @@ const HomePage = () => {
       </nav>
 
       <div className="container mx-auto px-6 py-16">
+        {/* Enhanced Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center"
+          className="text-center relative"
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-8">
-            Modern HR Management
-            <span className="text-blue-600"> Simplified</span>
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-100/20 to-purple-100/20 rounded-full blur-3xl"></div>
+          </div>
+          <span className="px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-semibold inline-block mb-6">
+            HR Management Platform
+          </span>
+          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+            Transform Your
+            <span className="text-blue-600"> HR Management</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
             Streamline your HR processes with our comprehensive human resource
-            management system. Everything you need in one place.
+            management system. Everything you need in one powerful platform.
           </p>
-          <div className="flex justify-center space-x-4">
-            <button className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors transform hover:scale-105">
+          <div className="flex justify-center space-x-6">
+            <button className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-blue-200">
               Start Free Trial
             </button>
-            <button className="px-8 py-4 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors transform hover:scale-105">
-              Watch Demo
+            <button className="px-8 py-4 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-all transform hover:scale-105 flex items-center space-x-2">
+              <span className="text-2xl">▶</span>
+              <span>Watch Demo</span>
             </button>
+          </div>
+
+          {/* Trust Badges */}
+          <div className="mt-16 flex flex-wrap justify-center items-center gap-8 opacity-70">
+            <span className="text-gray-500">Trusted by leading companies:</span>
+            {["AAA", "BBB", "CCC", "DDD"].map((company) => (
+              <span
+                key={company}
+                className="text-gray-400 font-semibold text-xl"
+              >
+                {company}
+              </span>
+            ))}
           </div>
         </motion.div>
 
-        {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-20">
+        {/* Enhanced Stats Section */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-24">
           {[
-            { icon: FiUsers, label: "Active Users", value: "10,000+" },
-            { icon: FiClock, label: "Time Saved", value: "250hrs/month" },
-            { icon: FiDollarSign, label: "Cost Reduced", value: "35%" },
-            { icon: FiBarChart2, label: "Efficiency Gain", value: "45%" },
+            {
+              icon: FiUsers,
+              label: "Active Users",
+              value: "10,000+",
+              color: "blue",
+            },
+            {
+              icon: FiClock,
+              label: "Time Saved",
+              value: "250hrs/month",
+              color: "green",
+            },
+            {
+              icon: FiDollarSign,
+              label: "Cost Reduced",
+              value: "35%",
+              color: "purple",
+            },
+            {
+              icon: FiBarChart2,
+              label: "Efficiency Gain",
+              value: "45%",
+              color: "orange",
+            },
           ].map((stat, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+              className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all group hover:-translate-y-1"
             >
-              <stat.icon className="w-12 h-12 text-blue-600 mb-4" />
-              <h3 className="text-3xl font-bold text-gray-900">{stat.value}</h3>
+              <div
+                className={`w-14 h-14 rounded-lg bg-${stat.color}-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}
+              >
+                <stat.icon className={`w-7 h-7 text-${stat.color}-600`} />
+              </div>
+              <h3 className="text-4xl font-bold text-gray-900 mb-2">
+                {stat.value}
+              </h3>
               <p className="text-gray-600">{stat.label}</p>
             </motion.div>
           ))}
         </div>
 
-        {/* Features Section */}
-        <section id="features" className="py-20">
-          <h2 className="text-4xl font-bold text-center mb-16">Key Features</h2>
+        {/* Enhanced Features Section */}
+        <section id="features" className="py-24">
+          <div className="text-center mb-16">
+            <span className="px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-semibold">
+              Features
+            </span>
+            <h2 className="text-4xl font-bold mt-4 mb-6">
+              Everything You Need
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Comprehensive tools to manage your entire HR operations
+              efficiently
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
                 title: "Employee Management",
                 description:
                   "Complete employee lifecycle management from onboarding to exit.",
-                icon: "👥",
+                icon: FiUsers,
+                color: "blue",
+                features: [
+                  "Profile Management",
+                  "Document Storage",
+                  "Performance Tracking",
+                ],
               },
               {
-                title: "Attendance Tracking",
+                title: "Attendance System",
                 description:
-                  "Advanced time tracking with leave management system.",
-                icon: "📅",
+                  "Advanced time tracking with integrated leave management.",
+                icon: FiClock,
+                color: "green",
+                features: [
+                  "Biometric Integration",
+                  "Leave Management",
+                  "Time Tracking",
+                ],
               },
               {
-                title: "Payroll System",
+                title: "Payroll Processing",
                 description:
-                  "Automated payroll processing with tax calculations.",
-                icon: "💰",
+                  "Automated payroll with tax calculations and compliance.",
+                icon: FiDollarSign,
+                color: "purple",
+                features: [
+                  "Salary Processing",
+                  "Tax Management",
+                  "Benefits Administration",
+                ],
               },
               {
                 title: "Performance Reviews",
-                description: "360-degree feedback and performance tracking.",
-                icon: "📈",
+                description: "Comprehensive performance evaluation system.",
+                icon: FiAward,
+                color: "yellow",
+                features: ["360° Feedback", "Goal Setting", "Review Cycles"],
               },
               {
-                title: "Training & Development",
-                description: "Comprehensive learning management system.",
-                icon: "🎓",
+                title: "Training Portal",
+                description: "Integrated learning and development platform.",
+                icon: FiTrendingUp,
+                color: "pink",
+                features: [
+                  "Course Management",
+                  "Progress Tracking",
+                  "Certifications",
+                ],
               },
               {
-                title: "Analytics & Reports",
-                description: "Detailed insights and customizable reports.",
-                icon: "📊",
+                title: "Analytics Dashboard",
+                description: "Powerful insights and customizable reports.",
+                icon: FiBarChart2,
+                color: "indigo",
+                features: [
+                  "Custom Reports",
+                  "Data Visualization",
+                  "Trend Analysis",
+                ],
               },
             ].map((feature, index) => (
               <motion.div
@@ -133,33 +240,56 @@ const HomePage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+                className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 group"
               >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <div
+                  className={`w-14 h-14 rounded-lg bg-${feature.color}-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}
+                >
+                  <feature.icon
+                    className={`w-7 h-7 text-${feature.color}-600`}
+                  />
+                </div>
+                <h3 className="text-xl font-bold mb-4">{feature.title}</h3>
+                <p className="text-gray-600 mb-6">{feature.description}</p>
+                <ul className="space-y-2">
+                  {feature.features.map((item, i) => (
+                    <li key={i} className="flex items-center text-gray-600">
+                      <FiCheckCircle className="w-5 h-5 text-green-500 mr-2" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </motion.div>
             ))}
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="bg-blue-600 text-white rounded-2xl p-12 my-20">
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to Transform Your HR Management?
-            </h2>
-            <p className="text-xl mb-8 opacity-90">
-              Join thousands of companies that trust our HRMS platform
-            </p>
-            <button className="px-8 py-4 bg-white text-blue-600 rounded-lg font-bold hover:bg-gray-100 transition-colors transform hover:scale-105">
-              Get Started Now
-            </button>
+        {/* Enhanced CTA Section */}
+        <section className="relative">
+          <div className="absolute inset-0 bg-blue-600 rounded-3xl transform -skew-y-2"></div>
+          <div className="relative bg-blue-600 text-white rounded-2xl p-16 my-20">
+            <div className="text-center max-w-3xl mx-auto">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                Ready to Transform Your HR Management?
+              </h2>
+              <p className="text-xl mb-12 opacity-90">
+                Join thousands of companies that trust our HRMS platform to
+                manage their workforce efficiently
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-6">
+                <button className="px-8 py-4 bg-white text-blue-600 rounded-lg font-bold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
+                  Start Free Trial
+                </button>
+                <button className="px-8 py-4 border-2 border-white text-white rounded-lg font-bold hover:bg-blue-700 transition-all transform hover:scale-105">
+                  Schedule Demo
+                </button>
+              </div>
+            </div>
           </div>
         </section>
       </div>
 
-      {/* Footer */}
+      {/* Enhanced Footer */}
       <footer className="bg-gray-50 py-12">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
