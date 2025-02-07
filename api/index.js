@@ -3,24 +3,12 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import path from "path";
 import cors from "cors";
-
 dotenv.config();
 
-// MongoDB connection setup
-// mongoose
-//   .connect(process.env.MONGO, {
-//     serverSelectionTimeoutMS: 30000, // 30 seconds
-//     socketTimeoutMS: 45000, // 45 seconds
-//   })
-//   .then(() => {
-//     console.log("DB 🚀");
-//   })
-//   .catch((err) => {
-//     console.log("DB ❌", err);
-//   });
-
 const __dirname = path.resolve();
+
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());

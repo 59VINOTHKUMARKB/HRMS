@@ -1,19 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   FiUsers,
   FiClock,
   FiDollarSign,
   FiBarChart2,
-  FiShield,
   FiAward,
   FiCheckCircle,
-  FiSettings,
-  FiSmile,
   FiTrendingUp,
 } from "react-icons/fi";
+import { Cloudinary } from "@cloudinary/url-gen";
+import { auto } from "@cloudinary/url-gen/actions/resize";
+import { autoGravity } from "@cloudinary/url-gen/qualifiers/gravity";
+import { AdvancedImage } from "@cloudinary/react";
+import { fill } from "@cloudinary/url-gen/actions/resize";
+import CloudinaryUpload from "../components/CloudinaryUpload";
 
 const HomePage = () => {
+  
+  const cld = new Cloudinary({ cloud: { cloudName: "dnez6l71o" } });
+
+  const handleImageUpload = (imageUrl) => {
+    console.log("Uploaded image URL:", imageUrl);
+    
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Enhanced Navigation */}
