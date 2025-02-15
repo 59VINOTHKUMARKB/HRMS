@@ -60,7 +60,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route
-          path="/dashboard/*"
+          path="/hr/dashboard/*"
           element={
             <Layout>
               <Dashboard />
@@ -68,7 +68,7 @@ const App = () => {
           }
         />
         <Route
-          path="/employees"
+          path="/hr/employees"
           element={
             <Layout>
               <EmployeeList />
@@ -76,7 +76,7 @@ const App = () => {
           }
         />
         <Route
-          path="/attendance"
+          path="/hr/attendance"
           element={
             <Layout>
               <AttendanceManagement />
@@ -84,7 +84,7 @@ const App = () => {
           }
         />
         <Route
-          path="/payroll"
+          path="/hr/payroll"
           element={
             <Layout>
               <PayrollManagement />
@@ -92,7 +92,7 @@ const App = () => {
           }
         />
         <Route
-          path="/recruitment"
+          path="/hr/recruitment"
           element={
             <Layout>
               <RecruitmentManagement />
@@ -100,7 +100,7 @@ const App = () => {
           }
         />
         <Route
-          path="/performance"
+          path="/hr/performance"
           element={
             <Layout>
               <PerformanceManagement />
@@ -108,7 +108,7 @@ const App = () => {
           }
         />
         <Route
-          path="/training"
+          path="/hr/training"
           element={
             <Layout>
               <TrainingManagement />
@@ -116,7 +116,7 @@ const App = () => {
           }
         />
         <Route
-          path="/expenses"
+          path="/hr/expenses"
           element={
             <Layout>
               <ExpensesManagement />
@@ -124,7 +124,7 @@ const App = () => {
           }
         />
         <Route
-          path="/reports"
+          path="/hr/reports"
           element={
             <Layout>
               <ReportsManagement />
@@ -132,7 +132,7 @@ const App = () => {
           }
         />
         <Route
-          path="/documents"
+          path="/hr/documents"
           element={
             <Layout>
               <DocumentsManagement />
@@ -140,7 +140,7 @@ const App = () => {
           }
         />
         <Route
-          path="/compliance"
+          path="/hr/compliance"
           element={
             <Layout>
               <ComplianceManagement />
@@ -148,7 +148,7 @@ const App = () => {
           }
         />
         <Route
-          path="/exit"
+          path="/hr/exit"
           element={
             <Layout>
               <ExitManagement />
@@ -156,7 +156,7 @@ const App = () => {
           }
         />
         <Route
-          path="/organization"
+          path="/hr/organization"
           element={
             <Layout>
               <OrganizationManagement />
@@ -164,11 +164,19 @@ const App = () => {
           }
         />
         <Route
-          path="/onboarding"
+          path="/hr/onboarding"
           element={
             <Layout>
               <OnboardingManagement />
             </Layout>
+          }
+        />
+        <Route
+          path="/employee/"
+          element={
+            <EmployeeLayout>
+              <EmployeeDashboard/>
+            </EmployeeLayout>
           }
         />
         <Route
@@ -243,6 +251,14 @@ const App = () => {
             </EmployeeLayout>
           }
         />
+        <Route 
+        path="/manager/"
+        element={
+          <ManagerLayout>
+            <ManagerDashboard/>
+          </ManagerLayout>
+        }
+        />
         <Route
           path="/manager/dashboard"
           element={
@@ -315,6 +331,7 @@ const App = () => {
             </ManagerLayout>
           }
         />
+        
         <Route
           path="/manager/tasks"
           element={
