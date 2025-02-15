@@ -15,6 +15,32 @@ import ComplianceManagement from "./pages/compliance/ComplianceManagement";
 import ExitManagement from "./pages/exit/ExitManagement";
 import OrganizationManagement from "./pages/organization/OrganizationManagement";
 import OnboardingManagement from "./pages/onboarding/OnboardingManagement";
+import EmployeeLayout from "./components/layout/EmployeeLayout";
+import EmployeeDashboard from "./pages/employee/Dashboard";
+import EmployeeProfile from "./pages/employee/Profile";
+import EmployeeAttendance from "./pages/employee/Attendance";
+import EmployeeLeave from "./pages/employee/Leave";
+import EmployeePayroll from "./pages/employee/Payroll";
+import EmployeeTraining from "./pages/employee/Training";
+import EmployeeExpenses from "./pages/employee/Expenses";
+import EmployeeAnnouncements from "./pages/employee/Announcements";
+import EmployeeSupport from "./pages/employee/Support";
+import ManagerDashboard from "./pages/manager/Dashboard";
+import ManagerLayout from "./components/layout/ManagerLayout";
+import ManagerAttendance from "./pages/manager/Attendance";
+import ManagerTeams from "./pages/manager/Teams";
+import ManagerPerformance from "./pages/manager/Performance";
+import ManagerLeave from "./pages/manager/Leave";
+import ManagerExpenses from "./pages/manager/Expenses";
+import ManagerTraining from "./pages/manager/Training";
+import ManagerReports from "./pages/manager/Reports";
+import ManagerFeedback from "./pages/manager/Feedback";
+import ManagerTasks from "./pages/manager/Tasks";
+// import EmployeePayroll from "./pages/employee/Payroll";
+// import EmployeeTraining from "./pages/employee/Training";
+// import EmployeeExpenses from "./pages/employee/Expenses";
+// import EmployeeAnnouncements from "./pages/employee/Announcements";
+// import EmployeeSupport from "./pages/employee/Support";
 
 const App = () => {
   return (
@@ -133,7 +159,160 @@ const App = () => {
             </Layout>
           }
         />
-      </Routes>
+        <Route
+          path="/employee/dashboard"
+          element={
+            <EmployeeLayout>
+              <EmployeeDashboard />
+            </EmployeeLayout>
+          }
+        />
+        <Route
+          path="/employee/profile"
+          element={
+            <EmployeeLayout>
+              <EmployeeProfile />
+            </EmployeeLayout>
+          }
+        />
+         <Route
+          path="/employee/attendance"
+          element={
+            <EmployeeLayout>
+              <EmployeeAttendance />
+            </EmployeeLayout>
+          }
+        />
+        <Route
+          path="/employee/leave"
+          element={
+            <EmployeeLayout>
+              <EmployeeLeave/>
+            </EmployeeLayout>
+          }
+        />
+        <Route
+          path="/employee/payroll"
+          element={
+            <EmployeeLayout>
+              <EmployeePayroll/>
+            </EmployeeLayout>
+          }
+          />
+        <Route
+          path="/employee/training"
+          element={
+            <EmployeeLayout>
+              <EmployeeTraining/>
+            </EmployeeLayout>
+          }
+          />
+        <Route
+          path="/employee/expenses"
+          element={
+            <EmployeeLayout>
+              <EmployeeExpenses/>
+            </EmployeeLayout>
+          }
+          />
+        <Route
+          path="/employee/announcements"
+          element={
+            <EmployeeLayout>
+              <EmployeeAnnouncements />
+            </EmployeeLayout>
+          }
+          />
+        <Route
+          path="/employee/support"
+          element={
+            <EmployeeLayout>
+              <EmployeeSupport />
+            </EmployeeLayout>
+          }
+          /> 
+
+           <Route
+          path="/manager/dashboard"
+          element={
+            <ManagerLayout>
+              <ManagerDashboard/>
+            </ManagerLayout>
+          }
+          />
+          <Route
+          path="/manager/team"
+          element={
+            <ManagerLayout>
+              <ManagerTeams/>
+            </ManagerLayout>
+          }
+          />
+          <Route
+          path="/manager/attendance"
+          element={
+            <ManagerLayout>
+              <ManagerAttendance/>
+            </ManagerLayout>
+          }
+          />
+          <Route 
+          path="/manager/leave"
+          element={
+            <ManagerLayout>
+              <ManagerLeave/>
+            </ManagerLayout>
+          }
+          />
+          <Route
+          path="/manager/performance"
+          element={
+            <ManagerLayout>
+              <ManagerPerformance/>
+            </ManagerLayout>
+          }
+          />
+          <Route
+          path="/manager/training"
+          element={
+            <ManagerLayout>
+              <ManagerTraining/>
+            </ManagerLayout>
+          }
+          />  
+          <Route
+          path="/manager/expenses"
+          element={
+            <ManagerLayout>
+              <ManagerExpenses/>
+            </ManagerLayout>
+          } 
+          />
+          <Route
+          path="/manager/reports"
+          element={
+            <ManagerLayout>
+              <ManagerReports/> 
+            </ManagerLayout>
+          }
+          />
+          <Route
+          path="/manager/feedback"
+          element={
+            <ManagerLayout>
+              <ManagerFeedback/>
+            </ManagerLayout>
+          }
+          />
+          <Route
+          path="/manager/tasks"
+          element={
+            <ManagerLayout>
+              <ManagerTasks/>
+            </ManagerLayout>
+          }
+          />
+          </Routes> 
     </BrowserRouter>
   );
 };
