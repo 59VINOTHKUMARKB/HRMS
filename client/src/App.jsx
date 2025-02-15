@@ -36,6 +36,18 @@ import ManagerTraining from "./pages/manager/Training";
 import ManagerReports from "./pages/manager/Reports";
 import ManagerFeedback from "./pages/manager/Feedback";
 import ManagerTasks from "./pages/manager/Tasks";
+import SuperAdminLayout from "./components/layout/SuperAdminLayout";
+import AdminDashboard from "./pages/admin/Dashboard";
+import UserManagement from "./pages/admin/UserManagement";
+import BillingManagement from "./pages/admin/BillingManagement";
+import SecurityManagement from "./pages/admin/SecurityManagement";
+import DatabaseManagement from "./pages/admin/DatabaseManagement";
+import Analytics from "./pages/admin/Analytics";
+import Integrations from "./pages/admin/Integrations";
+import AuditLogs from "./pages/admin/AuditLogs";
+import SystemAlerts from "./pages/admin/SystemAlerts";
+import SystemSettings from "./pages/admin/SystemSettings";
+import Maintenance from "./pages/admin/Maintenance";
 // import EmployeePayroll from "./pages/employee/Payroll";
 // import EmployeeTraining from "./pages/employee/Training";
 // import EmployeeExpenses from "./pages/employee/Expenses";
@@ -175,7 +187,7 @@ const App = () => {
             </EmployeeLayout>
           }
         />
-         <Route
+        <Route
           path="/employee/attendance"
           element={
             <EmployeeLayout>
@@ -187,7 +199,7 @@ const App = () => {
           path="/employee/leave"
           element={
             <EmployeeLayout>
-              <EmployeeLeave/>
+              <EmployeeLeave />
             </EmployeeLayout>
           }
         />
@@ -195,26 +207,26 @@ const App = () => {
           path="/employee/payroll"
           element={
             <EmployeeLayout>
-              <EmployeePayroll/>
+              <EmployeePayroll />
             </EmployeeLayout>
           }
-          />
+        />
         <Route
           path="/employee/training"
           element={
             <EmployeeLayout>
-              <EmployeeTraining/>
+              <EmployeeTraining />
             </EmployeeLayout>
           }
-          />
+        />
         <Route
           path="/employee/expenses"
           element={
             <EmployeeLayout>
-              <EmployeeExpenses/>
+              <EmployeeExpenses />
             </EmployeeLayout>
           }
-          />
+        />
         <Route
           path="/employee/announcements"
           element={
@@ -222,7 +234,7 @@ const App = () => {
               <EmployeeAnnouncements />
             </EmployeeLayout>
           }
-          />
+        />
         <Route
           path="/employee/support"
           element={
@@ -230,89 +242,184 @@ const App = () => {
               <EmployeeSupport />
             </EmployeeLayout>
           }
-          /> 
-
-           <Route
+        />
+        <Route
           path="/manager/dashboard"
           element={
             <ManagerLayout>
-              <ManagerDashboard/>
+              <ManagerDashboard />
             </ManagerLayout>
           }
-          />
-          <Route
+        />
+        <Route
           path="/manager/team"
           element={
             <ManagerLayout>
-              <ManagerTeams/>
+              <ManagerTeams />
             </ManagerLayout>
           }
-          />
-          <Route
+        />
+        <Route
           path="/manager/attendance"
           element={
             <ManagerLayout>
-              <ManagerAttendance/>
+              <ManagerAttendance />
             </ManagerLayout>
           }
-          />
-          <Route 
+        />
+        <Route
           path="/manager/leave"
           element={
             <ManagerLayout>
-              <ManagerLeave/>
+              <ManagerLeave />
             </ManagerLayout>
           }
-          />
-          <Route
+        />
+        <Route
           path="/manager/performance"
           element={
             <ManagerLayout>
-              <ManagerPerformance/>
+              <ManagerPerformance />
             </ManagerLayout>
           }
-          />
-          <Route
+        />
+        <Route
           path="/manager/training"
           element={
             <ManagerLayout>
-              <ManagerTraining/>
+              <ManagerTraining />
             </ManagerLayout>
           }
-          />  
-          <Route
+        />
+        <Route
           path="/manager/expenses"
           element={
             <ManagerLayout>
-              <ManagerExpenses/>
+              <ManagerExpenses />
             </ManagerLayout>
-          } 
-          />
-          <Route
+          }
+        />
+        <Route
           path="/manager/reports"
           element={
             <ManagerLayout>
-              <ManagerReports/> 
+              <ManagerReports />
             </ManagerLayout>
           }
-          />
-          <Route
+        />
+        <Route
           path="/manager/feedback"
           element={
             <ManagerLayout>
-              <ManagerFeedback/>
+              <ManagerFeedback />
             </ManagerLayout>
           }
-          />
-          <Route
+        />
+        <Route
           path="/manager/tasks"
           element={
             <ManagerLayout>
-              <ManagerTasks/>
+              <ManagerTasks />
             </ManagerLayout>
           }
-          />
-          </Routes> 
+        />
+        <Route
+          path="/superadmin/dashboard"
+          element={
+            <SuperAdminLayout>
+              <AdminDashboard />
+            </SuperAdminLayout>
+          }
+        />
+        <Route
+          path="/superadmin/organizations"
+          element={
+            <SuperAdminLayout>
+              <OrganizationManagement />
+            </SuperAdminLayout>
+          }
+        />
+        <Route
+          path="/superadmin/Users"
+          element={
+            <SuperAdminLayout>
+              <UserManagement />
+            </SuperAdminLayout>
+          }
+        />
+        <Route
+          path="/superadmin/billing"
+          element={
+            <SuperAdminLayout>
+              <BillingManagement />
+            </SuperAdminLayout>
+          }
+        />
+        <Route
+          path="superadmin/security"
+          element={
+            <SuperAdminLayout>
+              <SecurityManagement />
+            </SuperAdminLayout>
+          }
+        />
+        <Route
+          path="superadmin/database"
+          element={
+            <SuperAdminLayout>
+              <DatabaseManagement />
+            </SuperAdminLayout>
+          }
+        />
+        <Route
+          path="/superadmin/analytics"
+          element={
+            <SuperAdminLayout>
+              <Analytics />
+            </SuperAdminLayout>
+          }
+        />
+        <Route
+          path="/superadmin/integrations"
+          element={
+            <SuperAdminLayout>
+              <Integrations />
+            </SuperAdminLayout>
+          }
+        />
+        <Route
+          path="/superadmin/audit"
+          element={
+            <SuperAdminLayout>
+              <AuditLogs />
+            </SuperAdminLayout>
+          }
+        />
+        <Route
+          path="/superadmin/alerts"
+          element={
+            <SuperAdminLayout>
+              <SystemAlerts />
+            </SuperAdminLayout>
+          }
+        />
+        <Route
+          path="/superadmin/settings"
+          element={
+            <SuperAdminLayout>
+              <SystemSettings />
+            </SuperAdminLayout>
+          }
+        />
+        <Route
+          path="/superadmin/maintenance"
+          element={
+            <SuperAdminLayout>
+              <Maintenance />
+            </SuperAdminLayout>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 };
