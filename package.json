@@ -1,4 +1,10 @@
 {
+  "scripts": {
+    "dev": "nodemon api/index.js",
+    "start": "node api/index.js",
+    "build": "npm install && npm install --prefix client && npm run build --prefix client",
+    "init-super-admin": "node api/scripts/initSuperAdmin.js"
+  },
   "dependencies": {
     "@prisma/client": "^6.3.1",
     "axios": "^1.7.9",
@@ -20,11 +26,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
-  "scripts": {
-    "dev": "nodemon api/index.js",
-    "start": "node api/index.js",
-    "build": "npm install && npm install --prefix client && npm run build --prefix client"
-  },
   "author": "",
   "license": "ISC",
   "description": "",

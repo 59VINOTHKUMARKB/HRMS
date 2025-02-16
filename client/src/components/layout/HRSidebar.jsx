@@ -23,7 +23,7 @@ const menuItems = [
   { path: '/onboarding', icon: FiUserCheck, label: 'Onboarding' }
 ];
 
-const Sidebar = () => {
+const HRSidebar = () => {
   const location = useLocation();
 
   return (
@@ -52,4 +52,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar; 
+export default HRSidebar; 

@@ -1,18 +1,20 @@
 import { useState } from "react";
+import { useUser } from "../../components/layout/SuperAdminLayout";
 import {
   FiUsers,
-  FiUserPlus,
   FiDollarSign,
+  FiUserPlus,
   FiCalendar,
-  FiTrendingUp,
+  FiCheckCircle,
   FiClock,
   FiAlertCircle,
-  FiCheckCircle,
   FiBarChart2,
+  FiTrendingUp,
 } from "react-icons/fi";
 
 const AdminDashboard = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("month");
+  const { user } = useUser();
 
   const organizationStats = {
     totalEmployees: "245",
@@ -79,7 +81,10 @@ const AdminDashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+        <div>
+          <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+          <p className="text-gray-600">Welcome back, {user?.name || "Admin"}</p>
+        </div>
         <div className="flex space-x-4">
           <select
             className="border rounded-lg px-4 py-2"

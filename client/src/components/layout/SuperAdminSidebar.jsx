@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
 import {
   FiHome,
   FiUsers,
@@ -12,21 +12,25 @@ import {
   FiFileText,
   FiAlertCircle,
   FiTool,
-} from 'react-icons/fi';
+} from "react-icons/fi";
 
 const menuItems = [
-  { path: '/superadmin/dashboard', icon: FiHome, label: 'Dashboard' },
-  { path: '/superadmin/organizations', icon: FiLayers, label: 'Organizations' },
-  { path: '/superadmin/users', icon: FiUsers, label: 'User Management' },
-  { path: '/superadmin/billing', icon: FiDollarSign, label: 'Billing & Plans' },
-  { path: '/superadmin/security', icon: FiShield, label: 'Security Settings' },
-  { path: '/superadmin/database', icon: FiDatabase, label: 'Database Management' },
-  { path: '/superadmin/analytics', icon: FiTrendingUp, label: 'Analytics' },
-  { path: '/superadmin/integrations', icon: FiGlobe, label: 'Integrations' },
-  { path: '/superadmin/audit', icon: FiFileText, label: 'Audit Logs' },
-  { path: '/superadmin/alerts', icon: FiAlertCircle, label: 'System Alerts' },
-  { path: '/superadmin/settings', icon: FiSettings, label: 'System Settings' },
-  { path: '/superadmin/maintenance', icon: FiTool, label: 'Maintenance' },
+  { path: "/superadmin/dashboard", icon: FiHome, label: "Dashboard" },
+  { path: "/superadmin/users", icon: FiUsers, label: "User Management" },
+  { path: "/superadmin/organizations", icon: FiLayers, label: "Organizations" },
+  { path: "/superadmin/billing", icon: FiDollarSign, label: "Billing & Plans" },
+  { path: "/superadmin/security", icon: FiShield, label: "Security Settings" },
+  {
+    path: "/superadmin/database",
+    icon: FiDatabase,
+    label: "Database Management",
+  },
+  { path: "/superadmin/analytics", icon: FiTrendingUp, label: "Analytics" },
+  { path: "/superadmin/integrations", icon: FiGlobe, label: "Integrations" },
+  { path: "/superadmin/audit", icon: FiFileText, label: "Audit Logs" },
+  { path: "/superadmin/alerts", icon: FiAlertCircle, label: "System Alerts" },
+  { path: "/superadmin/settings", icon: FiSettings, label: "System Settings" },
+  { path: "/superadmin/maintenance", icon: FiTool, label: "Maintenance" },
 ];
 
 const SuperAdminSidebar = () => {
@@ -34,8 +38,8 @@ const SuperAdminSidebar = () => {
 
   return (
     <aside className="bg-white w-64 min-h-screen shadow-lg">
-      <div className="p-4 border-b">
-        <h2 className="text-2xl font-bold text-indigo-700">Super Admin</h2>
+      <div className="p-4 ">
+        <h2 className="text-2xl font-bold text-blue-700">Super Admin</h2>
         <p className="text-sm text-gray-500 mt-1">System Administration</p>
       </div>
       <nav className="mt-6">
@@ -47,8 +51,8 @@ const SuperAdminSidebar = () => {
               to={item.path}
               className={`flex items-center px-6 py-3 text-gray-600 hover:bg-indigo-50 hover:text-indigo-700 transition-colors ${
                 isActive
-                  ? 'bg-indigo-50 text-indigo-700 border-r-4 border-indigo-700'
-                  : ''
+                  ? "bg-indigo-50 text-indigo-700 border-r-4 border-indigo-700"
+                  : ""
               }`}
             >
               <item.icon className="w-5 h-5 mr-3" />
@@ -72,4 +76,4 @@ const SuperAdminSidebar = () => {
   );
 };
 
-export default SuperAdminSidebar; 
+export default SuperAdminSidebar;

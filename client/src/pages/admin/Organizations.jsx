@@ -1,186 +1,224 @@
 import { useState } from "react";
 import {
-  FiLayers,
   FiUsers,
-  FiCalendar,
-  FiDollarSign,
+  FiLayers,
+  FiGitBranch,
+  FiUserPlus,
+  FiEdit2,
+  FiTrash2,
   FiPlus,
-  FiMoreVertical,
-  FiSearch,
+  FiDownload,
+  FiChevronRight,
+  FiMapPin,
 } from "react-icons/fi";
+import { useUser } from "../../components/layout/SuperAdminLayout";
 
-const Organizations = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
-
-  const organizations = [
+const OrganizationManagement = () => {
+  const [activeTab, setActiveTab] = useState("structure");
+  const { user } = useUser();
+  const departments = [
     {
       id: 1,
-      name: "Tech Solutions Inc",
-      industry: "Technology",
-      employees: 245,
-      subscription: "Enterprise",
-      status: "Active",
-      lastBilling: "2024-03-01",
-      storage: "85%",
-      modules: ["HR", "Payroll", "Attendance", "Performance"],
+      name: "Engineering",
+      head: "Michael Chen",
+      employees: 45,
+      teams: [
+        { name: "Frontend", lead: "Sarah Wilson", members: 12 },
+        { name: "Backend", lead: "John Doe", members: 15 },
+        { name: "DevOps", lead: "David Kim", members: 8 },
+      ],
     },
     {
       id: 2,
-      name: "Global Marketing Group",
-      industry: "Marketing",
+      name: "Marketing",
+      head: "Emily Brown",
+      employees: 28,
+      teams: [
+        { name: "Digital Marketing", lead: "Lisa Park", members: 8 },
+        { name: "Content", lead: "Mark Johnson", members: 6 },
+        { name: "Brand", lead: "Anna Lee", members: 4 },
+      ],
+    },
+  ];
+
+  const locations = [
+    {
+      id: 1,
+      name: "Headquarters",
+      city: "New York",
       employees: 120,
-      subscription: "Professional",
-      status: "Active",
-      lastBilling: "2024-03-05",
-      storage: "60%",
-      modules: ["HR", "Attendance", "Performance"],
+      departments: 8,
     },
     {
-      id: 3,
-      name: "Innovate Design Co",
-      industry: "Design",
-      employees: 75,
-      subscription: "Standard",
-      status: "Suspended",
-      lastBilling: "2024-02-28",
-      storage: "45%",
-      modules: ["HR", "Attendance"],
+      id: 2,
+      name: "West Coast Office",
+      city: "San Francisco",
+      employees: 85,
+      departments: 5,
     },
   ];
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Organizations</h1>
-        <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center">
-          <FiPlus className="mr-2" /> Add Organization
-        </button>
+        <h1 className="text-2xl font-bold">Organization Management</h1>
+        <div className="flex space-x-3">
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
+            <FiPlus className="mr-2" /> Add Department
+          </button>
+          <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
+            <FiDownload className="mr-2" /> Export Structure
+          </button>
+        </div>
       </div>
 
-      {/* Search and Filter */}
-      <div className="flex justify-between items-center space-x-4">
-        <div className="flex-1 max-w-md">
-          <div className="relative">
-            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search organizations..."
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {[
+          {
+            label: "Total Employees",
+            value: "248",
+            icon: FiUsers,
+            color: "blue",
+          },
+          { label: "Departments", value: "12", icon: FiLayers, color: "green" },
+          { label: "Teams", value: "35", icon: FiGitBranch, color: "purple" },
+          { label: "Locations", value: "4", icon: FiMapPin, color: "orange" },
+        ].map((stat, index) => (
+          <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500">{stat.label}</p>
+                <h3 className="text-2xl font-bold mt-1">{stat.value}</h3>
+              </div>
+              <div className={`p-3 bg-${stat.color}-100 rounded-full`}>
+                <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Main Content */}
+      <div className="bg-white rounded-lg shadow-sm">
+        <div className="border-b">
+          <div className="flex">
+            {["structure", "locations", "policies"].map((tab) => (
+              <button
+                key={tab}
+                className={`px-6 py-3 text-sm font-medium ${
+                  activeTab === tab
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
           </div>
         </div>
-        <select
-          className="border rounded-lg px-4 py-2"
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-        >
-          <option value="all">All Status</option>
-          <option value="active">Active</option>
-          <option value="suspended">Suspended</option>
-          <option value="pending">Pending</option>
-        </select>
-      </div>
 
-      {/* Organizations List */}
-      <div className="bg-white rounded-lg shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Organization
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Subscription
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Employees
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Storage
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {organizations.map((org) => (
-                <tr key={org.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10">
-                        <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                          <FiLayers className="h-5 w-5 text-indigo-600" />
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          {org.name}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {org.industry}
-                        </div>
-                      </div>
+        <div className="p-6">
+          {/* Structure Tab */}
+          {activeTab === "structure" && (
+            <div className="space-y-6">
+              {departments.map((dept) => (
+                <div key={dept.id} className="border rounded-lg">
+                  <div className="p-4 flex justify-between items-center">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900">
+                        {dept.name}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        Head: {dept.head} • {dept.employees} Employees
+                      </p>
                     </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {org.subscription}
+                    <div className="flex space-x-2">
+                      <button className="p-2 text-blue-600 hover:text-blue-900">
+                        <FiEdit2 className="w-5 h-5" />
+                      </button>
+                      <button className="p-2 text-red-600 hover:text-red-900">
+                        <FiTrash2 className="w-5 h-5" />
+                      </button>
                     </div>
-                    <div className="text-xs text-gray-500">
-                      Last billed: {org.lastBilling}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {org.employees}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        org.status === "Active"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {org.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                  </div>
+                  <div className="border-t bg-gray-50">
+                    <div className="p-4 space-y-3">
+                      {dept.teams.map((team, index) => (
                         <div
-                          className="bg-indigo-600 rounded-full h-2"
-                          style={{ width: org.storage }}
-                        ></div>
-                      </div>
-                      <span className="text-sm text-gray-500">
-                        {org.storage}
-                      </span>
+                          key={index}
+                          className="flex items-center justify-between text-sm"
+                        >
+                          <div className="flex items-center">
+                            <FiChevronRight className="mr-2 text-gray-400" />
+                            <span className="font-medium">{team.name}</span>
+                            <span className="ml-2 text-gray-500">
+                              • Lead: {team.lead}
+                            </span>
+                          </div>
+                          <span className="text-gray-500">
+                            {team.members} members
+                          </span>
+                        </div>
+                      ))}
                     </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button className="text-indigo-600 hover:text-indigo-900 mr-4">
-                      Edit
-                    </button>
-                    <button className="text-red-600 hover:text-red-900">
-                      Suspend
-                    </button>
-                  </td>
-                </tr>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          )}
+
+          {/* Locations Tab */}
+          {activeTab === "locations" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {locations.map((location) => (
+                <div key={location.id} className="border rounded-lg p-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900">
+                        {location.name}
+                      </h3>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {location.city}
+                      </p>
+                    </div>
+                    <div className="flex space-x-2">
+                      <button className="p-2 text-blue-600 hover:text-blue-900">
+                        <FiEdit2 className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="mt-4 grid grid-cols-2 gap-4">
+                    <div className="bg-gray-50 rounded p-3">
+                      <p className="text-sm text-gray-500">Employees</p>
+                      <p className="text-lg font-medium">
+                        {location.employees}
+                      </p>
+                    </div>
+                    <div className="bg-gray-50 rounded p-3">
+                      <p className="text-sm text-gray-500">Departments</p>
+                      <p className="text-lg font-medium">
+                        {location.departments}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Policies Tab */}
+          {activeTab === "policies" && (
+            <div className="text-center py-8 text-gray-500">
+              Organization policies management to be implemented
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default Organizations; 
+export default OrganizationManagement;

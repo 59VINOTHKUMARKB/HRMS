@@ -1,0 +1,149 @@
+import {
+  getAllUsers,
+  getUser,
+  createNewUser,
+  createNewAdmin,
+  updateUser,
+  deleteUser,
+  getUserByEmail,
+  getAdminByEmail,
+} from "../actions/user.action.js";
+
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Private (Admin only)
+export const getUsers = async (req, res, next) => {
+  try {
+    const { users, admins } = await getAllUsers();
+    const allUsers = [...users, ...admins];
+    res.status(200).json({
+      success: true,
+      data: allUsers,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get user by ID
+// @route   GET /api/users/:id
+// @access  Private
+export const getUserById = async (req, res, next) => {
+  try {
+    const user = await getUser(req.params.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Create new user
+// @route   POST /api/users
+// @access  Private (Admin only)
+export const createUser = async (req, res, next) => {
+  try {
+    const { email, role } = req.body;
+
+    // Check for existing user/admin
+    const existingUser = await getUserByEmail(email);
+    const existingAdmin = await getAdminByEmail(email);
+
+    if (existingUser || existingAdmin) {
+      return res.status(409).json({
+        success: false,
+        message: "User with this email already exists",
+      });
+    }
+
+    // Determine if creating admin or regular user
+    const isAdminRole = role === "SUPER_ADMIN" || role === "ADMIN";
+
+    try {
+      const newUser = isAdminRole
+        ? await createNewAdmin(req.body)
+        : await createNewUser(req.body);
+
+      res.status(201).json({
+        success: true,
+        message: `${isAdminRole ? "Admin" : "User"} created successfully`,
+        data: newUser,
+      });
+    } catch (error) {
+      if (error.message === "Invalid admin role") {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid role selected",
+        });
+      }
+      throw error;
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Create new admin user
+// @route   POST /api/users/admin
+// @access  Private (Super Admin only)
+export const createAdmin = async (req, res, next) => {
+  try {
+    const newAdmin = await createNewAdmin(req.body);
+    res.status(201).json({
+      success: true,
+      data: newAdmin,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update user by ID
+// @route   PUT /api/users/:id
+// @access  Private
+export const updateUserById = async (req, res, next) => {
+  try {
+    const updatedUser = await updateUser(req.params.id, req.body);
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      data: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Delete user by ID
+// @route   DELETE /api/users/:id
+// @access  Private (Admin only)
+export const deleteUserById = async (req, res, next) => {
+  try {
+    const result = await deleteUser(req.params.id);
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

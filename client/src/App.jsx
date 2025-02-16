@@ -1,7 +1,13 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Layout from "./components/layout/Layout";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HRLayout from "./components/layout/HRLayout";
 import Dashboard from "./components/dashboard/DashboardStats";
 import HomePage from "./pages/HomePage";
+import AdminSignIn from "./pages/auth/AdminSignIn";
+import UserSignIn from "./pages/auth/UserSignIn";
+import AdminPrivateRoute from "./pages/private/AdminPrivateRoute";
+import HrPrivateRoute from "./pages/private/HrPrivateRoute";
+import ManagerPrivateRoute from "./pages/private/ManagerPrivateRoute";
+import EmployeePrivateRoute from "./pages/private/EmployeePrivateRoute";
 import EmployeeList from "./pages/employees/EmployeeList";
 import AttendanceManagement from "./pages/attendance/AttendanceManagement";
 import PayrollManagement from "./pages/payroll/PayrollManagement";
@@ -13,7 +19,7 @@ import ReportsManagement from "./pages/reports/ReportsManagement";
 import DocumentsManagement from "./pages/documents/DocumentsManagement";
 import ComplianceManagement from "./pages/compliance/ComplianceManagement";
 import ExitManagement from "./pages/exit/ExitManagement";
-import OrganizationManagement from "./pages/organization/OrganizationManagement";
+import OrganizationManagement from "./pages/admin/Organizations";
 import OnboardingManagement from "./pages/onboarding/OnboardingManagement";
 import EmployeeLayout from "./components/layout/EmployeeLayout";
 import EmployeeDashboard from "./pages/employee/Dashboard";
@@ -48,394 +54,87 @@ import AuditLogs from "./pages/admin/AuditLogs";
 import SystemAlerts from "./pages/admin/SystemAlerts";
 import SystemSettings from "./pages/admin/SystemSettings";
 import Maintenance from "./pages/admin/Maintenance";
-// import EmployeePayroll from "./pages/employee/Payroll";
-// import EmployeeTraining from "./pages/employee/Training";
-// import EmployeeExpenses from "./pages/employee/Expenses";
-// import EmployeeAnnouncements from "./pages/employee/Announcements";
-// import EmployeeSupport from "./pages/employee/Support";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
-        <Route
-          path="/hr/dashboard/*"
-          element={
-            <Layout>
-              <Dashboard />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/employees"
-          element={
-            <Layout>
-              <EmployeeList />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/attendance"
-          element={
-            <Layout>
-              <AttendanceManagement />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/payroll"
-          element={
-            <Layout>
-              <PayrollManagement />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/recruitment"
-          element={
-            <Layout>
-              <RecruitmentManagement />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/performance"
-          element={
-            <Layout>
-              <PerformanceManagement />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/training"
-          element={
-            <Layout>
-              <TrainingManagement />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/expenses"
-          element={
-            <Layout>
-              <ExpensesManagement />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/reports"
-          element={
-            <Layout>
-              <ReportsManagement />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/documents"
-          element={
-            <Layout>
-              <DocumentsManagement />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/compliance"
-          element={
-            <Layout>
-              <ComplianceManagement />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/exit"
-          element={
-            <Layout>
-              <ExitManagement />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/organization"
-          element={
-            <Layout>
-              <OrganizationManagement />
-            </Layout>
-          }
-        />
-        <Route
-          path="/hr/onboarding"
-          element={
-            <Layout>
-              <OnboardingManagement />
-            </Layout>
-          }
-        />
-        <Route
-          path="/employee/"
-          element={
-            <EmployeeLayout>
-              <EmployeeDashboard/>
-            </EmployeeLayout>
-          }
-        />
-        <Route
-          path="/employee/dashboard"
-          element={
-            <EmployeeLayout>
-              <EmployeeDashboard />
-            </EmployeeLayout>
-          }
-        />
-        <Route
-          path="/employee/profile"
-          element={
-            <EmployeeLayout>
-              <EmployeeProfile />
-            </EmployeeLayout>
-          }
-        />
-        <Route
-          path="/employee/attendance"
-          element={
-            <EmployeeLayout>
-              <EmployeeAttendance />
-            </EmployeeLayout>
-          }
-        />
-        <Route
-          path="/employee/leave"
-          element={
-            <EmployeeLayout>
-              <EmployeeLeave />
-            </EmployeeLayout>
-          }
-        />
-        <Route
-          path="/employee/payroll"
-          element={
-            <EmployeeLayout>
-              <EmployeePayroll />
-            </EmployeeLayout>
-          }
-        />
-        <Route
-          path="/employee/training"
-          element={
-            <EmployeeLayout>
-              <EmployeeTraining />
-            </EmployeeLayout>
-          }
-        />
-        <Route
-          path="/employee/expenses"
-          element={
-            <EmployeeLayout>
-              <EmployeeExpenses />
-            </EmployeeLayout>
-          }
-        />
-        <Route
-          path="/employee/announcements"
-          element={
-            <EmployeeLayout>
-              <EmployeeAnnouncements />
-            </EmployeeLayout>
-          }
-        />
-        <Route
-          path="/employee/support"
-          element={
-            <EmployeeLayout>
-              <EmployeeSupport />
-            </EmployeeLayout>
-          }
-        />
-        <Route 
-        path="/manager/"
-        element={
-          <ManagerLayout>
-            <ManagerDashboard/>
-          </ManagerLayout>
-        }
-        />
-        <Route
-          path="/manager/dashboard"
-          element={
-            <ManagerLayout>
-              <ManagerDashboard />
-            </ManagerLayout>
-          }
-        />
-        <Route
-          path="/manager/team"
-          element={
-            <ManagerLayout>
-              <ManagerTeams />
-            </ManagerLayout>
-          }
-        />
-        <Route
-          path="/manager/attendance"
-          element={
-            <ManagerLayout>
-              <ManagerAttendance />
-            </ManagerLayout>
-          }
-        />
-        <Route
-          path="/manager/leave"
-          element={
-            <ManagerLayout>
-              <ManagerLeave />
-            </ManagerLayout>
-          }
-        />
-        <Route
-          path="/manager/performance"
-          element={
-            <ManagerLayout>
-              <ManagerPerformance />
-            </ManagerLayout>
-          }
-        />
-        <Route
-          path="/manager/training"
-          element={
-            <ManagerLayout>
-              <ManagerTraining />
-            </ManagerLayout>
-          }
-        />
-        <Route
-          path="/manager/expenses"
-          element={
-            <ManagerLayout>
-              <ManagerExpenses />
-            </ManagerLayout>
-          }
-        />
-        <Route
-          path="/manager/reports"
-          element={
-            <ManagerLayout>
-              <ManagerReports />
-            </ManagerLayout>
-          }
-        />
-        <Route
-          path="/manager/feedback"
-          element={
-            <ManagerLayout>
-              <ManagerFeedback />
-            </ManagerLayout>
-          }
-        />
-        
-        <Route
-          path="/manager/tasks"
-          element={
-            <ManagerLayout>
-              <ManagerTasks />
-            </ManagerLayout>
-          }
-        />
-        <Route
-          path="/superadmin/dashboard"
-          element={
-            <SuperAdminLayout>
-              <AdminDashboard />
-            </SuperAdminLayout>
-          }
-        />
-        <Route
-          path="/superadmin/organizations"
-          element={
-            <SuperAdminLayout>
-              <OrganizationManagement />
-            </SuperAdminLayout>
-          }
-        />
-        <Route
-          path="/superadmin/Users"
-          element={
-            <SuperAdminLayout>
-              <UserManagement />
-            </SuperAdminLayout>
-          }
-        />
-        <Route
-          path="/superadmin/billing"
-          element={
-            <SuperAdminLayout>
-              <BillingManagement />
-            </SuperAdminLayout>
-          }
-        />
-        <Route
-          path="superadmin/security"
-          element={
-            <SuperAdminLayout>
-              <SecurityManagement />
-            </SuperAdminLayout>
-          }
-        />
-        <Route
-          path="superadmin/database"
-          element={
-            <SuperAdminLayout>
-              <DatabaseManagement />
-            </SuperAdminLayout>
-          }
-        />
-        <Route
-          path="/superadmin/analytics"
-          element={
-            <SuperAdminLayout>
-              <Analytics />
-            </SuperAdminLayout>
-          }
-        />
-        <Route
-          path="/superadmin/integrations"
-          element={
-            <SuperAdminLayout>
-              <Integrations />
-            </SuperAdminLayout>
-          }
-        />
-        <Route
-          path="/superadmin/audit"
-          element={
-            <SuperAdminLayout>
-              <AuditLogs />
-            </SuperAdminLayout>
-          }
-        />
-        <Route
-          path="/superadmin/alerts"
-          element={
-            <SuperAdminLayout>
-              <SystemAlerts />
-            </SuperAdminLayout>
-          }
-        />
-        <Route
-          path="/superadmin/settings"
-          element={
-            <SuperAdminLayout>
-              <SystemSettings />
-            </SuperAdminLayout>
-          }
-        />
-        <Route
-          path="/superadmin/maintenance"
-          element={
-            <SuperAdminLayout>
-              <Maintenance />
-            </SuperAdminLayout>
-          }
-        />
+        <Route path="/signin/admin" element={<AdminSignIn />} />
+        <Route path="/signin/user" element={<UserSignIn />} />
+
+        {/* HR Private Routes */}
+        <Route element={<HrPrivateRoute />}>
+          <Route path="/hr" element={<HRLayout />}>
+            <Route path="dashboard" element={<Dashboard />} />x
+            <Route path="employees" element={<EmployeeList />} />
+            <Route path="attendance" element={<AttendanceManagement />} />
+            <Route path="payroll" element={<PayrollManagement />} />
+            <Route path="recruitment" element={<RecruitmentManagement />} />
+            <Route path="performance" element={<PerformanceManagement />} />
+            <Route path="training" element={<TrainingManagement />} />
+            <Route path="expenses" element={<ExpensesManagement />} />
+            <Route path="reports" element={<ReportsManagement />} />
+            <Route path="documents" element={<DocumentsManagement />} />
+            <Route path="compliance" element={<ComplianceManagement />} />
+            <Route path="exit" element={<ExitManagement />} />
+            <Route path="organization" element={<OrganizationManagement />} />
+            <Route path="onboarding" element={<OnboardingManagement />} />
+          </Route>
+        </Route>
+
+        {/* Employee Private Routes */}
+        <Route element={<EmployeePrivateRoute />}>
+          <Route path="/employee" element={<EmployeeLayout />}>
+            <Route index element={<EmployeeDashboard />} />
+            <Route path="dashboard" element={<EmployeeDashboard />} />
+            <Route path="profile" element={<EmployeeProfile />} />
+            <Route path="attendance" element={<EmployeeAttendance />} />
+            <Route path="leave" element={<EmployeeLeave />} />
+            <Route path="payroll" element={<EmployeePayroll />} />
+            <Route path="training" element={<EmployeeTraining />} />
+            <Route path="expenses" element={<EmployeeExpenses />} />
+            <Route path="announcements" element={<EmployeeAnnouncements />} />
+            <Route path="support" element={<EmployeeSupport />} />
+          </Route>
+        </Route>
+
+        {/* Manager Private Routes */}
+        <Route element={<ManagerPrivateRoute />}>
+          <Route path="/manager" element={<ManagerLayout />}>
+            <Route index element={<ManagerDashboard />} />
+            <Route path="dashboard" element={<ManagerDashboard />} />
+            <Route path="team" element={<ManagerTeams />} />
+            <Route path="attendance" element={<ManagerAttendance />} />
+            <Route path="leave" element={<ManagerLeave />} />
+            <Route path="performance" element={<ManagerPerformance />} />
+            <Route path="training" element={<ManagerTraining />} />
+            <Route path="expenses" element={<ManagerExpenses />} />
+            <Route path="reports" element={<ManagerReports />} />
+            <Route path="feedback" element={<ManagerFeedback />} />
+            <Route path="tasks" element={<ManagerTasks />} />
+          </Route>
+        </Route>
+
+        {/* Admin Private Routes */}
+        <Route element={<AdminPrivateRoute />}>
+          <Route path="/superadmin" element={<SuperAdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="organizations" element={<OrganizationManagement />} />
+            <Route path="users" element={<UserManagement />} />
+            <Route path="billing" element={<BillingManagement />} />
+            <Route path="security" element={<SecurityManagement />} />
+            <Route path="database" element={<DatabaseManagement />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="integrations" element={<Integrations />} />
+            <Route path="audit" element={<AuditLogs />} />
+            <Route path="alerts" element={<SystemAlerts />} />
+            <Route path="settings" element={<SystemSettings />} />
+            <Route path="maintenance" element={<Maintenance />} />
+          </Route>
+        </Route>
       </Routes>
     </BrowserRouter>
   );
