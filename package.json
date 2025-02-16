@@ -2,8 +2,9 @@
   "scripts": {
     "dev": "nodemon api/index.js",
     "start": "node api/index.js",
-    "build": "npm install && npm install --prefix client && npm run build --prefix client",
-    "init-super-admin": "node api/scripts/initSuperAdmin.js"
+    "build": "npm run prisma:generate && npm install && npm install --prefix client && npm run build --prefix client",
+    "init-super-admin": "node api/scripts/initSuperAdmin.js",
+    "prisma:generate": "prisma generate --schema=api/prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^6.3.1",
