@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import db from "../prisma/prisma.js";
-import { AdminRole } from "@prisma/client";
 
 const VALID_ROLES = {
   ADMIN: "ADMIN",
