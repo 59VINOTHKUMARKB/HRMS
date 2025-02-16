@@ -7,23 +7,23 @@ import {
 } from 'react-icons/fi';
 
 const menuItems = [
-  { path: '/dashboard', icon: FiHome, label: 'Dashboard' },
-  { path: '/employees', icon: FiUsers, label: 'Employees' },
-  { path: '/attendance', icon: FiCalendar, label: 'Attendance' },
-  { path: '/payroll', icon: FiDollarSign, label: 'Payroll' },
-  { path: '/recruitment', icon: FiUserPlus, label: 'Recruitment' },
-  { path: '/performance', icon: FiTarget, label: 'Performance' },
-  { path: '/training', icon: FiBook, label: 'Training' },
-  { path: '/expenses', icon: FiFileText, label: 'Expenses' },
-  { path: '/reports', icon: FiPieChart, label: 'Reports' },
-  { path: '/documents', icon: FiFolder, label: 'Documents' },
-  { path: '/compliance', icon: FiShield, label: 'Compliance' },
-  { path: '/exit', icon: FiLogOut, label: 'Exit Management' },
-  { path: '/organization', icon: FiGitMerge, label: 'Organization' },
-  { path: '/onboarding', icon: FiUserCheck, label: 'Onboarding' }
+  { path: '/hr/dashboard', icon: FiHome, label: 'Dashboard' },
+  { path: '/hr/employees', icon: FiUsers, label: 'Employees' },
+  { path: '/hr/attendance', icon: FiCalendar, label: 'Attendance' },
+  { path: '/hr/payroll', icon: FiDollarSign, label: 'Payroll' },
+  { path: '/hr/recruitment', icon: FiUserPlus, label: 'Recruitment' },
+  { path: '/hr/performance', icon: FiTarget, label: 'Performance' },
+  { path: '/hr/training', icon: FiBook, label: 'Training' },
+  { path: '/hr/expenses', icon: FiFileText, label: 'Expenses' },
+  { path: '/hr/reports', icon: FiPieChart, label: 'Reports' },
+  { path: '/hr/documents', icon: FiFolder, label: 'Documents' },
+  { path: '/hr/compliance', icon: FiShield, label: 'Compliance' },
+  { path: '/hr/exit', icon: FiLogOut, label: 'Exit Management' },
+  { path: '/hr/organization', icon: FiGitMerge, label: 'Organization' },
+  { path: '/hr/onboarding', icon: FiUserCheck, label: 'Onboarding' }
 ];
 
-const HRSidebar = () => {
+const Sidebar = () => {
   const location = useLocation();
 
   return (
@@ -52,4 +52,4 @@ const HRSidebar = () => {
   );
 };
 
-export default HRSidebar; 
+export default Sidebar; 
