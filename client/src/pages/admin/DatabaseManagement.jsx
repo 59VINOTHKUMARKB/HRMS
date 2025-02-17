@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FiDatabase,
   FiHardDrive,
@@ -9,89 +9,144 @@ import {
   FiUpload,
   FiServer,
 } from "react-icons/fi";
+import axios from "axios";
+import { notification, Spin } from "antd";
 
 const DatabaseManagement = () => {
-  const [selectedInstance, setSelectedInstance] = useState("production");
+  const [loading, setLoading] = useState(true);
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+  const [stats, setStats] = useState(null);
+  const [operations, setOperations] = useState([]);
 
-  const databaseStats = {
-    totalSize: "1.2 TB",
-    activeConnections: "156",
-    avgResponseTime: "45ms",
-    lastBackup: "2024-03-20 03:00 AM",
-    uptime: "99.99%",
-    replicationLag: "1.2s",
+  const fetchDatabaseStats = async () => {
+    try {
+      const [statsResponse, operationsResponse] = await Promise.all([
+        axios.get("/api/db/stats"),
+        axios.get("/api/db/operations"),
+      ]);
+
+      if (statsResponse.data.success) {
+        setStats(statsResponse.data.data);
+      }
+
+      if (operationsResponse.data.success) {
+        setOperations(operationsResponse.data.data);
+      }
+    } catch (error) {
+      notification.error({
+        message: "Error Fetching Database Stats",
+        description:
+          error.response?.data?.message ||
+          "Could not fetch database statistics",
+        placement: "bottomRight",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const databaseInstances = [
-    {
-      id: 1,
-      name: "Production DB",
-      type: "Primary",
-      status: "Healthy",
-      version: "PostgreSQL 14.5",
-      size: "850 GB",
-      connections: 120,
-      performance: 95,
-    },
-    {
-      id: 2,
-      name: "Replica DB-1",
-      type: "Read Replica",
-      status: "Healthy",
-      version: "PostgreSQL 14.5",
-      size: "850 GB",
-      connections: 36,
-      performance: 92,
-    },
-    {
-      id: 3,
-      name: "Analytics DB",
-      type: "Warehouse",
-      status: "Warning",
-      version: "PostgreSQL 14.5",
-      size: "1.5 TB",
-      connections: 15,
-      performance: 78,
-    },
-  ];
+  useEffect(() => {
+    fetchDatabaseStats();
+    // Refresh stats every 30 seconds
+    const interval = setInterval(fetchDatabaseStats, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const recentOperations = [
-    {
-      id: 1,
-      operation: "Automated Backup",
-      timestamp: "2024-03-20 03:00 AM",
-      status: "Completed",
-      duration: "25 mins",
-      size: "850 GB",
-    },
-    {
-      id: 2,
-      operation: "Index Optimization",
-      timestamp: "2024-03-19 11:30 PM",
-      status: "Completed",
-      duration: "45 mins",
-      size: "N/A",
-    },
-    {
-      id: 3,
-      operation: "Data Migration",
-      timestamp: "2024-03-19 08:15 PM",
-      status: "Failed",
-      duration: "15 mins",
-      size: "25 GB",
-    },
-  ];
+  const handleBackup = async () => {
+    try {
+      setLoading(true);
+
+      // Request backup with download parameter
+      const response = await axios.post(
+        "/api/db/backup?download=true",
+        {},
+        {
+          responseType: "blob", // Important for handling the file download
+        }
+      );
+
+      // Create a download link
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      const filename = `backup-${new Date().toISOString()}.json`;
+      link.setAttribute("download", filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      notification.success({
+        message: "Backup Successful",
+        description: "Database backup has been downloaded successfully",
+        placement: "bottomRight",
+      });
+    } catch (error) {
+      notification.error({
+        message: "Backup Failed",
+        description:
+          error.response?.data?.message || "Could not perform backup",
+        placement: "bottomRight",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleMaintenance = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post("/api/db/maintenance", {
+        enable: !maintenanceMode,
+      });
+
+      if (response.data.success) {
+        setMaintenanceMode(response.data.data.maintenance);
+        notification.success({
+          message: "Maintenance Mode Updated",
+          description: response.data.message,
+          placement: "bottomRight",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        message: "Operation Failed",
+        description:
+          error.response?.data?.message || "Could not toggle maintenance mode",
+        placement: "bottomRight",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading || !stats) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Database Management</h1>
         <div className="flex space-x-4">
-          <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center">
+          <button
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center"
+            onClick={handleBackup}
+          >
             <FiDownload className="mr-2" /> Backup Now
           </button>
-          <button className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 flex items-center">
-            <FiRefreshCw className="mr-2" /> Maintenance Mode
+          <button
+            className={`px-4 py-2 ${
+              maintenanceMode ? "bg-red-600" : "bg-gray-600"
+            } text-white rounded-lg hover:bg-gray-700 flex items-center`}
+            onClick={toggleMaintenance}
+          >
+            <FiRefreshCw className="mr-2" />
+            {maintenanceMode ? "Disable" : "Enable"} Maintenance Mode
           </button>
         </div>
       </div>
@@ -102,7 +157,7 @@ const DatabaseManagement = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-500">Total Size</p>
-              <h3 className="text-2xl font-bold mt-1">{databaseStats.totalSize}</h3>
+              <h3 className="text-2xl font-bold mt-1">{stats.totalSize}</h3>
             </div>
             <div className="p-3 bg-blue-100 rounded-full">
               <FiHardDrive className="w-6 h-6 text-blue-600" />
@@ -114,7 +169,7 @@ const DatabaseManagement = () => {
             <div>
               <p className="text-sm text-gray-500">Active Connections</p>
               <h3 className="text-2xl font-bold mt-1">
-                {databaseStats.activeConnections}
+                {stats.activeConnections}
               </h3>
             </div>
             <div className="p-3 bg-green-100 rounded-full">
@@ -127,7 +182,7 @@ const DatabaseManagement = () => {
             <div>
               <p className="text-sm text-gray-500">Response Time</p>
               <h3 className="text-2xl font-bold mt-1">
-                {databaseStats.avgResponseTime}
+                {stats.avgResponseTime}
               </h3>
             </div>
             <div className="p-3 bg-yellow-100 rounded-full">
@@ -138,19 +193,8 @@ const DatabaseManagement = () => {
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Last Backup</p>
-              <h3 className="text-lg font-bold mt-1">{databaseStats.lastBackup}</h3>
-            </div>
-            <div className="p-3 bg-purple-100 rounded-full">
-              <FiDatabase className="w-6 h-6 text-purple-600" />
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
               <p className="text-sm text-gray-500">Uptime</p>
-              <h3 className="text-2xl font-bold mt-1">{databaseStats.uptime}</h3>
+              <h3 className="text-2xl font-bold mt-1">{stats.uptime}</h3>
             </div>
             <div className="p-3 bg-indigo-100 rounded-full">
               <FiRefreshCw className="w-6 h-6 text-indigo-600" />
@@ -162,7 +206,7 @@ const DatabaseManagement = () => {
             <div>
               <p className="text-sm text-gray-500">Replication Lag</p>
               <h3 className="text-2xl font-bold mt-1">
-                {databaseStats.replicationLag}
+                {stats.replicationLag}
               </h3>
             </div>
             <div className="p-3 bg-red-100 rounded-full">
@@ -176,9 +220,9 @@ const DatabaseManagement = () => {
       <div className="bg-white rounded-lg shadow-sm p-6">
         <h2 className="text-lg font-medium mb-4">Database Instances</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {databaseInstances.map((instance) => (
+          {stats.instances.map((instance, index) => (
             <div
-              key={instance.id}
+              key={index}
               className="border rounded-lg p-4 hover:shadow-md transition-shadow"
             >
               <div className="flex justify-between items-start">
@@ -246,7 +290,7 @@ const DatabaseManagement = () => {
                   Operation
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Timestamp
+                  Namespace
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
@@ -254,13 +298,10 @@ const DatabaseManagement = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Duration
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Size
-                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {recentOperations.map((operation) => (
+              {operations.map((operation) => (
                 <tr key={operation.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
@@ -268,14 +309,14 @@ const DatabaseManagement = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {operation.timestamp}
+                    {operation.namespace}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         operation.status === "Completed"
                           ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
+                          : "bg-yellow-100 text-yellow-800"
                       }`}
                     >
                       {operation.status}
@@ -283,9 +324,6 @@ const DatabaseManagement = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {operation.duration}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {operation.size}
                   </td>
                 </tr>
               ))}
@@ -297,4 +335,4 @@ const DatabaseManagement = () => {
   );
 };
 
-export default DatabaseManagement; 
+export default DatabaseManagement;

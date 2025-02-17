@@ -7,7 +7,7 @@ import {
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { getAdminByEmail, getUserByEmail } from "../actions/user.action.js";
-import { errorHandler } from "../utils/error.js";
+import { errorHandler } from "../middleware/error.js";
 import db from "../prisma/prisma.js";
 
 // @desc    Sign in user and create token
@@ -45,6 +45,7 @@ export const userSignIn = async (req, res, next) => {
     const token = jwt.sign(
       {
         id: validUser.id,
+        role: validUser.role,
         isUser: validUser.isUser,
       },
       process.env.JWT_SECRET
@@ -96,6 +97,7 @@ export const adminSignIn = async (req, res, next) => {
     const token = jwt.sign(
       {
         id: validAdmin.id,
+        role: validAdmin.role,
         isAdmin: validAdmin.isAdmin,
       },
       process.env.JWT_SECRET

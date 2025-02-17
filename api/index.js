@@ -6,6 +6,8 @@ import path from "path";
 import cors from "cors";
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
+import departmentRoutes from "./routes/department.route.js";
+import dbRoutes from "./routes/db.route.js";
 
 dotenv.config();
 
@@ -28,7 +30,8 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-
+app.use("/api/departments", departmentRoutes);
+app.use("/api/db", dbRoutes);
 app.use(express.static(path.join(__dirname, "client", "dist")));
 
 app.get("*", (req, res) => {

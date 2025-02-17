@@ -17,7 +17,7 @@ import {
 const menuItems = [
   { path: "/superadmin/dashboard", icon: FiHome, label: "Dashboard" },
   { path: "/superadmin/users", icon: FiUsers, label: "User Management" },
-  { path: "/superadmin/organizations", icon: FiLayers, label: "Organizations" },
+  { path: "/superadmin/department", icon: FiLayers, label: "Departments" },
   { path: "/superadmin/billing", icon: FiDollarSign, label: "Billing & Plans" },
   { path: "/superadmin/security", icon: FiShield, label: "Security Settings" },
   {

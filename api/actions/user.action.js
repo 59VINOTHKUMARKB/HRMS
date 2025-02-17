@@ -190,3 +190,33 @@ export const deleteUser = async (id) => {
     throw error;
   }
 };
+
+// @desc    Update user password
+// @params  id: string, password: string
+export const updateUserPassword = async (id, password) => {
+  try {
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const updatedUser = await db.user.update({
+      where: { id },
+      data: { password: hashedPassword },
+    });
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// @desc    Update admin password
+// @params  id: string, password: string
+export const updateAdminPassword = async (id, password) => {
+  try {
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const updatedAdmin = await db.admin.update({
+      where: { id },
+      data: { password: hashedPassword },
+    });
+    return updatedAdmin;
+  } catch (error) {
+    throw error;
+  }
+};

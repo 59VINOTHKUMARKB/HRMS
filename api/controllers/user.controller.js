@@ -5,6 +5,8 @@ import {
   createNewAdmin,
   updateUser,
   deleteUser,
+  updateUserPassword,
+  updateAdminPassword,
   getUserByEmail,
   getAdminByEmail,
 } from "../actions/user.action.js";
@@ -142,6 +144,31 @@ export const deleteUserById = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "User deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update user password by ID
+// @route   PUT /api/users/:id/password
+// @access  Private
+export const updateUserPasswordById = async (req, res, next) => {
+  try {
+    const { role } = req.body;
+    const isAdmin = role === "SUPER_ADMIN" || role === "ADMIN";
+    const updatedUser = isAdmin
+      ? await updateAdminPassword(req.params.id, req.body.password)
+      : await updateUserPassword(req.params.id, req.body.password);
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      data: updatedUser,
     });
   } catch (error) {
     next(error);

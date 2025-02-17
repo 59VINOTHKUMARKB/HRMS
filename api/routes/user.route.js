@@ -5,6 +5,7 @@ import {
   createUser,
   createAdmin,
   updateUserById,
+  updateUserPasswordById,
   deleteUserById,
 } from "../controllers/user.controller.js";
 
@@ -39,5 +40,10 @@ router.put("/:id", updateUserById);
 // @desc    Delete user by ID
 // @access  Private (Admin only)
 router.delete("/:id", deleteUserById);
+
+// @route   PUT /api/users/:id/password
+// @desc    Update user password by ID
+// @access  Private
+router.put("/:id/password", updateUserPasswordById);
 
 export default router;

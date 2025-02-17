@@ -195,6 +195,7 @@ const UserManagement = () => {
       const response = await axios.put(
         `/api/users/${selectedUser.id}/password`,
         {
+          role: selectedUser.role,
           password: values.password,
         }
       );

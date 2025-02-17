@@ -19,7 +19,7 @@ import ReportsManagement from "./pages/reports/ReportsManagement";
 import DocumentsManagement from "./pages/documents/DocumentsManagement";
 import ComplianceManagement from "./pages/compliance/ComplianceManagement";
 import ExitManagement from "./pages/exit/ExitManagement";
-import OrganizationManagement from "./pages/admin/Organizations";
+import DepartmentManagement from "./pages/admin/DepartmentManagement";
 import OnboardingManagement from "./pages/onboarding/OnboardingManagement";
 import EmployeeLayout from "./components/layout/EmployeeLayout";
 import EmployeeDashboard from "./pages/employee/Dashboard";
@@ -67,7 +67,7 @@ const App = () => {
         {/* HR Private Routes */}
         <Route element={<HrPrivateRoute />}>
           <Route path="/hr" element={<HRLayout />}>
-            <Route path="dashboard" element={<Dashboard />} />x
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="employees" element={<EmployeeList />} />
             <Route path="attendance" element={<AttendanceManagement />} />
             <Route path="payroll" element={<PayrollManagement />} />
@@ -79,7 +79,7 @@ const App = () => {
             <Route path="documents" element={<DocumentsManagement />} />
             <Route path="compliance" element={<ComplianceManagement />} />
             <Route path="exit" element={<ExitManagement />} />
-            <Route path="organization" element={<OrganizationManagement />} />
+            <Route path="department" element={<DepartmentManagement />} />
             <Route path="onboarding" element={<OnboardingManagement />} />
           </Route>
         </Route>
@@ -122,7 +122,7 @@ const App = () => {
           <Route path="/superadmin" element={<SuperAdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="organizations" element={<OrganizationManagement />} />
+            <Route path="department" element={<DepartmentManagement />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="billing" element={<BillingManagement />} />
             <Route path="security" element={<SecurityManagement />} />
