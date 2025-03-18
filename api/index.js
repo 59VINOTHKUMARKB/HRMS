@@ -8,7 +8,7 @@ import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
 import departmentRoutes from "./routes/department.route.js";
 import dbRoutes from "./routes/db.route.js";
-
+import organizationRoutes from "./routes/organization.route.js";
 dotenv.config();
 
 mongoose
@@ -20,7 +20,7 @@ mongoose
     console.log(err);
   });
 
-const __dirname = path.resolve();
+// const __dirname = path.resolve();
 
 const app = express();
 
@@ -31,12 +31,14 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/departments", departmentRoutes);
+app.use("/api/organizations", organizationRoutes);
 app.use("/api/db", dbRoutes);
-app.use(express.static(path.join(__dirname, "client", "dist")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-});
+// app.use(express.static(path.join(__dirname, "client", "dist")));
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+// });
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

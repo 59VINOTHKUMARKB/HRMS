@@ -82,8 +82,7 @@ const AdminDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-          <p className="text-gray-600">Welcome back, {user?.name || "Admin"}</p>
+          <h1 className="text-2xl font-bold uppercase">Welcome back, {user?.name || "Admin"}</h1>
         </div>
         <div className="flex space-x-4">
           <select

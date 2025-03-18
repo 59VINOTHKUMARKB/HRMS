@@ -19,7 +19,7 @@ const router = express.Router();
 router.get(
   "/",
   verifyToken,
-  authorizeRoles(["SUPER_ADMIN", "ADMIN", "HR"]),
+  authorizeRoles(["SUPER_ADMIN", "ORG_ADMIN", "HR"]),
   getDepartments
 );
 
@@ -27,7 +27,7 @@ router.get(
 router.get(
   "/hierarchy",
   verifyToken,
-  authorizeRoles(["SUPER_ADMIN", "ADMIN", "HR"]),
+  authorizeRoles(["SUPER_ADMIN", "ORG_ADMIN", "HR"]),
   getDepartmentHierarchy
 );
 
@@ -35,7 +35,7 @@ router.get(
 router.get(
   "/:id",
   verifyToken,
-  authorizeRoles(["SUPER_ADMIN", "ADMIN", "HR"]),
+  authorizeRoles(["SUPER_ADMIN", "ORG_ADMIN", "HR"]),
   getDepartmentById
 );
 
@@ -43,7 +43,7 @@ router.get(
 router.post(
   "/",
   verifyToken,
-  authorizeRoles(["SUPER_ADMIN", "ADMIN"]),
+  authorizeRoles(["SUPER_ADMIN", "ORG_ADMIN"]),
   createDepartment
 );
 
@@ -51,7 +51,7 @@ router.post(
 router.put(
   "/:id",
   verifyToken,
-  authorizeRoles(["SUPER_ADMIN", "ADMIN"]),
+  authorizeRoles(["SUPER_ADMIN", "ORG_ADMIN"]),
   updateDepartment
 );
 
@@ -67,7 +67,7 @@ router.delete(
 router.post(
   "/:id/head",
   verifyToken,
-  authorizeRoles(["SUPER_ADMIN", "ADMIN"]),
+  authorizeRoles(["SUPER_ADMIN", "ORG_ADMIN"]),
   assignDepartmentHead
 );
 
@@ -75,7 +75,7 @@ router.post(
 router.post(
   "/:id/members",
   verifyToken,
-  authorizeRoles(["SUPER_ADMIN", "ADMIN", "HR"]),
+  authorizeRoles(["SUPER_ADMIN", "ORG_ADMIN", "HR"]),
   addDepartmentMember
 );
 
@@ -83,7 +83,7 @@ router.post(
 router.delete(
   "/:id/members/:userId",
   verifyToken,
-  authorizeRoles(["SUPER_ADMIN", "ADMIN", "HR"]),
+  authorizeRoles(["SUPER_ADMIN", "ORG_ADMIN", "HR"]),
   removeDepartmentMember
 );
 

@@ -43,6 +43,7 @@ const UserManagement = () => {
   const [showPasswordUpdate, setShowPasswordUpdate] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const isOrgAdmin = user?.role === "ORG_ADMIN";
 
   const fetchUsers = async () => {
     try {
@@ -76,16 +77,61 @@ const UserManagement = () => {
     fetchUsers();
   }, []);
 
+  // Filter users based on role
+  const filteredUsers = users.filter((targetUser) => {
+    console.log("Current logged in user:", user);
+    console.log("Target user:", targetUser);
+
+    const matchesSearch =
+      targetUser.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      targetUser.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesRole =
+      filterRole === "all" ||
+      targetUser.role.toLowerCase() === filterRole.toLowerCase();
+
+    // For ORG_ADMIN, only show users in their organization
+    if (isOrgAdmin) {
+      console.log("Checking organization match:", {
+        targetOrgId: targetUser.organizationId,
+        userOrgId: user.organizationId,
+      });
+      return (
+        matchesSearch &&
+        matchesRole &&
+        targetUser.organizationId === user.organizationId &&
+        targetUser.organizationId !== undefined
+      );
+    }
+
+    return matchesSearch && matchesRole;
+  });
+
   // Function to check if current user can edit target user
   const canEditUser = (targetUser) => {
-    if (!user || !targetUser) return false;
+    if (!user || !targetUser) {
+      console.log("Missing user or targetUser:", { user, targetUser });
+      return false;
+    }
+
+    console.log("Checking edit permissions:", {
+      currentUserRole: user.role,
+      targetUserRole: targetUser.role,
+      currentUserOrg: user.organizationId,
+      targetUserOrg: targetUser.organizationId,
+    });
 
     // SUPER_ADMIN can edit anyone
     if (user.role === "SUPER_ADMIN") return true;
 
-    // ADMIN can't edit SUPER_ADMIN or other ADMIN
-    if (user.role === "ADMIN") {
-      return !["SUPER_ADMIN", "ADMIN"].includes(targetUser.role);
+    // ORG_ADMIN can edit users in their organization except SUPER_ADMIN and ORG_ADMIN
+    if (user.role === "ORG_ADMIN") {
+      const canEdit =
+        !["SUPER_ADMIN", "ORG_ADMIN"].includes(targetUser.role) &&
+        targetUser.organizationId === user.organizationId &&
+        targetUser.organizationId !== undefined;
+      console.log("ORG_ADMIN edit permission:", canEdit);
+      return canEdit;
     }
 
     return false;
@@ -93,17 +139,30 @@ const UserManagement = () => {
 
   // Function to check if current user can delete target user
   const canDeleteUser = (targetUser) => {
-    if (!user || !targetUser) return false;
+    if (!user || !targetUser) {
+      console.log("Missing user or targetUser:", { user, targetUser });
+      return false;
+    }
+
+    console.log("Checking delete permissions:", {
+      currentUserRole: user.role,
+      targetUserRole: targetUser.role,
+      currentUserOrg: user.organizationId,
+      targetUserOrg: targetUser.organizationId,
+    });
 
     // SUPER_ADMIN can delete anyone except themselves
     if (user.role === "SUPER_ADMIN") return user.id !== targetUser.id;
 
-    // ADMIN can't delete SUPER_ADMIN, ADMIN, or themselves
-    if (user.role === "ADMIN") {
-      return (
-        !["SUPER_ADMIN", "ADMIN"].includes(targetUser.role) &&
-        user.id !== targetUser.id
-      );
+    // ORG_ADMIN can delete users in their organization except SUPER_ADMIN, ORG_ADMIN, and themselves
+    if (user.role === "ORG_ADMIN") {
+      const canDelete =
+        !["SUPER_ADMIN", "ORG_ADMIN"].includes(targetUser.role) &&
+        targetUser.organizationId === user.organizationId &&
+        targetUser.organizationId !== undefined &&
+        user.id !== targetUser.id;
+      console.log("ORG_ADMIN delete permission:", canDelete);
+      return canDelete;
     }
 
     return false;
@@ -116,14 +175,13 @@ const UserManagement = () => {
     // SUPER_ADMIN can update anyone's password
     if (user.role === "SUPER_ADMIN") return true;
 
-    // ADMIN can update HR, MANAGER, EMPLOYEE passwords
-    if (user.role === "ADMIN") {
-      return ["HR", "MANAGER", "EMPLOYEE"].includes(targetUser.role);
-    }
-
-    // MANAGER can update EMPLOYEE passwords
-    if (user.role === "MANAGER") {
-      return targetUser.role === "EMPLOYEE";
+    // ORG_ADMIN can update passwords for users in their organization except SUPER_ADMIN and ORG_ADMIN
+    if (user.role === "ORG_ADMIN") {
+      return (
+        !["SUPER_ADMIN", "ORG_ADMIN"].includes(targetUser.role) &&
+        targetUser.organizationId === user.organizationId &&
+        targetUser.organizationId !== undefined
+      );
     }
 
     return false;
@@ -228,11 +286,22 @@ const UserManagement = () => {
       setLoading(true);
       const { confirmPassword, ...userData } = values;
 
+      // Format the role to match the AdminRole enum
+      const formattedUserData = {
+        ...userData,
+        role: userData.role.toUpperCase(),
+        organizationId: user.organizationId,
+      };
+      console.log(formattedUserData);
+
       let response;
       if (editMode) {
-        response = await axios.put(`/api/users/${selectedUser.id}`, userData);
+        response = await axios.put(
+          `/api/users/${selectedUser.id}`,
+          formattedUserData
+        );
       } else {
-        response = await axios.post("/api/users", userData);
+        response = await axios.post("/api/users", formattedUserData);
       }
 
       if (response.data.success) {
@@ -298,19 +367,6 @@ const UserManagement = () => {
     }
     return Promise.resolve();
   };
-
-  // Add search and filter functionality
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesRole =
-      filterRole === "all" ||
-      user.role.toLowerCase() === filterRole.toLowerCase();
-
-    return matchesSearch && matchesRole;
-  });
 
   return (
     <div className="space-y-6">
@@ -417,11 +473,21 @@ const UserManagement = () => {
               rules={[{ required: true, message: "Please select user role!" }]}
             >
               <Select placeholder="Select user role">
-                <Option value="SUPER_ADMIN">Super Admin</Option>
-                <Option value="ADMIN">Admin</Option>
-                <Option value="HR">HR</Option>
-                <Option value="MANAGER">Manager</Option>
-                <Option value="EMPLOYEE">Employee</Option>
+                {user.role === "SUPER_ADMIN" ? (
+                  <>
+                    <Option value="SUPER_ADMIN">Super Admin</Option>
+                    <Option value="ORG_ADMIN">Organization Admin</Option>
+                    <Option value="HR">HR</Option>
+                    <Option value="MANAGER">Manager</Option>
+                    <Option value="EMPLOYEE">Employee</Option>
+                  </>
+                ) : user.role === "ORG_ADMIN" ? (
+                  <>
+                    <Option value="HR">HR</Option>
+                    <Option value="MANAGER">Manager</Option>
+                    <Option value="EMPLOYEE">Employee</Option>
+                  </>
+                ) : null}
               </Select>
             </Form.Item>
           </div>
@@ -571,11 +637,15 @@ const UserManagement = () => {
           onChange={(e) => setFilterRole(e.target.value)}
         >
           <option value="all">All Roles</option>
-          <option value="hr">HR</option>
-          <option value="super_admin">Super Admin</option>
-          <option value="admin">Admin</option>
-          <option value="manager">Manager</option>
-          <option value="employee">Employee</option>
+          {!isOrgAdmin && (
+            <>
+              <option value="SUPER_ADMIN">Super Admin</option>
+              <option value="ORG_ADMIN">Organization Admin</option>
+            </>
+          )}
+          <option value="HR">HR</option>
+          <option value="MANAGER">Manager</option>
+          <option value="EMPLOYEE">Employee</option>
         </select>
       </div>
 
@@ -586,6 +656,8 @@ const UserManagement = () => {
             <div className="flex justify-center items-center py-8">
               <Spin size="large" />
             </div>
+          ) : filteredUsers.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">No users found</div>
           ) : (
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -608,14 +680,14 @@ const UserManagement = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
+                {filteredUsers.map((targetUser) => (
+                  <tr key={targetUser.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10">
                           <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
                             <span className="text-indigo-600 font-medium">
-                              {user.name
+                              {targetUser.name
                                 .split(" ")
                                 .map((n) => n[0])
                                 .join("")}
@@ -624,10 +696,10 @@ const UserManagement = () => {
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900">
-                            {user.name}
+                            {targetUser.name}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {user.email}
+                            {targetUser.email}
                           </div>
                         </div>
                       </div>
@@ -635,45 +707,49 @@ const UserManagement = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          user.role === "SUPER_ADMIN"
+                          targetUser.role === "SUPER_ADMIN"
                             ? "bg-purple-100 text-purple-800"
-                            : user.role === "ADMIN"
+                            : targetUser.role === "ORG_ADMIN"
                             ? "bg-blue-100 text-blue-800"
-                            : "bg-green-100 text-green-800"
+                            : targetUser.role === "HR"
+                            ? "bg-green-100 text-green-800"
+                            : targetUser.role === "MANAGER"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-gray-100 text-gray-800"
                         }`}
                       >
-                        {user.role}
+                        {targetUser.role}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          user.isActive
+                          targetUser.isActive
                             ? "bg-green-100 text-green-800"
                             : "bg-red-100 text-red-800"
                         }`}
                       >
-                        {user.isActive ? "Active" : "Inactive"}
+                        {targetUser.isActive ? "Active" : "Inactive"}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.lastLogin
-                        ? new Date(user.lastLogin).toLocaleString()
+                      {targetUser.lastLogin
+                        ? new Date(targetUser.lastLogin).toLocaleString()
                         : "Never"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      {canEditUser(user) && (
+                      {canEditUser(targetUser) && (
                         <button
                           className="text-indigo-600 hover:text-indigo-900 mr-3"
-                          onClick={() => handleEdit(user)}
+                          onClick={() => handleEdit(targetUser)}
                         >
                           <FiEdit className="w-5 h-5" />
                         </button>
                       )}
-                      {canDeleteUser(user) && (
+                      {canDeleteUser(targetUser) && (
                         <button
                           className="text-red-600 hover:text-red-900"
-                          onClick={() => showDeleteModal(user)}
+                          onClick={() => showDeleteModal(targetUser)}
                         >
                           <FiTrash2 className="w-5 h-5" />
                         </button>

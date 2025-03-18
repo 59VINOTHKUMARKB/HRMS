@@ -67,7 +67,7 @@ export const createUser = async (req, res, next) => {
     }
 
     // Determine if creating admin or regular user
-    const isAdminRole = role === "SUPER_ADMIN" || role === "ADMIN";
+    const isAdminRole = role === "SUPER_ADMIN" || role === "ORG_ADMIN";
 
     try {
       const newUser = isAdminRole
@@ -156,7 +156,7 @@ export const deleteUserById = async (req, res, next) => {
 export const updateUserPasswordById = async (req, res, next) => {
   try {
     const { role } = req.body;
-    const isAdmin = role === "SUPER_ADMIN" || role === "ADMIN";
+    const isAdmin = role === "SUPER_ADMIN" || role === "ORG_ADMIN";
     const updatedUser = isAdmin
       ? await updateAdminPassword(req.params.id, req.body.password)
       : await updateUserPassword(req.params.id, req.body.password);

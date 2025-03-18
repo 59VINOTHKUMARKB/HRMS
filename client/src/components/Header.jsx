@@ -32,7 +32,7 @@ const Header = ({ user }) => {
             <div className="text-sm">
               <p className="font-semibold">{user?.name}</p>
               <p className="text-gray-500">
-                {user?.role === "ADMIN" || user?.role === "SUPER_ADMIN"
+                {user?.role === "ORG_ADMIN" || user?.role === "SUPER_ADMIN"
                   ? "Super Admin"
                   : user?.role}
               </p>

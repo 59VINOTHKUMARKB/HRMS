@@ -2,8 +2,8 @@ import bcrypt from "bcryptjs";
 import db from "../prisma/prisma.js";
 
 const VALID_ROLES = {
-  ADMIN: "ADMIN",
   SUPER_ADMIN: "SUPER_ADMIN",
+  ORG_ADMIN: "ORG_ADMIN",
   HR: "HR",
   MANAGER: "MANAGER",
   EMPLOYEE: "EMPLOYEE",
@@ -21,6 +21,12 @@ export const getAllUsers = async () => {
           role: true,
           isActive: true,
           lastLogin: true,
+          organizationId: true,
+          organization: {
+            select: {
+              name: true,
+            },
+          },
         },
       }),
       db.admin.findMany({
@@ -31,6 +37,12 @@ export const getAllUsers = async () => {
           role: true,
           isActive: true,
           lastLogin: true,
+          organizationId: true,
+          organization: {
+            select: {
+              name: true,
+            },
+          },
         },
       }),
     ]);
@@ -83,6 +95,7 @@ export const createNewUser = async (userData) => {
         name: userData.name,
         role: userData.role,
         isActive: userData.isActive ?? true,
+        organizationId: userData.organizationId,
       },
       select: {
         id: true,
@@ -91,6 +104,12 @@ export const createNewUser = async (userData) => {
         role: true,
         isActive: true,
         lastLogin: true,
+        organizationId: true,
+        organization: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
@@ -121,8 +140,8 @@ export const getAdminByEmail = async (email) => {
 export const createNewAdmin = async (adminData) => {
   try {
     if (
-      adminData.role !== VALID_ROLES.ADMIN &&
-      adminData.role !== VALID_ROLES.SUPER_ADMIN
+      adminData.role !== VALID_ROLES.SUPER_ADMIN &&
+      adminData.role !== VALID_ROLES.ORG_ADMIN
     ) {
       throw new Error("Invalid admin role");
     }

@@ -20,6 +20,7 @@ import DocumentsManagement from "./pages/documents/DocumentsManagement";
 import ComplianceManagement from "./pages/compliance/ComplianceManagement";
 import ExitManagement from "./pages/exit/ExitManagement";
 import DepartmentManagement from "./pages/admin/DepartmentManagement";
+import OrganizationManagement from "./pages/admin/OrganizationManagement";
 import OnboardingManagement from "./pages/onboarding/OnboardingManagement";
 import EmployeeLayout from "./components/layout/EmployeeLayout";
 import EmployeeDashboard from "./pages/employee/Dashboard";
@@ -123,6 +124,7 @@ const App = () => {
             <Route index element={<AdminDashboard />} />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="department" element={<DepartmentManagement />} />
+            <Route path="organizations" element={<OrganizationManagement />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="billing" element={<BillingManagement />} />
             <Route path="security" element={<SecurityManagement />} />

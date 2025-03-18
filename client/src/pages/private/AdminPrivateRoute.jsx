@@ -8,7 +8,10 @@ function AdminPrivateRoute() {
     return <Navigate to="/signin/admin" />;
   }
 
-  if (currentUser.role !== "SUPER_ADMIN" && currentUser.role !== "ADMIN") {
+  if (
+    currentUser.role !== "SUPER_ADMIN" &&
+    currentUser.role !== "ORG_ADMIN"
+  ) {
     return <Navigate to="/signin/admin" />;
   }
 
