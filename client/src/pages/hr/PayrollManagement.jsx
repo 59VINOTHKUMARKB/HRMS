@@ -1,50 +1,55 @@
-import { useState } from 'react';
-import { 
-  FiDollarSign, FiDownload, FiPrinter, FiMail, 
-  FiFilter, FiCalendar, FiPieChart, FiTrendingUp 
-} from 'react-icons/fi';
+import { useState } from "react";
+import {
+  FiDollarSign,
+  FiDownload,
+  FiPrinter,
+  FiMail,
+  FiFilter,
+  FiCalendar,
+  FiPieChart,
+  FiTrendingUp,
+} from "react-icons/fi";
 
 const PayrollManagement = () => {
-  const [activeTab, setActiveTab] = useState('payroll');
-  const [selectedMonth, setSelectedMonth] = useState('March 2024');
+  const [activeTab, setActiveTab] = useState("payroll");
+  const [selectedMonth, setSelectedMonth] = useState("March 2024");
 
   const payrollData = [
     {
       id: 1,
-      employee: 'John Doe',
-      employeeId: 'EMP001',
-      designation: 'Senior Developer',
+      employee: "John Doe",
+      employeeId: "EMP001",
+      designation: "Senior Developer",
       basicSalary: 75000,
       allowances: 15000,
       deductions: 8000,
       netSalary: 82000,
-      status: 'Paid',
+      status: "Paid",
     },
     {
       id: 2,
-      employee: 'Jane Smith',
-      employeeId: 'EMP002',
-      designation: 'Project Manager',
+      employee: "Jane Smith",
+      employeeId: "EMP002",
+      designation: "Project Manager",
       basicSalary: 85000,
       allowances: 20000,
       deductions: 10000,
       netSalary: 95000,
-      status: 'Pending',
+      status: "Pending",
     },
     // Add more payroll records
   ];
 
   const salaryComponents = [
-    { name: 'Basic Salary', percentage: '60%' },
-    { name: 'House Rent Allowance', percentage: '15%' },
-    { name: 'Medical Allowance', percentage: '10%' },
-    { name: 'Transport Allowance', percentage: '5%' },
-    { name: 'Performance Bonus', percentage: '10%' },
+    { name: "Basic Salary", percentage: "60%" },
+    { name: "House Rent Allowance", percentage: "15%" },
+    { name: "Medical Allowance", percentage: "10%" },
+    { name: "Transport Allowance", percentage: "5%" },
+    { name: "Performance Bonus", percentage: "10%" },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Payroll Management</h1>
         <div className="flex space-x-3">
@@ -60,10 +65,25 @@ const PayrollManagement = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { label: 'Total Payroll', value: '$285,500', icon: FiDollarSign, color: 'green' },
-          { label: 'Processed', value: '45/50', icon: FiPieChart, color: 'blue' },
-          { label: 'Pending', value: '5', icon: FiTrendingUp, color: 'yellow' },
-          { label: 'This Month', value: '+12.5%', icon: FiTrendingUp, color: 'purple' },
+          {
+            label: "Total Payroll",
+            value: "$285,500",
+            icon: FiDollarSign,
+            color: "green",
+          },
+          {
+            label: "Processed",
+            value: "45/50",
+            icon: FiPieChart,
+            color: "blue",
+          },
+          { label: "Pending", value: "5", icon: FiTrendingUp, color: "yellow" },
+          {
+            label: "This Month",
+            value: "+12.5%",
+            icon: FiTrendingUp,
+            color: "purple",
+          },
         ].map((stat, index) => (
           <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between">
@@ -83,29 +103,34 @@ const PayrollManagement = () => {
       <div className="bg-white rounded-lg shadow-sm">
         <div className="border-b">
           <div className="flex">
-            {['payroll', 'salary-structure', 'deductions', 'reports'].map((tab) => (
-              <button
-                key={tab}
-                className={`px-6 py-3 text-sm font-medium ${
-                  activeTab === tab
-                    ? 'border-b-2 border-blue-600 text-blue-600'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-              </button>
-            ))}
+            {["payroll", "salary-structure", "deductions", "reports"].map(
+              (tab) => (
+                <button
+                  key={tab}
+                  className={`px-6 py-3 text-sm font-medium ${
+                    activeTab === tab
+                      ? "border-b-2 border-blue-600 text-blue-600"
+                      : "text-gray-500 hover:text-gray-700"
+                  }`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab
+                    .split("-")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ")}
+                </button>
+              )
+            )}
           </div>
         </div>
 
         <div className="p-6">
-          {activeTab === 'payroll' && (
+          {activeTab === "payroll" && (
             <div>
               {/* Filters */}
               <div className="flex items-center space-x-4 mb-6">
                 <div className="relative">
-                  <select 
+                  <select
                     className="appearance-none bg-white border rounded-lg px-4 py-2 pr-8 focus:outline-none focus:border-blue-500"
                     value={selectedMonth}
                     onChange={(e) => setSelectedMonth(e.target.value)}
@@ -181,9 +206,9 @@ const PayrollManagement = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            record.status === 'Paid'
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-yellow-100 text-yellow-800'
+                            record.status === "Paid"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
                           }`}
                         >
                           {record.status}
@@ -204,16 +229,23 @@ const PayrollManagement = () => {
             </div>
           )}
 
-          {activeTab === 'salary-structure' && (
+          {activeTab === "salary-structure" && (
             <div>
-              <h3 className="text-lg font-medium mb-4">Salary Structure Components</h3>
+              <h3 className="text-lg font-medium mb-4">
+                Salary Structure Components
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-gray-50 p-6 rounded-lg">
                   <h4 className="font-medium mb-4">Earnings</h4>
                   {salaryComponents.map((component, index) => (
-                    <div key={index} className="flex justify-between items-center mb-3">
+                    <div
+                      key={index}
+                      className="flex justify-between items-center mb-3"
+                    >
                       <span className="text-gray-600">{component.name}</span>
-                      <span className="font-medium">{component.percentage}</span>
+                      <span className="font-medium">
+                        {component.percentage}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -238,13 +270,13 @@ const PayrollManagement = () => {
             </div>
           )}
 
-          {activeTab === 'deductions' && (
+          {activeTab === "deductions" && (
             <div className="text-gray-500 text-center py-8">
               Deductions management interface to be implemented
             </div>
           )}
 
-          {activeTab === 'reports' && (
+          {activeTab === "reports" && (
             <div className="text-gray-500 text-center py-8">
               Payroll reports and analytics to be implemented
             </div>
@@ -255,4 +287,4 @@ const PayrollManagement = () => {
   );
 };
 
-export default PayrollManagement; 
+export default PayrollManagement;

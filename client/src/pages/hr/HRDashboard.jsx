@@ -1,11 +1,11 @@
-import DashboardStats from '../../components/dashboard/DashboardStats';
-import { FiTrendingUp, FiClock, FiCalendar, FiUser } from 'react-icons/fi';
+import DashboardStats from "./DashboardStats";
+import { FiTrendingUp, FiClock, FiCalendar, FiUser } from "react-icons/fi";
 
-const Dashboard = () => {
+const HRDashBoard = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Dashboard Overview</h1>
+        <h1 className="text-2xl font-bold">HRDashBoard Overview</h1>
         <div className="flex space-x-3">
           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             Generate Report
@@ -23,21 +23,21 @@ const Dashboard = () => {
             {[
               {
                 icon: FiUser,
-                title: 'New Employee Onboarded',
-                description: 'John Doe joined as Software Developer',
-                time: '2 hours ago',
+                title: "New Employee Onboarded",
+                description: "John Doe joined as Software Developer",
+                time: "2 hours ago",
               },
               {
                 icon: FiClock,
-                title: 'Leave Request',
-                description: 'Sarah approved Mark\'s leave request',
-                time: '3 hours ago',
+                title: "Leave Request",
+                description: "Sarah approved Mark's leave request",
+                time: "3 hours ago",
               },
               {
                 icon: FiCalendar,
-                title: 'Upcoming Review',
-                description: 'Performance review scheduled for Team A',
-                time: '5 hours ago',
+                title: "Upcoming Review",
+                description: "Performance review scheduled for Team A",
+                time: "5 hours ago",
               },
             ].map((activity, index) => (
               <div key={index} className="flex items-start space-x-4">
@@ -46,7 +46,9 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <h3 className="font-medium">{activity.title}</h3>
-                  <p className="text-sm text-gray-600">{activity.description}</p>
+                  <p className="text-sm text-gray-600">
+                    {activity.description}
+                  </p>
                   <span className="text-xs text-gray-500">{activity.time}</span>
                 </div>
               </div>
@@ -59,10 +61,10 @@ const Dashboard = () => {
           <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
           <div className="grid grid-cols-2 gap-4">
             {[
-              { title: 'Add Employee', icon: FiUser },
-              { title: 'Process Payroll', icon: FiTrendingUp },
-              { title: 'Approve Leave', icon: FiCalendar },
-              { title: 'Schedule Interview', icon: FiClock },
+              { title: "Add Employee", icon: FiUser },
+              { title: "Process Payroll", icon: FiTrendingUp },
+              { title: "Approve Leave", icon: FiCalendar },
+              { title: "Schedule Interview", icon: FiClock },
             ].map((action, index) => (
               <button
                 key={index}
@@ -79,4 +81,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard; 
+export default HRDashBoard;

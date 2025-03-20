@@ -1,54 +1,62 @@
-import { useState } from 'react';
-import { 
-  FiTarget, FiTrendingUp, FiUsers, FiStar,
-  FiCheckCircle, FiEdit2, FiTrash2, FiPlusCircle,
-  FiBarChart2, FiAward, FiThumbsUp
-} from 'react-icons/fi';
+import { useState } from "react";
+import {
+  FiTarget,
+  FiTrendingUp,
+  FiUsers,
+  FiStar,
+  FiCheckCircle,
+  FiEdit2,
+  FiTrash2,
+  FiPlusCircle,
+  FiBarChart2,
+  FiAward,
+  FiThumbsUp,
+} from "react-icons/fi";
 
 const PerformanceManagement = () => {
-  const [activeTab, setActiveTab] = useState('goals');
-  const [selectedPeriod, setSelectedPeriod] = useState('2024-Q1');
+  const [activeTab, setActiveTab] = useState("goals");
+  const [selectedPeriod, setSelectedPeriod] = useState("2024-Q1");
 
   const employeeGoals = [
     {
       id: 1,
-      employee: 'John Doe',
-      title: 'Improve Code Quality',
-      description: 'Reduce bug rate by 30% through better testing',
-      category: 'Technical',
+      employee: "John Doe",
+      title: "Improve Code Quality",
+      description: "Reduce bug rate by 30% through better testing",
+      category: "Technical",
       progress: 75,
-      status: 'In Progress',
-      dueDate: '2024-03-31',
+      status: "In Progress",
+      dueDate: "2024-03-31",
     },
     {
       id: 2,
-      employee: 'Sarah Wilson',
-      title: 'Client Satisfaction',
-      description: 'Achieve 95% client satisfaction rate',
-      category: 'Customer Success',
+      employee: "Sarah Wilson",
+      title: "Client Satisfaction",
+      description: "Achieve 95% client satisfaction rate",
+      category: "Customer Success",
       progress: 85,
-      status: 'In Progress',
-      dueDate: '2024-03-31',
+      status: "In Progress",
+      dueDate: "2024-03-31",
     },
   ];
 
   const reviews = [
     {
       id: 1,
-      employee: 'John Doe',
-      reviewer: 'Mike Johnson',
-      type: '360 Feedback',
-      status: 'Completed',
-      submissionDate: '2024-03-15',
+      employee: "John Doe",
+      reviewer: "Mike Johnson",
+      type: "360 Feedback",
+      status: "Completed",
+      submissionDate: "2024-03-15",
       rating: 4.5,
     },
     {
       id: 2,
-      employee: 'Sarah Wilson',
-      reviewer: 'Emily Brown',
-      type: 'Quarterly Review',
-      status: 'Pending',
-      dueDate: '2024-03-25',
+      employee: "Sarah Wilson",
+      reviewer: "Emily Brown",
+      type: "Quarterly Review",
+      status: "Pending",
+      dueDate: "2024-03-25",
       rating: null,
     },
   ];
@@ -56,33 +64,32 @@ const PerformanceManagement = () => {
   const kpis = [
     {
       id: 1,
-      name: 'Project Delivery',
-      target: '90%',
-      current: '85%',
-      trend: 'up',
-      category: 'Efficiency',
+      name: "Project Delivery",
+      target: "90%",
+      current: "85%",
+      trend: "up",
+      category: "Efficiency",
     },
     {
       id: 2,
-      name: 'Customer Satisfaction',
-      target: '95%',
-      current: '92%',
-      trend: 'up',
-      category: 'Quality',
+      name: "Customer Satisfaction",
+      target: "95%",
+      current: "92%",
+      trend: "up",
+      category: "Quality",
     },
     {
       id: 3,
-      name: 'Code Quality',
-      target: '95%',
-      current: '88%',
-      trend: 'stable',
-      category: 'Technical',
+      name: "Code Quality",
+      target: "95%",
+      current: "88%",
+      trend: "stable",
+      category: "Technical",
     },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Performance Management</h1>
         <div className="flex space-x-3">
@@ -95,10 +102,30 @@ const PerformanceManagement = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { label: 'Average Performance', value: '87%', icon: FiBarChart2, color: 'blue' },
-          { label: 'Completed Reviews', value: '45', icon: FiCheckCircle, color: 'green' },
-          { label: 'Pending Reviews', value: '12', icon: FiStar, color: 'yellow' },
-          { label: 'Top Performers', value: '15', icon: FiAward, color: 'purple' },
+          {
+            label: "Average Performance",
+            value: "87%",
+            icon: FiBarChart2,
+            color: "blue",
+          },
+          {
+            label: "Completed Reviews",
+            value: "45",
+            icon: FiCheckCircle,
+            color: "green",
+          },
+          {
+            label: "Pending Reviews",
+            value: "12",
+            icon: FiStar,
+            color: "yellow",
+          },
+          {
+            label: "Top Performers",
+            value: "15",
+            icon: FiAward,
+            color: "purple",
+          },
         ].map((stat, index) => (
           <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between">
@@ -118,13 +145,13 @@ const PerformanceManagement = () => {
       <div className="bg-white rounded-lg shadow-sm">
         <div className="border-b">
           <div className="flex">
-            {['goals', 'reviews', 'kpis'].map((tab) => (
+            {["goals", "reviews", "kpis"].map((tab) => (
               <button
                 key={tab}
                 className={`px-6 py-3 text-sm font-medium ${
                   activeTab === tab
-                    ? 'border-b-2 border-blue-600 text-blue-600'
-                    : 'text-gray-500 hover:text-gray-700'
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -136,10 +163,10 @@ const PerformanceManagement = () => {
 
         <div className="p-6">
           {/* Goals Tab */}
-          {activeTab === 'goals' && (
+          {activeTab === "goals" && (
             <div>
               <div className="flex items-center justify-between mb-6">
-                <select 
+                <select
                   className="border rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
                   value={selectedPeriod}
                   onChange={(e) => setSelectedPeriod(e.target.value)}
@@ -196,7 +223,7 @@ const PerformanceManagement = () => {
           )}
 
           {/* Reviews Tab */}
-          {activeTab === 'reviews' && (
+          {activeTab === "reviews" && (
             <div>
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -236,11 +263,13 @@ const PerformanceManagement = () => {
                         {review.reviewer}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          review.status === 'Completed'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            review.status === "Completed"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
                           {review.status}
                         </span>
                       </td>
@@ -248,7 +277,9 @@ const PerformanceManagement = () => {
                         {review.rating ? (
                           <div className="flex items-center">
                             <FiStar className="w-5 h-5 text-yellow-400 mr-1" />
-                            <span className="text-sm text-gray-900">{review.rating}</span>
+                            <span className="text-sm text-gray-900">
+                              {review.rating}
+                            </span>
                           </div>
                         ) : (
                           <span className="text-sm text-gray-500">Pending</span>
@@ -267,7 +298,7 @@ const PerformanceManagement = () => {
           )}
 
           {/* KPIs Tab */}
-          {activeTab === 'kpis' && (
+          {activeTab === "kpis" && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {kpis.map((kpi) => (
                 <div key={kpi.id} className="bg-gray-50 rounded-lg p-6">
@@ -276,14 +307,22 @@ const PerformanceManagement = () => {
                       <h3 className="text-lg font-medium text-gray-900">
                         {kpi.name}
                       </h3>
-                      <p className="text-sm text-gray-500 mt-1">{kpi.category}</p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {kpi.category}
+                      </p>
                     </div>
-                    <div className={`p-2 rounded-full ${
-                      kpi.trend === 'up' ? 'bg-green-100' : 'bg-yellow-100'
-                    }`}>
-                      <FiTrendingUp className={`w-5 h-5 ${
-                        kpi.trend === 'up' ? 'text-green-600' : 'text-yellow-600'
-                      }`} />
+                    <div
+                      className={`p-2 rounded-full ${
+                        kpi.trend === "up" ? "bg-green-100" : "bg-yellow-100"
+                      }`}
+                    >
+                      <FiTrendingUp
+                        className={`w-5 h-5 ${
+                          kpi.trend === "up"
+                            ? "text-green-600"
+                            : "text-yellow-600"
+                        }`}
+                      />
                     </div>
                   </div>
                   <div className="mt-4">
@@ -312,4 +351,4 @@ const PerformanceManagement = () => {
   );
 };
 
-export default PerformanceManagement; 
+export default PerformanceManagement;

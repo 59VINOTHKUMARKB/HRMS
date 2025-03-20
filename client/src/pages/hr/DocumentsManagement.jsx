@@ -1,57 +1,63 @@
-import { useState } from 'react';
-import { 
-  FiFolder, FiFile, FiUpload, FiDownload,
-  FiSearch, FiEdit2, FiTrash2, FiShare2,
-  FiLock, FiClock
-} from 'react-icons/fi';
+import { useState } from "react";
+import {
+  FiFolder,
+  FiFile,
+  FiUpload,
+  FiDownload,
+  FiSearch,
+  FiEdit2,
+  FiTrash2,
+  FiShare2,
+  FiLock,
+  FiClock,
+} from "react-icons/fi";
 
 const DocumentsManagement = () => {
-  const [activeTab, setActiveTab] = useState('all');
-  const [selectedFolder, setSelectedFolder] = useState('All Documents');
+  const [activeTab, setActiveTab] = useState("all");
+  const [selectedFolder, setSelectedFolder] = useState("All Documents");
 
   const documents = [
     {
       id: 1,
-      name: 'Employee Handbook 2024',
-      type: 'PDF',
-      category: 'Policies',
-      size: '2.5 MB',
-      lastModified: '2024-03-15',
-      owner: 'HR Admin',
-      access: 'All Employees',
+      name: "Employee Handbook 2024",
+      type: "PDF",
+      category: "Policies",
+      size: "2.5 MB",
+      lastModified: "2024-03-15",
+      owner: "HR Admin",
+      access: "All Employees",
     },
     {
       id: 2,
-      name: 'Performance Review Template',
-      type: 'DOCX',
-      category: 'Templates',
-      size: '500 KB',
-      lastModified: '2024-03-10',
-      owner: 'HR Manager',
-      access: 'Managers',
+      name: "Performance Review Template",
+      type: "DOCX",
+      category: "Templates",
+      size: "500 KB",
+      lastModified: "2024-03-10",
+      owner: "HR Manager",
+      access: "Managers",
     },
     {
       id: 3,
-      name: 'Onboarding Checklist',
-      type: 'XLSX',
-      category: 'Forms',
-      size: '750 KB',
-      lastModified: '2024-03-18',
-      owner: 'HR Admin',
-      access: 'HR Team',
+      name: "Onboarding Checklist",
+      type: "XLSX",
+      category: "Forms",
+      size: "750 KB",
+      lastModified: "2024-03-18",
+      owner: "HR Admin",
+      access: "HR Team",
     },
   ];
 
   const folders = [
-    { name: 'Policies', count: 15 },
-    { name: 'Templates', count: 8 },
-    { name: 'Forms', count: 12 },
-    { name: 'Contracts', count: 25 },
+    { name: "Policies", count: 15 },
+    { name: "Templates", count: 8 },
+    { name: "Forms", count: 12 },
+    { name: "Contracts", count: 25 },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Document Management</h1>
         <div className="flex space-x-3">
@@ -67,10 +73,30 @@ const DocumentsManagement = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { label: 'Total Documents', value: '156', icon: FiFile, color: 'blue' },
-          { label: 'Total Storage', value: '2.5 GB', icon: FiFolder, color: 'green' },
-          { label: 'Recent Uploads', value: '12', icon: FiClock, color: 'yellow' },
-          { label: 'Shared Files', value: '45', icon: FiShare2, color: 'purple' },
+          {
+            label: "Total Documents",
+            value: "156",
+            icon: FiFile,
+            color: "blue",
+          },
+          {
+            label: "Total Storage",
+            value: "2.5 GB",
+            icon: FiFolder,
+            color: "green",
+          },
+          {
+            label: "Recent Uploads",
+            value: "12",
+            icon: FiClock,
+            color: "yellow",
+          },
+          {
+            label: "Shared Files",
+            value: "45",
+            icon: FiShare2,
+            color: "purple",
+          },
         ].map((stat, index) => (
           <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between">
@@ -90,13 +116,13 @@ const DocumentsManagement = () => {
       <div className="bg-white rounded-lg shadow-sm">
         <div className="border-b">
           <div className="flex">
-            {['all', 'shared', 'recent'].map((tab) => (
+            {["all", "shared", "recent"].map((tab) => (
               <button
                 key={tab}
                 className={`px-6 py-3 text-sm font-medium ${
                   activeTab === tab
-                    ? 'border-b-2 border-blue-600 text-blue-600'
-                    : 'text-gray-500 hover:text-gray-700'
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -113,11 +139,11 @@ const DocumentsManagement = () => {
               <div className="mb-4">
                 <button
                   className={`w-full text-left px-3 py-2 rounded-lg ${
-                    selectedFolder === 'All Documents'
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'hover:bg-gray-50'
+                    selectedFolder === "All Documents"
+                      ? "bg-blue-50 text-blue-600"
+                      : "hover:bg-gray-50"
                   }`}
-                  onClick={() => setSelectedFolder('All Documents')}
+                  onClick={() => setSelectedFolder("All Documents")}
                 >
                   <div className="flex items-center">
                     <FiFolder className="mr-2" />
@@ -130,8 +156,8 @@ const DocumentsManagement = () => {
                   key={folder.name}
                   className={`w-full text-left px-3 py-2 rounded-lg ${
                     selectedFolder === folder.name
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'hover:bg-gray-50'
+                      ? "bg-blue-50 text-blue-600"
+                      : "hover:bg-gray-50"
                   }`}
                   onClick={() => setSelectedFolder(folder.name)}
                 >
@@ -140,7 +166,9 @@ const DocumentsManagement = () => {
                       <FiFolder className="mr-2" />
                       <span>{folder.name}</span>
                     </div>
-                    <span className="text-sm text-gray-500">{folder.count}</span>
+                    <span className="text-sm text-gray-500">
+                      {folder.count}
+                    </span>
                   </div>
                 </button>
               ))}
@@ -240,4 +268,4 @@ const DocumentsManagement = () => {
   );
 };
 
-export default DocumentsManagement; 
+export default DocumentsManagement;

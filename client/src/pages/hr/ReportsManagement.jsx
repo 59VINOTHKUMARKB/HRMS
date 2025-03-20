@@ -1,75 +1,81 @@
-import { useState } from 'react';
-import { 
-  FiBarChart2, FiPieChart, FiTrendingUp, FiUsers,
-  FiDownload, FiFilter, FiCalendar, FiFileText,
-  FiPrinter, FiMail
-} from 'react-icons/fi';
+import { useState } from "react";
+import {
+  FiBarChart2,
+  FiPieChart,
+  FiTrendingUp,
+  FiUsers,
+  FiDownload,
+  FiFilter,
+  FiCalendar,
+  FiFileText,
+  FiPrinter,
+  FiMail,
+} from "react-icons/fi";
 
 const ReportsManagement = () => {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [selectedPeriod, setSelectedPeriod] = useState('This Month');
+  const [activeTab, setActiveTab] = useState("overview");
+  const [selectedPeriod, setSelectedPeriod] = useState("This Month");
 
   const reports = [
     {
       id: 1,
-      name: 'Monthly Attendance Report',
-      category: 'Attendance',
-      lastGenerated: '2024-03-20',
-      frequency: 'Monthly',
-      status: 'Generated',
+      name: "Monthly Attendance Report",
+      category: "Attendance",
+      lastGenerated: "2024-03-20",
+      frequency: "Monthly",
+      status: "Generated",
     },
     {
       id: 2,
-      name: 'Payroll Summary Q1 2024',
-      category: 'Payroll',
-      lastGenerated: '2024-03-15',
-      frequency: 'Quarterly',
-      status: 'Generated',
+      name: "Payroll Summary Q1 2024",
+      category: "Payroll",
+      lastGenerated: "2024-03-15",
+      frequency: "Quarterly",
+      status: "Generated",
     },
     {
       id: 3,
-      name: 'Employee Performance Review',
-      category: 'Performance',
-      lastGenerated: '2024-03-10',
-      frequency: 'Quarterly',
-      status: 'Pending',
+      name: "Employee Performance Review",
+      category: "Performance",
+      lastGenerated: "2024-03-10",
+      frequency: "Quarterly",
+      status: "Pending",
     },
   ];
 
   const metrics = [
     {
-      category: 'Workforce',
+      category: "Workforce",
       metrics: [
-        { name: 'Total Employees', value: '248', trend: '+5%' },
-        { name: 'Turnover Rate', value: '4.2%', trend: '-0.8%' },
-        { name: 'Average Tenure', value: '3.2 years', trend: '+0.3' },
-      ]
+        { name: "Total Employees", value: "248", trend: "+5%" },
+        { name: "Turnover Rate", value: "4.2%", trend: "-0.8%" },
+        { name: "Average Tenure", value: "3.2 years", trend: "+0.3" },
+      ],
     },
     {
-      category: 'Performance',
+      category: "Performance",
       metrics: [
-        { name: 'Average Rating', value: '4.2/5', trend: '+0.3' },
-        { name: 'Goals Completed', value: '85%', trend: '+5%' },
-        { name: 'Training Completion', value: '92%', trend: '+3%' },
-      ]
+        { name: "Average Rating", value: "4.2/5", trend: "+0.3" },
+        { name: "Goals Completed", value: "85%", trend: "+5%" },
+        { name: "Training Completion", value: "92%", trend: "+3%" },
+      ],
     },
     {
-      category: 'Attendance',
+      category: "Attendance",
       metrics: [
-        { name: 'Attendance Rate', value: '96%', trend: '+1%' },
-        { name: 'Leave Utilization', value: '45%', trend: '-2%' },
-        { name: 'Overtime Hours', value: '120hrs', trend: '-10%' },
-      ]
+        { name: "Attendance Rate", value: "96%", trend: "+1%" },
+        { name: "Leave Utilization", value: "45%", trend: "-2%" },
+        { name: "Overtime Hours", value: "120hrs", trend: "-10%" },
+      ],
     },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Reports & Analytics</h1>
         <div className="flex space-x-3">
-          <select 
+          <select
             className="border rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(e.target.value)}
@@ -88,10 +94,30 @@ const ReportsManagement = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { label: 'Total Reports', value: '24', icon: FiFileText, color: 'blue' },
-          { label: 'Generated This Month', value: '12', icon: FiBarChart2, color: 'green' },
-          { label: 'Scheduled Reports', value: '8', icon: FiCalendar, color: 'yellow' },
-          { label: 'Custom Reports', value: '15', icon: FiPieChart, color: 'purple' },
+          {
+            label: "Total Reports",
+            value: "24",
+            icon: FiFileText,
+            color: "blue",
+          },
+          {
+            label: "Generated This Month",
+            value: "12",
+            icon: FiBarChart2,
+            color: "green",
+          },
+          {
+            label: "Scheduled Reports",
+            value: "8",
+            icon: FiCalendar,
+            color: "yellow",
+          },
+          {
+            label: "Custom Reports",
+            value: "15",
+            icon: FiPieChart,
+            color: "purple",
+          },
         ].map((stat, index) => (
           <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between">
@@ -111,13 +137,13 @@ const ReportsManagement = () => {
       <div className="bg-white rounded-lg shadow-sm">
         <div className="border-b">
           <div className="flex">
-            {['overview', 'reports', 'metrics'].map((tab) => (
+            {["overview", "reports", "metrics"].map((tab) => (
               <button
                 key={tab}
                 className={`px-6 py-3 text-sm font-medium ${
                   activeTab === tab
-                    ? 'border-b-2 border-blue-600 text-blue-600'
-                    : 'text-gray-500 hover:text-gray-700'
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -129,7 +155,7 @@ const ReportsManagement = () => {
 
         <div className="p-6">
           {/* Overview Tab */}
-          {activeTab === 'overview' && (
+          {activeTab === "overview" && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {metrics.map((section, index) => (
                 <div key={index} className="bg-gray-50 rounded-lg p-6">
@@ -138,15 +164,24 @@ const ReportsManagement = () => {
                   </h3>
                   <div className="space-y-4">
                     {section.metrics.map((metric, idx) => (
-                      <div key={idx} className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">{metric.name}</span>
+                      <div
+                        key={idx}
+                        className="flex justify-between items-center"
+                      >
+                        <span className="text-sm text-gray-600">
+                          {metric.name}
+                        </span>
                         <div className="flex items-center">
-                          <span className="font-medium mr-2">{metric.value}</span>
-                          <span className={`text-xs ${
-                            metric.trend.startsWith('+') 
-                              ? 'text-green-600' 
-                              : 'text-red-600'
-                          }`}>
+                          <span className="font-medium mr-2">
+                            {metric.value}
+                          </span>
+                          <span
+                            className={`text-xs ${
+                              metric.trend.startsWith("+")
+                                ? "text-green-600"
+                                : "text-red-600"
+                            }`}
+                          >
                             {metric.trend}
                           </span>
                         </div>
@@ -159,7 +194,7 @@ const ReportsManagement = () => {
           )}
 
           {/* Reports Tab */}
-          {activeTab === 'reports' && (
+          {activeTab === "reports" && (
             <div>
               <div className="flex items-center space-x-4 mb-6">
                 <input
@@ -213,11 +248,13 @@ const ReportsManagement = () => {
                         {report.frequency}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          report.status === 'Generated'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            report.status === "Generated"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
                           {report.status}
                         </span>
                       </td>
@@ -240,7 +277,7 @@ const ReportsManagement = () => {
           )}
 
           {/* Metrics Tab */}
-          {activeTab === 'metrics' && (
+          {activeTab === "metrics" && (
             <div className="text-gray-500 text-center py-8">
               Detailed metrics and analytics dashboard to be implemented
             </div>
@@ -251,4 +288,4 @@ const ReportsManagement = () => {
   );
 };
 
-export default ReportsManagement; 
+export default ReportsManagement;

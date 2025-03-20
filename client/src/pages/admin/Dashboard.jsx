@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { useUser } from "../../components/layout/SuperAdminLayout";
 import {
-  FiUsers,
-  FiDollarSign,
-  FiUserPlus,
+  FiAlertCircle,
+  FiBarChart2,
   FiCalendar,
   FiCheckCircle,
   FiClock,
-  FiAlertCircle,
-  FiBarChart2,
+  FiDollarSign,
   FiTrendingUp,
+  FiUserPlus,
+  FiUsers,
 } from "react-icons/fi";
+import { useUser } from "../../components/Layout";
 
 const AdminDashboard = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("month");

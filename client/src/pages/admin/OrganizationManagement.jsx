@@ -1,14 +1,14 @@
-import { Button, Form, Input, Modal, Switch, notification, Table } from "antd";
-import { useState, useEffect } from "react";
+import { Button, Form, Input, Modal, notification, Switch, Table } from "antd";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import {
+  FiCheckCircle,
   FiEdit2,
   FiPlus,
   FiTrash2,
-  FiCheckCircle,
   FiXCircle,
 } from "react-icons/fi";
-import axios from "axios";
-import { useUser } from "../../components/layout/SuperAdminLayout";
+import { useUser } from "../../components/Layout";
 
 // Set default axios config
 axios.defaults.withCredentials = true;
@@ -275,7 +275,6 @@ const OrganizationManagement = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         {!isOrgAdmin ? (
           <h1 className="text-2xl font-bold">Organization Management</h1>

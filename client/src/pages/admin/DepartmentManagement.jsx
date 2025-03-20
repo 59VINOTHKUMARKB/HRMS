@@ -3,14 +3,14 @@ import {
   Form,
   Input,
   Modal,
-  Select,
-  Switch,
   notification,
+  Select,
   Spin,
+  Switch,
 } from "antd";
-import { useState, useEffect } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import {
-  FiChevronRight,
   FiEdit2,
   FiGitBranch,
   FiLayers,
@@ -19,8 +19,7 @@ import {
   FiTrash2,
   FiUsers,
 } from "react-icons/fi";
-import axios from "axios";
-import { useUser } from "../../components/layout/SuperAdminLayout";
+import { useUser } from "../../components/Layout";
 
 // Set default axios config
 axios.defaults.withCredentials = true;
@@ -270,7 +269,6 @@ const DepartmentManagement = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Department Management</h1>
         <Button

@@ -1,42 +1,50 @@
-import { useState } from 'react';
-import { 
-  FiShield, FiAlertCircle, FiCalendar, FiCheckCircle,
-  FiDownload, FiFile, FiClock, FiBell,
-  FiEdit2, FiTrash2, FiEye
-} from 'react-icons/fi';
+import { useState } from "react";
+import {
+  FiShield,
+  FiAlertCircle,
+  FiCalendar,
+  FiCheckCircle,
+  FiDownload,
+  FiFile,
+  FiClock,
+  FiBell,
+  FiEdit2,
+  FiTrash2,
+  FiEye,
+} from "react-icons/fi";
 
 const ComplianceManagement = () => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
 
   const complianceItems = [
     {
       id: 1,
-      title: 'Annual Labor Law Compliance',
-      category: 'Labor Laws',
-      dueDate: '2024-06-30',
-      status: 'In Progress',
-      priority: 'High',
-      assignedTo: 'HR Legal Team',
+      title: "Annual Labor Law Compliance",
+      category: "Labor Laws",
+      dueDate: "2024-06-30",
+      status: "In Progress",
+      priority: "High",
+      assignedTo: "HR Legal Team",
       progress: 65,
     },
     {
       id: 2,
-      title: 'Data Protection Audit',
-      category: 'Data Privacy',
-      dueDate: '2024-04-15',
-      status: 'Pending Review',
-      priority: 'Medium',
-      assignedTo: 'Compliance Officer',
+      title: "Data Protection Audit",
+      category: "Data Privacy",
+      dueDate: "2024-04-15",
+      status: "Pending Review",
+      priority: "Medium",
+      assignedTo: "Compliance Officer",
       progress: 80,
     },
     {
       id: 3,
-      title: 'Workplace Safety Assessment',
-      category: 'Safety',
-      dueDate: '2024-05-01',
-      status: 'Completed',
-      priority: 'High',
-      assignedTo: 'Safety Committee',
+      title: "Workplace Safety Assessment",
+      category: "Safety",
+      dueDate: "2024-05-01",
+      status: "Completed",
+      priority: "High",
+      assignedTo: "Safety Committee",
       progress: 100,
     },
   ];
@@ -44,21 +52,20 @@ const ComplianceManagement = () => {
   const upcomingDeadlines = [
     {
       id: 1,
-      title: 'Tax Compliance Report',
-      dueDate: '2024-03-31',
+      title: "Tax Compliance Report",
+      dueDate: "2024-03-31",
       daysLeft: 5,
     },
     {
       id: 2,
-      title: 'Employee Benefits Review',
-      dueDate: '2024-04-15',
+      title: "Employee Benefits Review",
+      dueDate: "2024-04-15",
       daysLeft: 20,
     },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Compliance Management</h1>
         <div className="flex space-x-3">
@@ -74,10 +81,25 @@ const ComplianceManagement = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { label: 'Total Tasks', value: '24', icon: FiShield, color: 'blue' },
-          { label: 'Pending Review', value: '8', icon: FiClock, color: 'yellow' },
-          { label: 'Completed', value: '12', icon: FiCheckCircle, color: 'green' },
-          { label: 'Upcoming Deadlines', value: '4', icon: FiBell, color: 'red' },
+          { label: "Total Tasks", value: "24", icon: FiShield, color: "blue" },
+          {
+            label: "Pending Review",
+            value: "8",
+            icon: FiClock,
+            color: "yellow",
+          },
+          {
+            label: "Completed",
+            value: "12",
+            icon: FiCheckCircle,
+            color: "green",
+          },
+          {
+            label: "Upcoming Deadlines",
+            value: "4",
+            icon: FiBell,
+            color: "red",
+          },
         ].map((stat, index) => (
           <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between">
@@ -97,13 +119,13 @@ const ComplianceManagement = () => {
       <div className="bg-white rounded-lg shadow-sm">
         <div className="border-b">
           <div className="flex">
-            {['overview', 'tasks', 'documents', 'audit'].map((tab) => (
+            {["overview", "tasks", "documents", "audit"].map((tab) => (
               <button
                 key={tab}
                 className={`px-6 py-3 text-sm font-medium ${
                   activeTab === tab
-                    ? 'border-b-2 border-blue-600 text-blue-600'
-                    : 'text-gray-500 hover:text-gray-700'
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -115,7 +137,7 @@ const ComplianceManagement = () => {
 
         <div className="p-6">
           {/* Overview Tab */}
-          {activeTab === 'overview' && (
+          {activeTab === "overview" && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Compliance Tasks */}
               <div className="lg:col-span-2 space-y-6">
@@ -124,18 +146,22 @@ const ComplianceManagement = () => {
                   <div key={item.id} className="border rounded-lg p-4">
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="font-medium text-gray-900">{item.title}</h3>
+                        <h3 className="font-medium text-gray-900">
+                          {item.title}
+                        </h3>
                         <p className="text-sm text-gray-500 mt-1">
                           {item.category} • Assigned to {item.assignedTo}
                         </p>
                       </div>
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        item.status === 'Completed'
-                          ? 'bg-green-100 text-green-800'
-                          : item.status === 'In Progress'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 text-xs rounded-full ${
+                          item.status === "Completed"
+                            ? "bg-green-100 text-green-800"
+                            : item.status === "In Progress"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
                         {item.status}
                       </span>
                     </div>
@@ -174,16 +200,25 @@ const ComplianceManagement = () => {
                 <h2 className="text-lg font-medium mb-4">Upcoming Deadlines</h2>
                 <div className="bg-gray-50 rounded-lg p-4 space-y-4">
                   {upcomingDeadlines.map((deadline) => (
-                    <div key={deadline.id} className="flex items-center justify-between">
+                    <div
+                      key={deadline.id}
+                      className="flex items-center justify-between"
+                    >
                       <div>
-                        <h4 className="font-medium text-gray-900">{deadline.title}</h4>
-                        <p className="text-sm text-gray-500">Due: {deadline.dueDate}</p>
+                        <h4 className="font-medium text-gray-900">
+                          {deadline.title}
+                        </h4>
+                        <p className="text-sm text-gray-500">
+                          Due: {deadline.dueDate}
+                        </p>
                       </div>
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        deadline.daysLeft <= 7
-                          ? 'bg-red-100 text-red-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 text-xs rounded-full ${
+                          deadline.daysLeft <= 7
+                            ? "bg-red-100 text-red-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
                         {deadline.daysLeft} days left
                       </span>
                     </div>
@@ -194,7 +229,7 @@ const ComplianceManagement = () => {
           )}
 
           {/* Tasks Tab */}
-          {activeTab === 'tasks' && (
+          {activeTab === "tasks" && (
             <div>
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -234,13 +269,15 @@ const ComplianceManagement = () => {
                         {item.dueDate}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          item.status === 'Completed'
-                            ? 'bg-green-100 text-green-800'
-                            : item.status === 'In Progress'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            item.status === "Completed"
+                              ? "bg-green-100 text-green-800"
+                              : item.status === "In Progress"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
                           {item.status}
                         </span>
                       </td>
@@ -263,12 +300,12 @@ const ComplianceManagement = () => {
           )}
 
           {/* Other tabs placeholders */}
-          {activeTab === 'documents' && (
+          {activeTab === "documents" && (
             <div className="text-center py-8 text-gray-500">
               Compliance documents management to be implemented
             </div>
           )}
-          {activeTab === 'audit' && (
+          {activeTab === "audit" && (
             <div className="text-center py-8 text-gray-500">
               Audit logs and reports to be implemented
             </div>
@@ -279,4 +316,4 @@ const ComplianceManagement = () => {
   );
 };
 
-export default ComplianceManagement; 
+export default ComplianceManagement;

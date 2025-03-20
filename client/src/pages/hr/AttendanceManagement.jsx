@@ -1,33 +1,40 @@
-import { useState } from 'react';
-import { 
-  FiCalendar, FiClock, FiCheckCircle, FiXCircle, 
-  FiUser, FiFilter, FiDownload, FiPlusCircle,
-  FiChevronLeft, FiChevronRight
-} from 'react-icons/fi';
+import { useState } from "react";
+import {
+  FiCalendar,
+  FiClock,
+  FiCheckCircle,
+  FiXCircle,
+  FiUser,
+  FiFilter,
+  FiDownload,
+  FiPlusCircle,
+  FiChevronLeft,
+  FiChevronRight,
+} from "react-icons/fi";
 
 const AttendanceManagement = () => {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [selectedMonth, setSelectedMonth] = useState('March 2024');
+  const [activeTab, setActiveTab] = useState("overview");
+  const [selectedMonth, setSelectedMonth] = useState("March 2024");
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const attendanceData = [
     {
       id: 1,
-      employee: 'John Doe',
-      checkIn: '09:00 AM',
-      checkOut: '06:00 PM',
-      status: 'Present',
-      totalHours: '9h 0m',
-      date: '2024-03-20',
+      employee: "John Doe",
+      checkIn: "09:00 AM",
+      checkOut: "06:00 PM",
+      status: "Present",
+      totalHours: "9h 0m",
+      date: "2024-03-20",
     },
     {
       id: 2,
-      employee: 'Jane Smith',
-      checkIn: '09:15 AM',
-      checkOut: '05:45 PM',
-      status: 'Late',
-      totalHours: '8h 30m',
-      date: '2024-03-20',
+      employee: "Jane Smith",
+      checkIn: "09:15 AM",
+      checkOut: "05:45 PM",
+      status: "Late",
+      totalHours: "8h 30m",
+      date: "2024-03-20",
     },
     // Add more attendance records
   ];
@@ -35,12 +42,12 @@ const AttendanceManagement = () => {
   const leaveRequests = [
     {
       id: 1,
-      employee: 'Sarah Johnson',
-      type: 'Annual Leave',
-      startDate: '2024-03-25',
-      endDate: '2024-03-28',
-      status: 'Pending',
-      reason: 'Family vacation',
+      employee: "Sarah Johnson",
+      type: "Annual Leave",
+      startDate: "2024-03-25",
+      endDate: "2024-03-28",
+      status: "Pending",
+      reason: "Family vacation",
     },
     // Add more leave requests
   ];
@@ -55,37 +62,42 @@ const AttendanceManagement = () => {
   };
 
   const formatDate = (date) => {
-    return new Intl.DateTimeFormat('en-US', { 
-      month: 'long', 
-      year: 'numeric' 
+    return new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      year: "numeric",
     }).format(date);
   };
 
   // Sample attendance data
   const attendanceDataSample = {
-    '2024-03-15': { status: 'present', timeIn: '09:00', timeOut: '17:30' },
-    '2024-03-16': { status: 'absent', reason: 'Sick Leave' },
-    '2024-03-17': { status: 'weekend' },
-    '2024-03-18': { status: 'present', timeIn: '08:45', timeOut: '17:15' },
+    "2024-03-15": { status: "present", timeIn: "09:00", timeOut: "17:30" },
+    "2024-03-16": { status: "absent", reason: "Sick Leave" },
+    "2024-03-17": { status: "weekend" },
+    "2024-03-18": { status: "present", timeIn: "08:45", timeOut: "17:15" },
     // Add more dates as needed
   };
 
   const getAttendanceStatus = (day) => {
-    const dateStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    return attendanceDataSample[dateStr] || { status: 'none' };
+    const dateStr = `${currentMonth.getFullYear()}-${String(
+      currentMonth.getMonth() + 1
+    ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    return attendanceDataSample[dateStr] || { status: "none" };
   };
 
   const nextMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
+    setCurrentMonth(
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
+    );
   };
 
   const prevMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
+    setCurrentMonth(
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
+    );
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Attendance Management</h1>
         <div className="flex space-x-3">
@@ -101,10 +113,20 @@ const AttendanceManagement = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { label: 'Present Today', value: '45', icon: FiCheckCircle, color: 'green' },
-          { label: 'On Leave', value: '5', icon: FiCalendar, color: 'yellow' },
-          { label: 'Late Arrivals', value: '3', icon: FiClock, color: 'red' },
-          { label: 'Pending Requests', value: '8', icon: FiUser, color: 'blue' },
+          {
+            label: "Present Today",
+            value: "45",
+            icon: FiCheckCircle,
+            color: "green",
+          },
+          { label: "On Leave", value: "5", icon: FiCalendar, color: "yellow" },
+          { label: "Late Arrivals", value: "3", icon: FiClock, color: "red" },
+          {
+            label: "Pending Requests",
+            value: "8",
+            icon: FiUser,
+            color: "blue",
+          },
         ].map((stat, index) => (
           <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between">
@@ -124,13 +146,13 @@ const AttendanceManagement = () => {
       <div className="bg-white rounded-lg shadow-sm">
         <div className="border-b">
           <div className="flex">
-            {['overview', 'calendar', 'reports'].map((tab) => (
+            {["overview", "calendar", "reports"].map((tab) => (
               <button
                 key={tab}
                 className={`px-6 py-3 text-sm font-medium ${
                   activeTab === tab
-                    ? 'border-b-2 border-blue-600 text-blue-600'
-                    : 'text-gray-500 hover:text-gray-700'
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -142,12 +164,12 @@ const AttendanceManagement = () => {
 
         {/* Tab Content */}
         <div className="p-6">
-          {activeTab === 'overview' && (
+          {activeTab === "overview" && (
             <div>
               {/* Filters */}
               <div className="flex items-center space-x-4 mb-6">
                 <div className="relative">
-                  <select 
+                  <select
                     className="appearance-none bg-white border rounded-lg px-4 py-2 pr-8 focus:outline-none focus:border-blue-500"
                     value={selectedMonth}
                     onChange={(e) => setSelectedMonth(e.target.value)}
@@ -214,9 +236,9 @@ const AttendanceManagement = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            record.status === 'Present'
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-yellow-100 text-yellow-800'
+                            record.status === "Present"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
                           }`}
                         >
                           {record.status}
@@ -232,7 +254,7 @@ const AttendanceManagement = () => {
             </div>
           )}
 
-          {activeTab === 'leave-requests' && (
+          {activeTab === "leave-requests" && (
             <div>
               {/* Leave Requests Table */}
               <table className="min-w-full divide-y divide-gray-200">
@@ -296,7 +318,7 @@ const AttendanceManagement = () => {
             </div>
           )}
 
-          {activeTab === 'calendar' && (
+          {activeTab === "calendar" && (
             <div>
               {/* Calendar Header */}
               <div className="flex items-center justify-between mb-6">
@@ -324,61 +346,70 @@ const AttendanceManagement = () => {
               {/* Calendar Grid */}
               <div className="grid grid-cols-7 gap-px bg-gray-200 rounded-lg overflow-hidden">
                 {/* Day Headers */}
-                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                  <div
-                    key={day}
-                    className="bg-gray-50 py-2 text-center text-sm font-medium text-gray-500"
-                  >
-                    {day}
-                  </div>
-                ))}
-
-                {/* Calendar Days */}
-                {Array.from({ length: getFirstDayOfMonth(currentMonth) }).map((_, index) => (
-                  <div key={`empty-${index}`} className="bg-white h-32" />
-                ))}
-
-                {Array.from({ length: getDaysInMonth(currentMonth) }).map((_, index) => {
-                  const day = index + 1;
-                  const attendance = getAttendanceStatus(day);
-                  
-                  return (
+                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                  (day) => (
                     <div
                       key={day}
-                      className="bg-white h-32 p-2 border-t border-l first:border-l-0"
+                      className="bg-gray-50 py-2 text-center text-sm font-medium text-gray-500"
                     >
-                      <div className="flex justify-between items-start">
-                        <span className="text-sm font-medium text-gray-700">
-                          {day}
-                        </span>
-                        {attendance.status !== 'none' && (
-                          <span className={`text-xs px-2 py-1 rounded-full ${
-                            attendance.status === 'present'
-                              ? 'bg-green-100 text-green-800'
-                              : attendance.status === 'absent'
-                              ? 'bg-red-100 text-red-800'
-                              : attendance.status === 'weekend'
-                              ? 'bg-gray-100 text-gray-800'
-                              : ''
-                          }`}>
-                            {attendance.status.charAt(0).toUpperCase() + attendance.status.slice(1)}
+                      {day}
+                    </div>
+                  )
+                )}
+
+                {/* Calendar Days */}
+                {Array.from({ length: getFirstDayOfMonth(currentMonth) }).map(
+                  (_, index) => (
+                    <div key={`empty-${index}`} className="bg-white h-32" />
+                  )
+                )}
+
+                {Array.from({ length: getDaysInMonth(currentMonth) }).map(
+                  (_, index) => {
+                    const day = index + 1;
+                    const attendance = getAttendanceStatus(day);
+
+                    return (
+                      <div
+                        key={day}
+                        className="bg-white h-32 p-2 border-t border-l first:border-l-0"
+                      >
+                        <div className="flex justify-between items-start">
+                          <span className="text-sm font-medium text-gray-700">
+                            {day}
                           </span>
+                          {attendance.status !== "none" && (
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full ${
+                                attendance.status === "present"
+                                  ? "bg-green-100 text-green-800"
+                                  : attendance.status === "absent"
+                                  ? "bg-red-100 text-red-800"
+                                  : attendance.status === "weekend"
+                                  ? "bg-gray-100 text-gray-800"
+                                  : ""
+                              }`}
+                            >
+                              {attendance.status.charAt(0).toUpperCase() +
+                                attendance.status.slice(1)}
+                            </span>
+                          )}
+                        </div>
+                        {attendance.status === "present" && (
+                          <div className="mt-2 text-xs text-gray-500">
+                            <div>In: {attendance.timeIn}</div>
+                            <div>Out: {attendance.timeOut}</div>
+                          </div>
+                        )}
+                        {attendance.status === "absent" && (
+                          <div className="mt-2 text-xs text-gray-500">
+                            {attendance.reason}
+                          </div>
                         )}
                       </div>
-                      {attendance.status === 'present' && (
-                        <div className="mt-2 text-xs text-gray-500">
-                          <div>In: {attendance.timeIn}</div>
-                          <div>Out: {attendance.timeOut}</div>
-                        </div>
-                      )}
-                      {attendance.status === 'absent' && (
-                        <div className="mt-2 text-xs text-gray-500">
-                          {attendance.reason}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                    );
+                  }
+                )}
               </div>
 
               {/* Legend */}
@@ -404,4 +435,4 @@ const AttendanceManagement = () => {
   );
 };
 
-export default AttendanceManagement; 
+export default AttendanceManagement;

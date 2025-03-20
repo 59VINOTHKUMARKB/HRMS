@@ -1,35 +1,44 @@
-import { useState } from 'react';
-import { 
-  FiUsers, FiUserPlus, FiCalendar, FiDownload, 
-  FiFilter, FiEdit2, FiTrash2, FiEye, FiCheckCircle,
-  FiXCircle, FiClock, FiBriefcase
-} from 'react-icons/fi';
+import { useState } from "react";
+import {
+  FiUsers,
+  FiUserPlus,
+  FiCalendar,
+  FiDownload,
+  FiFilter,
+  FiEdit2,
+  FiTrash2,
+  FiEye,
+  FiCheckCircle,
+  FiXCircle,
+  FiClock,
+  FiBriefcase,
+} from "react-icons/fi";
 
 const RecruitmentManagement = () => {
-  const [activeTab, setActiveTab] = useState('jobs');
-  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [activeTab, setActiveTab] = useState("jobs");
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
   const jobPostings = [
     {
       id: 1,
-      title: 'Senior Software Engineer',
-      department: 'Engineering',
-      location: 'New York',
-      type: 'Full-time',
-      experience: '5-7 years',
-      postedDate: '2024-03-15',
-      status: 'Active',
+      title: "Senior Software Engineer",
+      department: "Engineering",
+      location: "New York",
+      type: "Full-time",
+      experience: "5-7 years",
+      postedDate: "2024-03-15",
+      status: "Active",
       applicants: 24,
     },
     {
       id: 2,
-      title: 'Product Manager',
-      department: 'Product',
-      location: 'Remote',
-      type: 'Full-time',
-      experience: '4-6 years',
-      postedDate: '2024-03-18',
-      status: 'Active',
+      title: "Product Manager",
+      department: "Product",
+      location: "Remote",
+      type: "Full-time",
+      experience: "4-6 years",
+      postedDate: "2024-03-18",
+      status: "Active",
       applicants: 18,
     },
   ];
@@ -37,42 +46,41 @@ const RecruitmentManagement = () => {
   const applications = [
     {
       id: 1,
-      candidate: 'John Smith',
-      position: 'Senior Software Engineer',
-      appliedDate: '2024-03-16',
-      status: 'Shortlisted',
-      experience: '6 years',
-      email: 'john.smith@email.com',
-      phone: '+1 234-567-8900',
+      candidate: "John Smith",
+      position: "Senior Software Engineer",
+      appliedDate: "2024-03-16",
+      status: "Shortlisted",
+      experience: "6 years",
+      email: "john.smith@email.com",
+      phone: "+1 234-567-8900",
     },
     {
       id: 2,
-      candidate: 'Sarah Wilson',
-      position: 'Product Manager',
-      appliedDate: '2024-03-19',
-      status: 'In Review',
-      experience: '5 years',
-      email: 'sarah.w@email.com',
-      phone: '+1 234-567-8901',
+      candidate: "Sarah Wilson",
+      position: "Product Manager",
+      appliedDate: "2024-03-19",
+      status: "In Review",
+      experience: "5 years",
+      email: "sarah.w@email.com",
+      phone: "+1 234-567-8901",
     },
   ];
 
   const interviews = [
     {
       id: 1,
-      candidate: 'John Smith',
-      position: 'Senior Software Engineer',
-      date: '2024-03-25',
-      time: '10:00 AM',
-      type: 'Technical',
-      interviewer: 'Mike Johnson',
-      status: 'Scheduled',
+      candidate: "John Smith",
+      position: "Senior Software Engineer",
+      date: "2024-03-25",
+      time: "10:00 AM",
+      type: "Technical",
+      interviewer: "Mike Johnson",
+      status: "Scheduled",
     },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Recruitment Management</h1>
         <div className="flex space-x-3">
@@ -88,10 +96,30 @@ const RecruitmentManagement = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { label: 'Active Jobs', value: '12', icon: FiBriefcase, color: 'blue' },
-          { label: 'Total Applications', value: '156', icon: FiUsers, color: 'green' },
-          { label: 'Interviews Scheduled', value: '8', icon: FiCalendar, color: 'yellow' },
-          { label: 'Positions Filled', value: '3', icon: FiCheckCircle, color: 'purple' },
+          {
+            label: "Active Jobs",
+            value: "12",
+            icon: FiBriefcase,
+            color: "blue",
+          },
+          {
+            label: "Total Applications",
+            value: "156",
+            icon: FiUsers,
+            color: "green",
+          },
+          {
+            label: "Interviews Scheduled",
+            value: "8",
+            icon: FiCalendar,
+            color: "yellow",
+          },
+          {
+            label: "Positions Filled",
+            value: "3",
+            icon: FiCheckCircle,
+            color: "purple",
+          },
         ].map((stat, index) => (
           <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between">
@@ -111,13 +139,13 @@ const RecruitmentManagement = () => {
       <div className="bg-white rounded-lg shadow-sm">
         <div className="border-b">
           <div className="flex">
-            {['jobs', 'applications', 'interviews'].map((tab) => (
+            {["jobs", "applications", "interviews"].map((tab) => (
               <button
                 key={tab}
                 className={`px-6 py-3 text-sm font-medium ${
                   activeTab === tab
-                    ? 'border-b-2 border-blue-600 text-blue-600'
-                    : 'text-gray-500 hover:text-gray-700'
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -129,10 +157,10 @@ const RecruitmentManagement = () => {
 
         <div className="p-6">
           {/* Jobs Tab */}
-          {activeTab === 'jobs' && (
+          {activeTab === "jobs" && (
             <div>
               <div className="flex items-center space-x-4 mb-6">
-                <select 
+                <select
                   className="border rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
@@ -217,10 +245,10 @@ const RecruitmentManagement = () => {
           )}
 
           {/* Applications Tab */}
-          {activeTab === 'applications' && (
+          {activeTab === "applications" && (
             <div>
               <div className="flex items-center space-x-4 mb-6">
-                <select 
+                <select
                   className="border rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
@@ -278,11 +306,13 @@ const RecruitmentManagement = () => {
                         {application.appliedDate}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          application.status === 'Shortlisted'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            application.status === "Shortlisted"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
                           {application.status}
                         </span>
                       </td>
@@ -305,7 +335,7 @@ const RecruitmentManagement = () => {
           )}
 
           {/* Interviews Tab */}
-          {activeTab === 'interviews' && (
+          {activeTab === "interviews" && (
             <div>
               <div className="flex items-center space-x-4 mb-6">
                 <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
@@ -384,4 +414,4 @@ const RecruitmentManagement = () => {
   );
 };
 
-export default RecruitmentManagement; 
+export default RecruitmentManagement;

@@ -1,6 +1,7 @@
 import { Button, notification } from "antd";
 import axios from "axios";
 import { useState } from "react";
+import { FiLogOut } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signOutSuccess } from "../redux/user/userSlice";
@@ -45,8 +46,9 @@ const SignOutButton = () => {
       loading={loading}
       danger
       type="primary"
-      className="hover:bg-red-600"
+      className="hover:bg-red-600 w-full"
     >
+      <FiLogOut className="w-4 h-4 mr-2" />
       {loading ? "Signing Out..." : "Sign Out"}
     </Button>
   );
