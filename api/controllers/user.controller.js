@@ -112,6 +112,7 @@ export const createAdmin = async (req, res, next) => {
 // @route   PUT /api/users/:id
 // @access  Private
 export const updateUserById = async (req, res, next) => {
+  console.log(req.params.id);
   try {
     const updatedUser = await updateUser(req.params.id, req.body);
     if (!updatedUser) {
