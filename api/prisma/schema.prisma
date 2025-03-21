@@ -20,17 +20,32 @@ enum UserRole {
 }
 
 model Organization {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  id          String               @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  code        String       @unique
+  code        String               @unique
   description String?
   admins      Admin[]
-  users      User[]
+  users       User[]
   departments Department[]
-  isActive    Boolean      @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  settings    OrganizationSettings?
+  isActive    Boolean              @default(true)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
 }
+
+model OrganizationSettings {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String       @unique @db.ObjectId
+  general        Json         @default("{}")
+  email          Json         @default("{}")
+  security       Json         @default("{}")
+  leaveApproval  Json         @default("{}")
+  notifications  Json         @default("{}")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
 
 model Admin {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId

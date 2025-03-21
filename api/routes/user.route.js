@@ -8,6 +8,11 @@ import {
   updateUserPasswordById,
   deleteUserById,
 } from "../controllers/user.controller.js";
+import {
+  getEmployeeProfile,
+  getHRProfile,
+  getManagerProfile,
+} from "../actions/user.action.js";
 
 const router = express.Router();
 
@@ -45,5 +50,11 @@ router.delete("/:id", deleteUserById);
 // @desc    Update user password by ID
 // @access  Private
 router.put("/:id/password", updateUserPasswordById);
+
+router.get("/profile/hr/:id", getHRProfile);
+
+router.get("/profile/manager/:id", getManagerProfile);
+
+router.get("/profile/employee/:id", getEmployeeProfile);
 
 export default router;

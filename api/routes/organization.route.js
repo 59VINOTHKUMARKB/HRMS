@@ -9,6 +9,8 @@ import {
   assignOrganizationAdmin,
   addOrganizationUser,
   removeOrganizationUser,
+  setOrganizationSettings,
+  getOrganizationSettings,
 } from "../controllers/organization.controller.js";
 import { authorizeRoles } from "../middleware/role.middleware.js";
 import { verifyToken } from "../middleware/verifyUser.js";
@@ -85,6 +87,22 @@ router.delete(
   verifyToken,
   authorizeRoles(["SUPER_ADMIN", "ORG_ADMIN"]),
   removeOrganizationUser
+);
+
+// Saving Organization settings (Super Admin, Org Admin only)
+router.put(
+  "/:id/settings",
+  verifyToken,
+  authorizeRoles(["SUPER_ADMIN", "ORG_ADMIN"]),
+  setOrganizationSettings
+);
+
+// Fetch Organization settings (Super Admin, Org Admin only)
+router.get(
+  "/:id/settings",
+  verifyToken,
+  authorizeRoles(["SUPER_ADMIN", "ORG_ADMIN"]),
+  getOrganizationSettings
 );
 
 export default router;
