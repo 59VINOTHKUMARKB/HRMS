@@ -86,12 +86,14 @@ const UserManagement = () => {
       console.log("Checking organization match:", {
         targetOrgId: targetUser.organizationId,
         userOrgId: user.organizationId,
+        userRole: user.role,
       });
       return (
         matchesSearch &&
         matchesRole &&
         targetUser.organizationId === user.organizationId &&
-        targetUser.organizationId !== undefined
+        targetUser.organizationId !== undefined &&
+        targetUser.role != "ORG_ADMIN"
       );
     }
 
@@ -744,7 +746,7 @@ const UserManagement = () => {
                         >
                           <FiTrash2 className="w-5 h-5" />
                         </button>
-                      )}
+                      ) }
                     </td>
                   </tr>
                 ))}
