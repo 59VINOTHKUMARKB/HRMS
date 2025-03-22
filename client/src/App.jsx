@@ -62,11 +62,15 @@ import OnboardingManagement from "./pages/hr/OnboardingManagement";
 import RecruitmentManagement from "./pages/hr/RecruitmentManagement";
 import ReportsManagement from "./pages/hr/ReportsManagement";
 import TrainingManagement from "./pages/hr/TrainingManagement";
+import LeaveForm from "./components/Leave/LeaveForm";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Test Routes */}
+        <Route path="/test/leaveForm" element={<LeaveForm/>} />
+
         {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/signin/admin" element={<AdminSignIn />} />

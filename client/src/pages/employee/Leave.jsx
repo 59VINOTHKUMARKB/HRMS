@@ -7,10 +7,11 @@ import {
   FiPlus,
   FiFileText,
 } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeLeave = () => {
   const [activeTab, setActiveTab] = useState("overview");
-
+  const navigate = useNavigate();
   const leaveBalance = [
     { type: "Annual Leave", total: 21, used: 12, remaining: 9 },
     { type: "Sick Leave", total: 10, used: 3, remaining: 7 },
@@ -45,7 +46,10 @@ const EmployeeLeave = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Leave Management</h1>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
+        <button
+          onClick={() => navigate("/test/leaveForm")}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center"
+        >
           <FiPlus className="mr-2" /> Apply Leave
         </button>
       </div>
