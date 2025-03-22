@@ -1,26 +1,21 @@
-import React from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import React from "react";
 import {
-  FiUsers,
-  FiClock,
-  FiDollarSign,
-  FiBarChart2,
-  FiShield,
-  FiCheckCircle,
   FiArrowRight,
-  FiPlay,
-  FiGlobe,
-  FiAward,
-  FiStar,
-  FiTrendingUp,
-  FiSettings,
-  FiSmile,
-  FiMessageCircle,
+  FiCheckCircle,
   FiHeart,
+  FiPlay,
+  FiSettings,
+  FiShield,
+  FiStar,
 } from "react-icons/fi";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import SignOutButton from "../components/SignOutButton";
 
 const HomePage = () => {
+  const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser);
   return (
     <div className="min-h-screen">
       {/* Navbar */}
@@ -33,7 +28,9 @@ const HomePage = () => {
                   HR
                 </span>
               </div>
-              <span className="text-xl font-bold text-gray-800">by Nex-Gen</span>
+              <span className="text-xl font-bold text-gray-800">
+                by Nex-Gen
+              </span>
             </div>
             <div className="hidden md:flex items-center gap-8">
               <a
@@ -61,20 +58,26 @@ const HomePage = () => {
                 Pricing
               </a>
             </div>
-            <div className="flex items-center gap-4">
-              <Link
-                to="/signin/user"
-                className="text-blue-700 font-semibold hover:text-blue-800"
-              >
-                Sign In
-              </Link>
-              <Link
-                to="/signin/admin"
-                className="bg-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-800"
-              >
-                Get Started
-              </Link>
-            </div>
+            {currentUser ? (
+              <div className="flex items-center gap-4">
+                <SignOutButton />
+              </div>
+            ) : (
+              <div className="flex items-center gap-4">
+                <Link
+                  to="/signin/user"
+                  className="text-blue-700 font-semibold hover:text-blue-800"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signin/admin"
+                  className="bg-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-800"
+                >
+                  Get Started
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </nav>
@@ -88,7 +91,6 @@ const HomePage = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-          
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                 Empower Your <span className="text-blue-700">Workforce</span>{" "}
                 With Modern HR
@@ -132,9 +134,9 @@ const HomePage = () => {
             >
               <div className="relative z-10 bg-white rounded-2xl shadow-xl p-8">
                 <img
-                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"
+                  src="/hero.jpg"
                   alt="HR Dashboard"
-                  className="rounded-lg shadow-lg"
+                  className="rounded-lg h-full w-full shadow-lg"
                 />
                 <div className="absolute -bottom-6 -right-6 bg-blue-700 text-white p-4 rounded-xl">
                   <div className="text-2xl font-bold">4.9/5</div>
@@ -269,9 +271,9 @@ const HomePage = () => {
             >
               <div className="bg-white rounded-2xl shadow-xl p-8 relative z-10">
                 <img
-                  src="https://images.unsplash.com/photo-1531538606174-0f90ff5dce83?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1674&q=80"
+                  src="/hero.jpg"
                   alt="HR Features"
-                  className="rounded-lg"
+                  className="rounded-lg h-full w-full"
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-r from-purple-100 to-blue-100 rounded-2xl transform -rotate-6 -z-10"></div>

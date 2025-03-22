@@ -15,8 +15,8 @@ const EmployeeLeave = () => {
   const leaveBalance = [
     { type: "Annual Leave", total: 21, used: 12, remaining: 9 },
     { type: "Sick Leave", total: 10, used: 3, remaining: 7 },
-    { type: "Personal Leave", total: 5, used: 2, remaining: 3 },
-    { type: "Unpaid Leave", total: "-", used: 1, remaining: "-" },
+    { type: "Personal Leave", total: 6, used: 2, remaining: 3 },
+    { type: "Unpaid Leave", total: "No Limit", used: 1, remaining: "-" },
   ];
 
   const leaveRequests = [

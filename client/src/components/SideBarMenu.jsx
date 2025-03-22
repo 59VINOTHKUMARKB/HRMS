@@ -27,11 +27,11 @@ import {
   FiUser,
   FiUserCheck,
   FiUserPlus,
-  FiUsers
-} from 'react-icons/fi';
-import { Link, useLocation } from 'react-router-dom';
-import SignOutButton from './SignOutButton';
-const SideBarMenu = ({user}) => {
+  FiUsers,
+} from "react-icons/fi";
+import { Link, useLocation } from "react-router-dom";
+import SignOutButton from "./SignOutButton";
+const SideBarMenu = ({ user }) => {
   const location = useLocation();
   const allMenuItems = [
     {
@@ -52,6 +52,7 @@ const SideBarMenu = ({user}) => {
       label: "Departments",
       roles: ["SUPER_ADMIN", "ORG_ADMIN"],
     },
+
     {
       path: "/superadmin/users",
       icon: FiUsers,
@@ -112,7 +113,14 @@ const SideBarMenu = ({user}) => {
       label: "Maintenance",
       roles: ["SUPER_ADMIN"],
     },
+    {
+      path: "/superadmin/org-settings",
+      icon: FiLayers,
+      label: "Settings",
+      roles: ["ORG_ADMIN"],
+    },
 
+    
     {
       path: "/manager/dashboard",
       icon: FiHome,
@@ -175,21 +183,15 @@ const SideBarMenu = ({user}) => {
     },
 
     {
-      path: "/employee/dashboard",
-      icon: FiHome,
-      label: "Dashboard",
-      roles: ["EMPLOYEE"],
-    },
-    {
       path: "/employee/profile",
       icon: FiUser,
       label: "My Profile",
       roles: ["EMPLOYEE"],
     },
     {
-      path: "/employee/attendance",
-      icon: FiClock,
-      label: "Attendance",
+      path: "/employee/dashboard",
+      icon: FiHome,
+      label: "Dashboard",
       roles: ["EMPLOYEE"],
     },
     {
@@ -198,36 +200,43 @@ const SideBarMenu = ({user}) => {
       label: "Leave Management",
       roles: ["EMPLOYEE"],
     },
-    {
-      path: "/employee/payroll",
-      icon: FiDollarSign,
-      label: "Payroll",
-      roles: ["EMPLOYEE"],
-    },
-    {
-      path: "/employee/training",
-      icon: FiBook,
-      label: "Training",
-      roles: ["EMPLOYEE"],
-    },
-    {
-      path: "/employee/expenses",
-      icon: FiFileText,
-      label: "Expense Claims",
-      roles: ["EMPLOYEE"],
-    },
-    {
-      path: "/employee/announcements",
-      icon: FiBell,
-      label: "Announcements",
-      roles: ["EMPLOYEE"],
-    },
-    {
-      path: "/employee/support",
-      icon: FiHelpCircle,
-      label: "Support",
-      roles: ["EMPLOYEE"],
-    },
+    // {
+    //   path: "/employee/attendance",
+    //   icon: FiClock,
+    //   label: "Attendance",
+    //   roles: ["EMPLOYEE"],
+    // },
+
+    // {
+    //   path: "/employee/payroll",
+    //   icon: FiDollarSign,
+    //   label: "Payroll",
+    //   roles: ["EMPLOYEE"],
+    // },
+    // {
+    //   path: "/employee/training",
+    //   icon: FiBook,
+    //   label: "Training",
+    //   roles: ["EMPLOYEE"],
+    // },
+    // {
+    //   path: "/employee/expenses",
+    //   icon: FiFileText,
+    //   label: "Expense Claims",
+    //   roles: ["EMPLOYEE"],
+    // },
+    // {
+    //   path: "/employee/announcements",
+    //   icon: FiBell,
+    //   label: "Announcements",
+    //   roles: ["EMPLOYEE"],
+    // },
+    // {
+    //   path: "/employee/support",
+    //   icon: FiHelpCircle,
+    //   label: "Support",
+    //   roles: ["EMPLOYEE"],
+    // },
 
     { path: "/hr/dashboard", icon: FiHome, label: "Dashboard", roles: ["HR"] },
     { path: "/hr/employees", icon: FiUsers, label: "Employees", roles: ["HR"] },
@@ -300,11 +309,12 @@ const SideBarMenu = ({user}) => {
   );
 
   return (
-<aside className="bg-gray-900 text-gray-100 w-64 min-h-screen flex flex-col shadow-lg">
-      
+    <aside className="bg-gray-900 text-gray-100 w-64 min-h-screen flex flex-col shadow-lg">
       {/* Logo / Brand */}
       <div className="py-4 text-center border-b border-gray-700">
-        <h1 className="text-xl font-semibold text-blue-400">HRMS-NexGen</h1>
+        <a href="/">
+          <h1 className="text-xl font-semibold text-blue-400">HRMS-NexGen</h1>
+        </a>
       </div>
 
       {/* User Info Section */}
@@ -342,7 +352,7 @@ const SideBarMenu = ({user}) => {
 
       {/* Logout Button */}
       <div className="p-2 flex items-center justify-center">
-          <SignOutButton />
+        <SignOutButton />
       </div>
     </aside>
   );

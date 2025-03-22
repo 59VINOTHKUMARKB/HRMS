@@ -67,8 +67,6 @@ const DepartmentManagement = () => {
   console.log(departmentTree);
   const [users, setUsers] = useState([]);
 
-  const { user } = useUser();
-
   // Fetch departments
   const fetchDepartments = async () => {
     try {
@@ -475,7 +473,7 @@ const DepartmentManagement = () => {
           <Form.Item name="headId" label="Department Head">
             <Select placeholder="Select department head" allowClear>
               {users
-                .filter((u) => ["MANAGER", "HR"].includes(u.role))
+                .filter((u) => ["MANAGER", "HR", "EMPLOYEE"].includes(u.role))
                 .map((user) => (
                   <Option key={user.id} value={user.id}>
                     {user.name} ({user.role})

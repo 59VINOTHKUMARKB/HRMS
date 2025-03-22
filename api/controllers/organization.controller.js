@@ -6,6 +6,88 @@ import {
   updateOrganizationAction,
   deleteOrganizationAction,
 } from "../actions/organization.action.js";
+import db from "../prisma/prisma.js";
+
+// Set Settings for an organization if exit thenu  update it
+export const setOrganizationSettings = async (req, res) => {
+  try {
+    const { general, email, security, notifications, leaveApproval } = req.body;
+    const existingSettings = await db.organizationSettings.findUnique({
+      where: {
+        organizationId: req.params.id,
+      },
+    });
+
+    let response;
+    if (existingSettings) {
+      response = await db.organizationSettings.update({
+        where: {
+          organizationId: req.params.id,
+        },
+        data: {
+          general,
+          email,
+          security,
+          notifications,
+          leaveApproval,
+        },
+      });
+    } else {
+      response = await db.organizationSettings.create({
+        data: {
+          organizationId: req.params.id,
+          general,
+          email,
+          security,
+          notifications,
+          leaveApproval,
+        },
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Organization settings saved successfully",
+      data: response,
+    });
+  } catch (error) {
+    console.error("Error saving organization settings:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+// Get Settings for an organization
+export const getOrganizationSettings = async (req, res) => {
+  try {
+    const settings = await db.organizationSettings.findUnique({
+      where: {
+        organizationId: req.params.id,
+      },
+    });
+    if (!settings) {
+      return res.status(404).json({
+        success: false,
+        message: "Organization settings not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Organization settings retrieved successfully",
+      data: settings,
+    });
+  } catch (error) {
+    console.error("Error retrieving organization settings:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
 
 // Create a new organization
 export const createOrganization = async (req, res) => {

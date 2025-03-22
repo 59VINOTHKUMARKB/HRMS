@@ -62,6 +62,7 @@ import OnboardingManagement from "./pages/hr/OnboardingManagement";
 import RecruitmentManagement from "./pages/hr/RecruitmentManagement";
 import ReportsManagement from "./pages/hr/ReportsManagement";
 import TrainingManagement from "./pages/hr/TrainingManagement";
+import OrgSettings from "./pages/admin/OrgSettings";
 import LeaveForm from "./components/Leave/LeaveForm";
 
 const App = () => {
@@ -137,8 +138,9 @@ const App = () => {
             <Route index element={<AdminDashboard />} />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="department" element={<DepartmentManagement />} />
-            <Route path="organizations" element={<OrganizationManagement />} />
             <Route path="users" element={<UserManagement />} />
+            <Route path="organizations" element={<OrganizationManagement />} />
+            <Route path="org-settings" element={<OrgSettings />} />
             <Route path="billing" element={<BillingManagement />} />
             <Route path="security" element={<SecurityManagement />} />
             <Route path="database" element={<DatabaseManagement />} />

@@ -2,6 +2,7 @@
   "scripts": {
     "dev": "nodemon api/index.js",
     "start": "node api/index.js",
+    "con": "concurrently \"npm run dev\" \"npm run dev --prefix client\"",
     "build": "npm run prisma:generate && npm install && npm install --prefix client && npm run build --prefix client",
     "init-super-admin": "node api/scripts/initSuperAdmin.js",
     "prisma:generate": "prisma generate --schema=api/prisma/schema.prisma"
@@ -11,6 +12,7 @@
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "better-auth": "^1.1.16",
+    "concurrently": "^9.1.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
