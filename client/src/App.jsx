@@ -37,15 +37,15 @@ import ManagerTeams from "./pages/manager/Teams";
 import ManagerTraining from "./pages/manager/Training";
 
 // Employee Pages
-import EmployeeDashboard from "./pages/employee/Dashboard";
-import EmployeeAttendance from "./pages/employee/Attendance";
-import EmployeeLeave from "./pages/employee/Leave";
-import EmployeePayroll from "./pages/employee/Payroll";
-import EmployeeExpenses from "./pages/employee/Expenses";
-import EmployeeTraining from "./pages/employee/Training";
-import EmployeeProfile from "./pages/employee/Profile";
-import EmployeeSupport from "./pages/employee/Support";
-import EmployeeAnnouncements from "./pages/employee/Announcements";
+import EmployeeDashboard from "./pages/Employee/Dashboard";
+import EmployeeAttendance from "./pages/Employee/Attendance";
+import EmployeeLeave from "./pages/Employee/Leave";
+import EmployeePayroll from "./pages/Employee/Payroll";
+import EmployeeExpenses from "./pages/Employee/Expenses";
+import EmployeeTraining from "./pages/Employee/Training";
+import EmployeeProfile from "./pages/Employee/Profile";
+import EmployeeSupport from "./pages/Employee/Support";
+import EmployeeAnnouncements from "./pages/Employee/Announcements";
 
 // Other Management Pages
 
@@ -69,9 +69,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Test Routes */}
-        <Route path="/test/leaveForm" element={<LeaveForm/>} />
-
+        
         {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/signin/admin" element={<AdminSignIn />} />

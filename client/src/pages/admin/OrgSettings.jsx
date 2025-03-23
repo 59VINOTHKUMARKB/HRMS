@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
-  FiSettings,
+  notification,
+  Button,
+  Select,
+  Input,
+  InputNumber,
+  Checkbox,
+  Form,
+} from "antd";
+import {
   FiGlobe,
   FiMail,
   FiLock,
@@ -76,110 +84,96 @@ const SystemSettings = () => {
         `/api/organizations/${currentUser.organizationId}/settings`,
         settings
       );
-      console.log("Settings saved:", response.data);
-      alert("Settings saved successfully!");
+      notification.success({
+        message: "Settings Saved Successfully",
+        placement: "top",
+        duration: 3,
+      });
     } catch (error) {
       console.error("Error saving settings:", error);
-      alert("Failed to save settings. Please try again.");
+      notification.error({
+        message: "Failed to save settings",
+        placement: "top",
+        duration: 3,
+      });
     }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Organization Related Settings</h1>
-        <button
+        <h1 className="text-2xl font-bold">Organization Settings</h1>
+        <Button
           onClick={handleSaveSettings}
           className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center"
         >
           <FiSave className="mr-2" /> Save Changes
-        </button>
+        </Button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="bg-white rounded-lg shadow-sm p-2">
         <div className="flex items-center space-x-3 mb-4">
           <FiGlobe className="w-5 h-5 text-gray-500" />
           <h2 className="text-lg font-medium">Leave Settings</h2>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Leave Approval Flow
-          </label>
-          <select
-            value={settings.leaveApproval.leaveApprovalFlow}
-            onChange={(e) =>
-              handleSettingChange(
-                "leaveApproval",
-                "leaveApprovalFlow",
-                e.target.value
-              )
-            }
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
-          >
-            <option value="manager_to_hr">
-              Manager → HR (Two-step approval)
-            </option>
-            <option value="direct_to_hr">
-              Directly to HR (One-step approval)
-            </option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Annual Leave Quota (Days)
-          </label>
-          <input
-            type="number"
-            min="0"
-            value={settings.leaveApproval.annualLeaveQuota}
-            onChange={(e) =>
-              handleSettingChange(
-                "leaveApproval",
-                "annualLeaveQuota",
-                e.target.value
-              )
-            }
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
-          />
-        </div>
+        <Form layout="vertical">
+          <Form.Item label="Leave Approval Flow">
+            <Select
+              value={settings.leaveApproval.leaveApprovalFlow}
+              onChange={(value) =>
+                handleSettingChange("leaveApproval", "leaveApprovalFlow", value)
+              }
+            >
+              <Select.Option value="manager_to_hr">
+                Manager → HR (Two-step approval)
+              </Select.Option>
+              <Select.Option value="direct_to_hr">
+                Directly to HR (One-step approval)
+              </Select.Option>
+            </Select>
+          </Form.Item>
 
-        {/* Leave Carry Forward */}
-        <div className="mb-4 flex items-center">
-          <input
-            type="checkbox"
-            checked={settings.leaveApproval.leaveCarryForward}
-            onChange={(e) =>
-              handleSettingChange(
-                "leaveApproval",
-                "leaveCarryForward",
-                e.target.checked
-              )
-            }
-            className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-          />
-          <label className="ml-2 text-sm font-medium text-gray-700">
-            Allow Leave Carry Forward
-          </label>
-        </div>
+          <Form.Item label="Annual Leave Quota (Days)">
+            <InputNumber
+              min={0}
+              value={settings.leaveApproval.annualLeaveQuota}
+              onChange={(value) =>
+                handleSettingChange("leaveApproval", "annualLeaveQuota", value)
+              }
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
 
-        {/* Probation Period Restriction */}
-        <div className="mb-4 flex items-center">
-          <input
-            type="checkbox"
-            checked={settings.leaveApproval.probationRestriction}
-            onChange={(e) =>
-              handleSettingChange(
-                "leaveApproval",
-                "probationRestriction",
-                e.target.checked
-              )
-            }
-            className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-          />
-          <label className="ml-2 text-sm font-medium text-gray-700">
-            Restrict Leaves During Probation
-          </label>
-        </div>
+          <Form.Item>
+            <Checkbox
+              checked={settings.leaveApproval.leaveCarryForward}
+              onChange={(e) =>
+                handleSettingChange(
+                  "leaveApproval",
+                  "leaveCarryForward",
+                  e.target.checked
+                )
+              }
+            >
+              Allow Leave Carry Forward
+            </Checkbox>
+          </Form.Item>
+
+          <Form.Item>
+            <Checkbox
+              checked={settings.leaveApproval.probationRestriction}
+              onChange={(e) =>
+                handleSettingChange(
+                  "leaveApproval",
+                  "probationRestriction",
+                  e.target.checked
+                )
+              }
+            >
+              Restrict Leaves During Probation
+            </Checkbox>
+          </Form.Item>
+        </Form>
       </div>
 
       {/* General Settings */}
@@ -188,71 +182,60 @@ const SystemSettings = () => {
           <FiGlobe className="w-5 h-5 text-gray-500" />
           <h2 className="text-lg font-medium">General Settings</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Company Name
-            </label>
-            <input
-              type="text"
+        <Form
+          layout="vertical"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          <Form.Item label="Company Name">
+            <Input
               value={settings.general.companyName}
               onChange={(e) =>
                 handleSettingChange("general", "companyName", e.target.value)
               }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Timezone
-            </label>
-            <select
+          </Form.Item>
+
+          <Form.Item label="Timezone">
+            <Select
               value={settings.general.timezone}
-              onChange={(e) =>
-                handleSettingChange("general", "timezone", e.target.value)
+              onChange={(value) =>
+                handleSettingChange("general", "timezone", value)
               }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
             >
-              <option value="UTC+00:00">UTC+00:00</option>
-              <option value="UTC-05:00">UTC-05:00 (EST)</option>
-              <option value="UTC-08:00">UTC-08:00 (PST)</option>
-              <option value="UTC+01:00">UTC+01:00 (CET)</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Date Format
-            </label>
-            <select
+              <Select.Option value="UTC+00:00">UTC+00:00</Select.Option>
+              <Select.Option value="UTC-05:00">UTC-05:00 (EST)</Select.Option>
+              <Select.Option value="UTC-08:00">UTC-08:00 (PST)</Select.Option>
+              <Select.Option value="UTC+01:00">UTC+01:00 (CET)</Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item label="Date Format">
+            <Select
               value={settings.general.dateFormat}
-              onChange={(e) =>
-                handleSettingChange("general", "dateFormat", e.target.value)
+              onChange={(value) =>
+                handleSettingChange("general", "dateFormat", value)
               }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
             >
-              <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-              <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-              <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Language
-            </label>
-            <select
+              <Select.Option value="YYYY-MM-DD">YYYY-MM-DD</Select.Option>
+              <Select.Option value="MM/DD/YYYY">MM/DD/YYYY</Select.Option>
+              <Select.Option value="DD/MM/YYYY">DD/MM/YYYY</Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item label="Language">
+            <Select
               value={settings.general.language}
-              onChange={(e) =>
-                handleSettingChange("general", "language", e.target.value)
+              onChange={(value) =>
+                handleSettingChange("general", "language", value)
               }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
             >
-              <option value="English">English</option>
-              <option value="Spanish">Spanish</option>
-              <option value="French">French</option>
-              <option value="German">German</option>
-            </select>
-          </div>
-        </div>
+              <Select.Option value="English">English</Select.Option>
+              <Select.Option value="Spanish">Spanish</Select.Option>
+              <Select.Option value="French">French</Select.Option>
+              <Select.Option value="German">German</Select.Option>
+            </Select>
+          </Form.Item>
+        </Form>
       </div>
 
       {/* Email Settings */}
@@ -261,60 +244,55 @@ const SystemSettings = () => {
           <FiMail className="w-5 h-5 text-gray-500" />
           <h2 className="text-lg font-medium">Email Settings</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              SMTP Server
-            </label>
-            <input
-              type="text"
+        <Form
+          layout="vertical"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          <Form.Item label="SMTP Server">
+            <Input
               value={settings.email.smtpServer}
               onChange={(e) =>
                 handleSettingChange("email", "smtpServer", e.target.value)
               }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              SMTP Port
-            </label>
-            <input
-              type="text"
+          </Form.Item>
+
+          <Form.Item label="SMTP Port">
+            <Input
               value={settings.email.smtpPort}
               onChange={(e) =>
                 handleSettingChange("email", "smtpPort", e.target.value)
               }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              SMTP Username
-            </label>
-            <input
-              type="text"
+          </Form.Item>
+
+          <Form.Item label="SMTP Username">
+            <Input
               value={settings.email.smtpUsername}
               onChange={(e) =>
                 handleSettingChange("email", "smtpUsername", e.target.value)
               }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email From Name
-            </label>
-            <input
-              type="text"
+          </Form.Item>
+
+          <Form.Item label="SMTP Password">
+            <Input.Password
+              value={settings.email.smtpPassword}
+              onChange={(e) =>
+                handleSettingChange("email", "smtpPassword", e.target.value)
+              }
+            />
+          </Form.Item>
+
+          <Form.Item label="Email From Name">
+            <Input
               value={settings.email.emailFromName}
               onChange={(e) =>
                 handleSettingChange("email", "emailFromName", e.target.value)
               }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
             />
-          </div>
-        </div>
+          </Form.Item>
+        </Form>
         <div className="mt-4">
           <button className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 flex items-center">
             <FiRefreshCw className="mr-2" /> Test Email Configuration
@@ -328,83 +306,55 @@ const SystemSettings = () => {
           <FiLock className="w-5 h-5 text-gray-500" />
           <h2 className="text-lg font-medium">Security Settings</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Password Expiry (days)
-            </label>
-            <input
-              type="number"
+        <Form
+          layout="vertical"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          <Form.Item label="Password Expiry (days)">
+            <InputNumber
               value={settings.security.passwordExpiry}
-              onChange={(e) =>
-                handleSettingChange(
-                  "security",
-                  "passwordExpiry",
-                  e.target.value
-                )
+              onChange={(value) =>
+                handleSettingChange("security", "passwordExpiry", value)
               }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
+              style={{ width: "100%" }}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Session Timeout (minutes)
-            </label>
-            <input
-              type="number"
+          </Form.Item>
+
+          <Form.Item label="Session Timeout (minutes)">
+            <InputNumber
               value={settings.security.sessionTimeout}
-              onChange={(e) =>
-                handleSettingChange(
-                  "security",
-                  "sessionTimeout",
-                  e.target.value
-                )
+              onChange={(value) =>
+                handleSettingChange("security", "sessionTimeout", value)
               }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
+              style={{ width: "100%" }}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Max Login Attempts
-            </label>
-            <input
-              type="number"
+          </Form.Item>
+
+          <Form.Item label="Max Login Attempts">
+            <InputNumber
               value={settings.security.maxLoginAttempts}
+              onChange={(value) =>
+                handleSettingChange("security", "maxLoginAttempts", value)
+              }
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
+
+          <Form.Item label="Two-Factor Authentication">
+            <Checkbox
+              checked={settings.security.twoFactorAuth}
               onChange={(e) =>
                 handleSettingChange(
                   "security",
-                  "maxLoginAttempts",
-                  e.target.value
+                  "twoFactorAuth",
+                  e.target.checked
                 )
               }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Two-Factor Authentication
-            </label>
-            <div className="mt-2">
-              <label className="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  checked={settings.security.twoFactorAuth}
-                  onChange={(e) =>
-                    handleSettingChange(
-                      "security",
-                      "twoFactorAuth",
-                      e.target.checked
-                    )
-                  }
-                  className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <span className="ml-2 text-sm text-gray-600">
-                  Enable Two-Factor Authentication for all users
-                </span>
-              </label>
-            </div>
-          </div>
-        </div>
+            >
+              Enable Two-Factor Authentication for all users
+            </Checkbox>
+          </Form.Item>
+        </Form>
       </div>
 
       {/* Notification Settings */}
@@ -413,84 +363,67 @@ const SystemSettings = () => {
           <FiClock className="w-5 h-5 text-gray-500" />
           <h2 className="text-lg font-medium">Notification Settings</h2>
         </div>
-        <div className="space-y-4">
-          <div>
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={settings.notifications.emailNotifications}
-                onChange={(e) =>
-                  handleSettingChange(
-                    "notifications",
-                    "emailNotifications",
-                    e.target.checked
-                  )
-                }
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <span className="ml-2 text-sm text-gray-600">
-                Enable Email Notifications
-              </span>
-            </label>
-          </div>
-          <div>
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={settings.notifications.systemAlerts}
-                onChange={(e) =>
-                  handleSettingChange(
-                    "notifications",
-                    "systemAlerts",
-                    e.target.checked
-                  )
-                }
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <span className="ml-2 text-sm text-gray-600">
-                Enable System Alerts
-              </span>
-            </label>
-          </div>
-          <div>
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={settings.notifications.maintenanceAlerts}
-                onChange={(e) =>
-                  handleSettingChange(
-                    "notifications",
-                    "maintenanceAlerts",
-                    e.target.checked
-                  )
-                }
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <span className="ml-2 text-sm text-gray-600">
-                Enable Maintenance Alerts
-              </span>
-            </label>
-          </div>
-          <div>
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={settings.notifications.securityAlerts}
-                onChange={(e) =>
-                  handleSettingChange(
-                    "notifications",
-                    "securityAlerts",
-                    e.target.checked
-                  )
-                }
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <span className="ml-2 text-sm text-gray-600">
-                Enable Security Alerts
-              </span>
-            </label>
-          </div>
-        </div>
+        <Form layout="vertical" className="space-y-4">
+          <Form.Item>
+            <Checkbox
+              checked={settings.notifications.emailNotifications}
+              onChange={(e) =>
+                handleSettingChange(
+                  "notifications",
+                  "emailNotifications",
+                  e.target.checked
+                )
+              }
+            >
+              Enable Email Notifications
+            </Checkbox>
+          </Form.Item>
+
+          <Form.Item>
+            <Checkbox
+              checked={settings.notifications.systemAlerts}
+              onChange={(e) =>
+                handleSettingChange(
+                  "notifications",
+                  "systemAlerts",
+                  e.target.checked
+                )
+              }
+            >
+              Enable System Alerts
+            </Checkbox>
+          </Form.Item>
+
+          <Form.Item>
+            <Checkbox
+              checked={settings.notifications.maintenanceAlerts}
+              onChange={(e) =>
+                handleSettingChange(
+                  "notifications",
+                  "maintenanceAlerts",
+                  e.target.checked
+                )
+              }
+            >
+              Enable Maintenance Alerts
+            </Checkbox>
+          </Form.Item>
+
+          <Form.Item>
+            <Checkbox
+              checked={settings.notifications.securityAlerts}
+              onChange={(e) =>
+                handleSettingChange(
+                  "notifications",
+                  "securityAlerts",
+                  e.target.checked
+                )
+              }
+            >
+              Enable Security Alerts
+            </Checkbox>
+          </Form.Item>
+        </Form>
       </div>
     </div>
   );

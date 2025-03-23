@@ -18,22 +18,9 @@ const SignOutButton = () => {
 
       if (response.data.success) {
         dispatch(signOutSuccess());
-        notification.success({
-          message: "Sign Out Successful",
-          description: "You have been successfully signed out.",
-          placement: "bottomRight",
-        });
         navigate("/");
       }
     } catch (error) {
-      notification.error({
-        message: "Sign Out Failed",
-        description:
-          error.response?.data?.message ||
-          "Something went wrong during sign out.",
-        placement: "bottomRight",
-      });
-
       console.error("Sign out error:", error);
     } finally {
       setLoading(false);

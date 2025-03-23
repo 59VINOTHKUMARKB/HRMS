@@ -28,6 +28,7 @@ model Organization {
   users       User[]
   departments Department[]
   settings    OrganizationSettings?
+  leaveRequests LeaveRequest[]
   isActive    Boolean              @default(true)
   createdAt   DateTime             @default(now())
   updatedAt   DateTime             @updatedAt
@@ -79,6 +80,8 @@ model User {
   updatedAt     DateTime    @updatedAt
   organization Organization? @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   organizationId String?     @db.ObjectId
+  leaveRequests LeaveRequest[]
+  leaveApprovals LeaveApproval[]
 }
 
 model Department {
@@ -99,6 +102,61 @@ model Department {
   organization  Organization? @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   organizationId String?      @db.ObjectId
   @@unique([name, parentId])
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+model LeaveApproval {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  leaveRequest   LeaveRequest  @relation(fields: [leaveRequestId], references: [id], onDelete: Cascade)
+  leaveRequestId String        @db.ObjectId
+
+  approver       User?         @relation(fields: [approverId], references: [id], onDelete: SetNull)
+  approverId     String?       @db.ObjectId
+
+  role           String        // "MANAGER" or "HR"
+  status         ApprovalStatus @default(PENDING)
+  comments       String?
+  approvedAt     DateTime?
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model LeaveRequest {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String       @db.ObjectId
+
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String       @db.ObjectId
+
+  leaveType      String      
+  startDate      DateTime
+  endDate        DateTime
+  totalDays      Int
+  reason         String?
+
+  status         LeaveStatus  @default(PENDING)
+  approvals      LeaveApproval[]
+
+  comments       String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId])
+  @@index([userId])
 }
 
 model MaintenanceMode {
