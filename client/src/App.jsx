@@ -37,7 +37,6 @@ import ManagerTeams from "./pages/manager/Teams";
 import ManagerTraining from "./pages/manager/Training";
 
 // Employee Pages
-import EmployeeDashboard from "./pages/Employee/Dashboard";
 import EmployeeAttendance from "./pages/Employee/Attendance";
 import EmployeeLeave from "./pages/Employee/Leave";
 import EmployeePayroll from "./pages/Employee/Payroll";
@@ -68,7 +67,6 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        
         {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/signin/admin" element={<AdminSignIn />} />
