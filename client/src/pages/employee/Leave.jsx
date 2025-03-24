@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import {
@@ -13,6 +13,7 @@ import {
 import axios from "axios";
 import dayjs from "dayjs";
 import { useUser } from "../../components/Layout";
+import { LeaveStatus } from "@prisma/client";
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -23,47 +24,46 @@ const EmployeeLeave = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
+  const [leaveRequests, setLeaveRequests] = useState([]);
+  const [leaveBalance, setLeaveBalance] = useState([]);
+
+  useEffect(() => {
+    const fetchLeaves = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`/api/leave/user/${user.id}`);
+        console.log(response.data);
+        if (response.data.success) {
+          setLeaveRequests(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching leave requests:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchLeaveBalance = async () => {
+      try {
+        const response = await axios.get(`/api/leave/balance/${user.id}`);
+        if (response.data.success) {
+          setLeaveBalance(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching leave balance:", error);
+      }
+    };
+    fetchLeaveBalance();
+    fetchLeaves();
+  }, [user.id]);
 
   const [showLeaveModal, setShowLeaveModal] = useState(false);
-  const navigate = useNavigate();
-  const leaveBalance = [
-    { type: "Annual Leave", total: 21, used: 12, remaining: 9 },
-    { type: "Sick Leave", total: 10, used: 3, remaining: 7 },
-    { type: "Personal Leave", total: 6, used: 2, remaining: 3 },
-    { type: "Unpaid Leave", total: "No Limit", used: 1, remaining: "-" },
-  ];
-
-  const leaveRequests = [
-    {
-      id: 1,
-      type: "Annual Leave",
-      startDate: "2024-04-01",
-      endDate: "2024-04-05",
-      days: 5,
-      reason: "Family vacation",
-      status: "Pending",
-      appliedOn: "2024-03-15",
-    },
-    {
-      id: 2,
-      type: "Sick Leave",
-      startDate: "2024-03-10",
-      endDate: "2024-03-11",
-      days: 2,
-      reason: "Medical appointment",
-      status: "Approved",
-      appliedOn: "2024-03-08",
-    },
-  ];
 
   const leaveTypes = [
     { value: "ANNUAL", label: "Annual Leave" },
     { value: "SICK", label: "Sick Leave" },
-    { value: "MATERNITY", label: "Maternity Leave" },
-    { value: "PATERNITY", label: "Paternity Leave" },
-    { value: "BEREAVEMENT", label: "Bereavement Leave" },
+    { value: "PERSONAL", label: "Personal Leave" },
     { value: "UNPAID", label: "Unpaid Leave" },
-    { value: "OTHER", label: "Other" },
   ];
 
   const handleSubmit = async (values) => {
@@ -72,16 +72,19 @@ const EmployeeLeave = () => {
       const [startDate, endDate] = values.dateRange;
 
       const leaveData = {
-        employeeId: user.id,
+        organizationId: user.organizationId,
+        userId: user.id,
         leaveType: values.leaveType,
         startDate: startDate.format("YYYY-MM-DD"),
         endDate: endDate.format("YYYY-MM-DD"),
+        totalDays: endDate.diff(startDate, "days") + 1,
         reason: values.reason,
-        status: "PENDING",
-        organizationId: user.organizationId,
+        status: LeaveStatus.PENDING,
       };
 
-      const response = await axios.post("/api/leaves", leaveData);
+      const response = await axios.post("/api/leave", leaveData, {
+        headers: { "Content-Type": "application/json" },
+      });
 
       if (response.data.success) {
         notification.success({
@@ -102,6 +105,7 @@ const EmployeeLeave = () => {
       });
     } finally {
       setLoading(false);
+      setShowLeaveModal(false);
     }
   };
 
@@ -176,19 +180,20 @@ const EmployeeLeave = () => {
               {leaveRequests.map((request) => (
                 <tr key={request.id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {request.type}
+                    {request.leaveType}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {request.startDate} to {request.endDate}
+                    {new Date(request.startDate).toLocaleDateString()} to{" "}
+                    {new Date(request.endDate).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {request.days}
+                    {request.totalDays}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {request.reason}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {request.appliedOn}
+                    {new Date(request.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span

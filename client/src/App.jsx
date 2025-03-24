@@ -63,7 +63,6 @@ import RecruitmentManagement from "./pages/hr/RecruitmentManagement";
 import ReportsManagement from "./pages/hr/ReportsManagement";
 import TrainingManagement from "./pages/hr/TrainingManagement";
 import OrgSettings from "./pages/admin/OrgSettings";
-import LeaveForm from "./components/Leave/LeaveForm";
 
 const App = () => {
   return (

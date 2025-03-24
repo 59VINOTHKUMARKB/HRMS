@@ -9,6 +9,7 @@ import userRoutes from "./routes/user.route.js";
 import departmentRoutes from "./routes/department.route.js";
 import dbRoutes from "./routes/db.route.js";
 import organizationRoutes from "./routes/organization.route.js";
+import leaveRoutes from "./routes/leave.route.js";
 dotenv.config();
 
 mongoose
@@ -27,7 +28,7 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:5173",
-    credentials: true, 
+    credentials: true,
   })
 );
 
@@ -38,6 +39,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api/organizations", organizationRoutes);
+app.use("/api/leave", leaveRoutes);
 app.use("/api/db", dbRoutes);
 
 app.use(express.static(path.join(__dirname, "client", "dist")));
