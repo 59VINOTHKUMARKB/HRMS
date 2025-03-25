@@ -10,6 +10,7 @@ import {
   getUserByEmail,
   getAdminByEmail,
 } from "../actions/user.action.js";
+import db from "../prisma/prisma.js";
 
 // @desc    Get all users
 // @route   GET /api/users
@@ -52,6 +53,7 @@ export const getUserById = async (req, res, next) => {
 // @route   POST /api/users
 // @access  Private (Admin only)
 export const createUser = async (req, res, next) => {
+  console.log("CREATING USER",req.body);
   try {
     const { email, role } = req.body;
 
@@ -170,6 +172,27 @@ export const updateUserPasswordById = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get employees
+// @route   GET /api/users/getEmployees
+// @access  Private (Admin only)
+export const getEmployees = async (req, res, next) => {
+  const { role } = req.query;
+  console.log("ROLE", role);
+  try {
+    const employees = await db.user.findMany({
+      where:{
+        role: role,
+      }
+    });
+    res.status(200).json({
+      success: true,
+      data: employees,
     });
   } catch (error) {
     next(error);

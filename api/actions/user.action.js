@@ -97,6 +97,9 @@ export const createNewUser = async (userData) => {
         role: userData.role,
         isActive: userData.isActive ?? true,
         organizationId: userData.organizationId,
+        managerAssignedId: userData.managerAssignedId,
+        hrAssignedId: userData.hrAssignedId,
+        
       },
       select: {
         id: true,

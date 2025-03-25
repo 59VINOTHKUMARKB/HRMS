@@ -7,6 +7,7 @@ import {
   updateUserById,
   updateUserPasswordById,
   deleteUserById,
+  getEmployees,
 } from "../controllers/user.controller.js";
 import {
   getEmployeeProfile,
@@ -21,10 +22,11 @@ const router = express.Router();
 // @access  Private (Admin only)
 router.get("/", getUsers);
 
+
 // @route   GET /api/users/:id
 // @desc    Get user by ID
 // @access  Private
-router.get("/:id", getUserById);
+router.get("/getUserById/:id", getUserById);
 
 // @route   POST /api/users
 // @desc    Create a new user
@@ -56,5 +58,9 @@ router.get("/profile/hr/:id", getHRProfile);
 router.get("/profile/manager/:id", getManagerProfile);
 
 router.get("/profile/employee/:id", getEmployeeProfile);
+
+
+router.get("/getEmployees", getEmployees);
+
 
 export default router;

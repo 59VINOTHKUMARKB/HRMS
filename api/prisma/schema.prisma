@@ -82,6 +82,15 @@ model User {
   organizationId String?     @db.ObjectId
   leaveRequests LeaveRequest[]
   leaveApprovals LeaveApproval[]
+
+  hrAssigned     User?       @relation("UserHR", fields: [hrAssignedId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  hrAssignedId   String?     @db.ObjectId
+  employeesUnderHR User[]    @relation("UserHR")
+
+  managerAssigned     User?       @relation("UserManager", fields: [managerAssignedId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  managerAssignedId   String?     @db.ObjectId
+  employeesUnderManager User[]    @relation("UserManager")
+
 }
 
 model Department {
