@@ -34,12 +34,12 @@ import SignOutButton from "./SignOutButton";
 const SideBarMenu = ({ user }) => {
   const location = useLocation();
   const allMenuItems = [
-    {
-      path: "/superadmin/dashboard",
-      icon: FiHome,
-      label: "Dashboard",
-      roles: ["SUPER_ADMIN", "ORG_ADMIN"],
-    },
+    // {
+    //   path: "/superadmin/dashboard",
+    //   icon: FiHome,
+    //   label: "Dashboard",
+    //   roles: ["SUPER_ADMIN", "ORG_ADMIN"],
+    // },
     {
       path: "/superadmin/organizations",
       icon: FiLayers,
@@ -65,54 +65,54 @@ const SideBarMenu = ({ user }) => {
       label: "Database Management",
       roles: ["SUPER_ADMIN"],
     },
-    {
-      path: "/superadmin/billing",
-      icon: FiDollarSign,
-      label: "Billing & Plans",
-      roles: ["SUPER_ADMIN"],
-    },
-    {
-      path: "/superadmin/security",
-      icon: FiShield,
-      label: "Security Settings",
-      roles: ["SUPER_ADMIN"],
-    },
-    {
-      path: "/superadmin/analytics",
-      icon: FiTrendingUp,
-      label: "Analytics",
-      roles: ["SUPER_ADMIN"],
-    },
-    {
-      path: "/superadmin/integrations",
-      icon: FiGlobe,
-      label: "Integrations",
-      roles: ["SUPER_ADMIN"],
-    },
-    {
-      path: "/superadmin/audit",
-      icon: FiFileText,
-      label: "Audit Logs",
-      roles: ["SUPER_ADMIN"],
-    },
-    {
-      path: "/superadmin/alerts",
-      icon: FiAlertCircle,
-      label: "System Alerts",
-      roles: ["SUPER_ADMIN"],
-    },
+    // {
+    //   path: "/superadmin/billing",
+    //   icon: FiDollarSign,
+    //   label: "Billing & Plans",
+    //   roles: ["SUPER_ADMIN"],
+    // },
+    // {
+    //   path: "/superadmin/security",
+    //   icon: FiShield,
+    //   label: "Security Settings",
+    //   roles: ["SUPER_ADMIN"],
+    // },
+    // {
+    //   path: "/superadmin/analytics",
+    //   icon: FiTrendingUp,
+    //   label: "Analytics",
+    //   roles: ["SUPER_ADMIN"],
+    // },
+    // {
+    //   path: "/superadmin/integrations",
+    //   icon: FiGlobe,
+    //   label: "Integrations",
+    //   roles: ["SUPER_ADMIN"],
+    // },
+    // {
+    //   path: "/superadmin/audit",
+    //   icon: FiFileText,
+    //   label: "Audit Logs",
+    //   roles: ["SUPER_ADMIN"],
+    // },
+    // {
+    //   path: "/superadmin/alerts",
+    //   icon: FiAlertCircle,
+    //   label: "System Alerts",
+    //   roles: ["SUPER_ADMIN"],
+    // },
     {
       path: "/superadmin/settings",
       icon: FiSettings,
       label: "System Settings",
       roles: ["SUPER_ADMIN"],
     },
-    {
-      path: "/superadmin/maintenance",
-      icon: FiTool,
-      label: "Maintenance",
-      roles: ["SUPER_ADMIN"],
-    },
+    // {
+    //   path: "/superadmin/maintenance",
+    //   icon: FiTool,
+    //   label: "Maintenance",
+    //   roles: ["SUPER_ADMIN"],
+    // },
     {
       path: "/superadmin/org-settings",
       icon: FiLayers,
@@ -120,7 +120,6 @@ const SideBarMenu = ({ user }) => {
       roles: ["ORG_ADMIN"],
     },
 
-    
     {
       path: "/manager/dashboard",
       icon: FiHome,
@@ -145,42 +144,42 @@ const SideBarMenu = ({ user }) => {
       label: "Leave Management",
       roles: ["MANAGER"],
     },
-    {
-      path: "/manager/performance",
-      icon: FiTarget,
-      label: "Performance Reviews",
-      roles: ["MANAGER"],
-    },
-    {
-      path: "/manager/expenses",
-      icon: FiDollarSign,
-      label: "Expense Approvals",
-      roles: ["MANAGER"],
-    },
-    {
-      path: "/manager/training",
-      icon: FiBook,
-      label: "Training Management",
-      roles: ["MANAGER"],
-    },
-    {
-      path: "/manager/reports",
-      icon: FiPieChart,
-      label: "Team Reports",
-      roles: ["MANAGER"],
-    },
-    {
-      path: "/manager/feedback",
-      icon: FiMessageSquare,
-      label: "Team Feedback",
-      roles: ["MANAGER"],
-    },
-    {
-      path: "/manager/tasks",
-      icon: FiClipboard,
-      label: "Task Management",
-      roles: ["MANAGER"],
-    },
+    // {
+    //   path: "/manager/performance",
+    //   icon: FiTarget,
+    //   label: "Performance Reviews",
+    //   roles: ["MANAGER"],
+    // },
+    // {
+    //   path: "/manager/expenses",
+    //   icon: FiDollarSign,
+    //   label: "Expense Approvals",
+    //   roles: ["MANAGER"],
+    // },
+    // {
+    //   path: "/manager/training",
+    //   icon: FiBook,
+    //   label: "Training Management",
+    //   roles: ["MANAGER"],
+    // },
+    // {
+    //   path: "/manager/reports",
+    //   icon: FiPieChart,
+    //   label: "Team Reports",
+    //   roles: ["MANAGER"],
+    // },
+    // {
+    //   path: "/manager/feedback",
+    //   icon: FiMessageSquare,
+    //   label: "Team Feedback",
+    //   roles: ["MANAGER"],
+    // },
+    // {
+    //   path: "/manager/tasks",
+    //   icon: FiClipboard,
+    //   label: "Task Management",
+    //   roles: ["MANAGER"],
+    // },
 
     {
       path: "/employee/profile",
@@ -246,62 +245,62 @@ const SideBarMenu = ({ user }) => {
       label: "Attendance",
       roles: ["HR"],
     },
-    {
-      path: "/hr/payroll",
-      icon: FiDollarSign,
-      label: "Payroll",
-      roles: ["HR"],
-    },
-    {
-      path: "/hr/recruitment",
-      icon: FiUserPlus,
-      label: "Recruitment",
-      roles: ["HR"],
-    },
-    {
-      path: "/hr/performance",
-      icon: FiTarget,
-      label: "Performance",
-      roles: ["HR"],
-    },
-    { path: "/hr/training", icon: FiBook, label: "Training", roles: ["HR"] },
-    {
-      path: "/hr/expenses",
-      icon: FiFileText,
-      label: "Expenses",
-      roles: ["HR"],
-    },
-    { path: "/hr/reports", icon: FiPieChart, label: "Reports", roles: ["HR"] },
-    {
-      path: "/hr/documents",
-      icon: FiFolder,
-      label: "Documents",
-      roles: ["HR"],
-    },
-    {
-      path: "/hr/compliance",
-      icon: FiShield,
-      label: "Compliance",
-      roles: ["HR"],
-    },
-    {
-      path: "/hr/exit",
-      icon: FiLogOut,
-      label: "Exit Management",
-      roles: ["HR"],
-    },
-    {
-      path: "/hr/organization",
-      icon: FiGitMerge,
-      label: "Organization",
-      roles: ["HR"],
-    },
-    {
-      path: "/hr/onboarding",
-      icon: FiUserCheck,
-      label: "Onboarding",
-      roles: ["HR"],
-    },
+    // {
+    //   path: "/hr/payroll",
+    //   icon: FiDollarSign,
+    //   label: "Payroll",
+    //   roles: ["HR"],
+    // },
+    // {
+    //   path: "/hr/recruitment",
+    //   icon: FiUserPlus,
+    //   label: "Recruitment",
+    //   roles: ["HR"],
+    // },
+    // {
+    //   path: "/hr/performance",
+    //   icon: FiTarget,
+    //   label: "Performance",
+    //   roles: ["HR"],
+    // },
+    // { path: "/hr/training", icon: FiBook, label: "Training", roles: ["HR"] },
+    // {
+    //   path: "/hr/expenses",
+    //   icon: FiFileText,
+    //   label: "Expenses",
+    //   roles: ["HR"],
+    // },
+    // { path: "/hr/reports", icon: FiPieChart, label: "Reports", roles: ["HR"] },
+    // {
+    //   path: "/hr/documents",
+    //   icon: FiFolder,
+    //   label: "Documents",
+    //   roles: ["HR"],
+    // },
+    // {
+    //   path: "/hr/compliance",
+    //   icon: FiShield,
+    //   label: "Compliance",
+    //   roles: ["HR"],
+    // },
+    // {
+    //   path: "/hr/exit",
+    //   icon: FiLogOut,
+    //   label: "Exit Management",
+    //   roles: ["HR"],
+    // },
+    // {
+    //   path: "/hr/organization",
+    //   icon: FiGitMerge,
+    //   label: "Organization",
+    //   roles: ["HR"],
+    // },
+    // {
+    //   path: "/hr/onboarding",
+    //   icon: FiUserCheck,
+    //   label: "Onboarding",
+    //   roles: ["HR"],
+    // },
   ];
 
   const filteredMenuItems = allMenuItems.filter((item) =>
