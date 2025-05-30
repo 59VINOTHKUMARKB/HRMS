@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, notification, Switch, Table } from "antd";
+import { Button, Form, Input, Modal, notification, Switch, Table, Select } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {
@@ -46,6 +46,7 @@ const OrganizationManagement = () => {
   const [loading, setLoading] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
   const [organizations, setOrganizations] = useState([]);
+  const [admins, setAdmins] = useState([]);
 
   const { user } = useUser();
   const isOrgAdmin = user?.role === "ORG_ADMIN";
@@ -81,8 +82,25 @@ const OrganizationManagement = () => {
     }
   };
 
+  const fetchAdmins = async () => {
+    try {
+      const response = await axios.get("/api/users");
+      if (response.data.success) {
+        const adminList = response.data.data.filter((u) => u.role === "ORG_ADMIN");
+        setAdmins(adminList);
+      }
+    } catch (error) {
+      notification.error({
+        message: "Error Fetching Admins",
+        description: error.response?.data?.message || "Could not fetch admins",
+        placement: "bottomRight",
+      });
+    }
+  };
+
   useEffect(() => {
     fetchData();
+    fetchAdmins();
   }, []);
 
   const handleEdit = (organization) => {
@@ -93,6 +111,7 @@ const OrganizationManagement = () => {
       code: organization.code,
       description: organization.description,
       isActive: organization.isActive,
+      adminId: organization.admins?.[0]?.id,
     });
     setOpen(true);
   };
@@ -178,6 +197,23 @@ const OrganizationManagement = () => {
       }
 
       if (response.data.success) {
+        const orgId = editMode ? selectedOrganization.id : response.data.data.id;
+        if (values.adminId) {
+          try {
+            await axios.post(`/api/organizations/${orgId}/admin`, {
+              adminId: values.adminId,
+            });
+          } catch (err) {
+            notification.error({
+              message: "Error Assigning Admin",
+              description:
+                err.response?.data?.message || "Failed to assign admin",
+              placement: "bottomRight",
+            });
+            return;
+          }
+        }
+
         notification.success({
           message: `Organization ${
             editMode ? "Updated" : "Added"
@@ -428,6 +464,20 @@ const OrganizationManagement = () => {
               initialValue={true}
             >
               <Switch />
+            </Form.Item>
+
+            <Form.Item
+              name="adminId"
+              label="Assign Admin"
+              rules={[{ required: true, message: "Please select an organization admin!" }]}
+            >
+              <Select
+                placeholder="Select an admin"
+                options={admins.map((admin) => ({
+                  value: admin.id,
+                  label: admin.name,
+                }))}
+              />
             </Form.Item>
 
             <div className="flex justify-end gap-3 mt-6">

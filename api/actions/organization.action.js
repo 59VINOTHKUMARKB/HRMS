@@ -115,7 +115,7 @@ export const deleteOrganizationAction = async (id) => {
 };
 
 // Assign organization admin
-export const assignOrganizationAdmin = async (id, adminId) => {
+export const assignOrganizationAdminAction = async (id, adminId) => {
   try {
     const admin = await db.admin.update({
       where: { id: adminId },
