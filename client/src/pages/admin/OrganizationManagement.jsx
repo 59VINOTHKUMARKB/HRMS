@@ -40,6 +40,7 @@ const OrganizationManagement = () => {
   const [open, setOpen] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [organizationToDelete, setOrganizationToDelete] = useState(null);
+  const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [selectedOrganization, setSelectedOrganization] = useState(null);
   const [form] = Form.useForm();
@@ -118,6 +119,7 @@ const OrganizationManagement = () => {
 
   const showDeleteModal = (organization) => {
     setOrganizationToDelete(organization);
+    setDeleteConfirmInput("");
     setDeleteModalVisible(true);
   };
 
@@ -502,6 +504,7 @@ const OrganizationManagement = () => {
           onCancel={() => {
             setDeleteModalVisible(false);
             setOrganizationToDelete(null);
+            setDeleteConfirmInput("");
           }}
           footer={[
             <Button
@@ -509,6 +512,7 @@ const OrganizationManagement = () => {
               onClick={() => {
                 setDeleteModalVisible(false);
                 setOrganizationToDelete(null);
+                setDeleteConfirmInput("");
               }}
             >
               Cancel
@@ -519,6 +523,7 @@ const OrganizationManagement = () => {
               danger
               loading={loading}
               onClick={handleDeleteConfirm}
+              disabled={deleteConfirmInput !== organizationToDelete?.name}
             >
               Delete
             </Button>,
@@ -531,18 +536,28 @@ const OrganizationManagement = () => {
             {organizationToDelete && (
               <div className="bg-gray-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-600 mb-2">
-                  <span className="font-medium">Name:</span>{" "}
-                  {organizationToDelete.name}
+                  <span className="font-medium">Name:</span> {organizationToDelete.name}
                 </p>
                 <p className="text-sm text-gray-600 mb-2">
-                  <span className="font-medium">Code:</span>{" "}
-                  {organizationToDelete.code}
+                  <span className="font-medium">Code:</span> {organizationToDelete.code}
                 </p>
               </div>
             )}
             <p className="text-red-600 mt-4 text-sm">
               This action cannot be undone.
             </p>
+            {organizationToDelete && (
+              <>
+                <p className="mt-4 text-sm">
+                  Please type the organization name to confirm:
+                </p>
+                <Input
+                  placeholder="Organization name"
+                  value={deleteConfirmInput}
+                  onChange={(e) => setDeleteConfirmInput(e.target.value)}
+                />
+              </>
+            )}
           </div>
         </Modal>
       )}

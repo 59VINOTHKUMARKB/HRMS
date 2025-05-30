@@ -491,7 +491,6 @@ const UserManagement = () => {
               <Form.Item
                 name="organizationId"
                 label="Organization"
-                rules={[{ required: true, message: "Please select organization!" }]}
               >
                 <Select
                   placeholder="Select organization"

@@ -59,6 +59,7 @@ const DepartmentManagement = () => {
   const [open, setOpen] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [departmentToDelete, setDepartmentToDelete] = useState(null);
+  const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [form] = Form.useForm();
@@ -158,6 +159,7 @@ const DepartmentManagement = () => {
 
   const showDeleteModal = (department) => {
     setDepartmentToDelete(department);
+    setDeleteConfirmInput("");
     setDeleteModalVisible(true);
   };
 
@@ -559,11 +561,7 @@ const DepartmentManagement = () => {
                 disabled={!selectedOrg}
               >
                 {users
-                  .filter(
-                    (u) =>
-                      u.organizationId === selectedOrg &&
-                      ["MANAGER", "HR", "EMPLOYEE"].includes(u.role)
-                  )
+                  .filter((u) => u.organizationId === selectedOrg && u.role === "HR")
                   .map((user) => (
                     <Option key={user.id} value={user.id}>
                       {user.name} ({user.role})
@@ -597,6 +595,7 @@ const DepartmentManagement = () => {
           onCancel={() => {
             setDeleteModalVisible(false);
             setDepartmentToDelete(null);
+            setDeleteConfirmInput("");
           }}
           footer={[
             <Button
@@ -604,6 +603,7 @@ const DepartmentManagement = () => {
               onClick={() => {
                 setDeleteModalVisible(false);
                 setDepartmentToDelete(null);
+                setDeleteConfirmInput("");
               }}
             >
               Cancel
@@ -614,6 +614,7 @@ const DepartmentManagement = () => {
               danger
               loading={loading}
               onClick={handleDeleteConfirm}
+              disabled={deleteConfirmInput !== departmentToDelete?.name}
             >
               Delete
             </Button>,
@@ -644,6 +645,18 @@ const DepartmentManagement = () => {
             <p className="text-red-600 mt-4 text-sm">
               This action cannot be undone. All sub-departments will be unlinked.
             </p>
+            {departmentToDelete && (
+              <>
+                <p className="mt-4 text-sm">
+                  Please type the department name to confirm:
+                </p>
+                <Input
+                  placeholder="Department name"
+                  value={deleteConfirmInput}
+                  onChange={(e) => setDeleteConfirmInput(e.target.value)}
+                />
+              </>
+            )}
           </div>
         </Modal>
       </div>

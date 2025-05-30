@@ -23,6 +23,7 @@ import SystemAlerts from "./pages/admin/SystemAlerts";
 import SystemSettings from "./pages/admin/SystemSettings";
 import Integrations from "./pages/admin/Integrations";
 import Maintenance from "./pages/admin/Maintenance";
+import OrgSettings from "./pages/admin/OrgSettings";
 
 // Manager Pages
 import ManagerDashboard from "./pages/manager/Dashboard";
@@ -62,7 +63,6 @@ import OnboardingManagement from "./pages/hr/OnboardingManagement";
 import RecruitmentManagement from "./pages/hr/RecruitmentManagement";
 import ReportsManagement from "./pages/hr/ReportsManagement";
 import TrainingManagement from "./pages/hr/TrainingManagement";
-import OrgSettings from "./pages/admin/OrgSettings";
 
 const App = () => {
   return (
@@ -135,17 +135,17 @@ const App = () => {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="department" element={<DepartmentManagement />} />
             <Route path="users" element={<UserManagement />} />
-            {/* <Route path="organizations" element={<OrganizationManagement />} />
+            <Route path="organizations" element={<OrganizationManagement />} />
             <Route path="org-settings" element={<OrgSettings />} />
             <Route path="billing" element={<BillingManagement />} />
-            <Route path="security" element={<SecurityManagement />} /> */}
+            <Route path="security" element={<SecurityManagement />} />
             <Route path="database" element={<DatabaseManagement />} />
-            {/* <Route path="analytics" element={<Analytics />} />
+            <Route path="analytics" element={<Analytics />} />
             <Route path="integrations" element={<Integrations />} />
             <Route path="audit" element={<AuditLogs />} />
-            <Route path="alerts" element={<SystemAlerts />} /> */}
+            <Route path="alerts" element={<SystemAlerts />} />
             <Route path="settings" element={<SystemSettings />} />
-            {/* <Route path="maintenance" element={<Maintenance />} /> */}
+            <Route path="maintenance" element={<Maintenance />} />
           </Route>
         </Route>
       </Routes>

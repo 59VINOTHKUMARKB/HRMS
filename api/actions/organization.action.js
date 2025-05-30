@@ -1,4 +1,5 @@
 import db from "../prisma/prisma.js";
+import { deleteDepartmentById } from "./department.action.js";
 
 // Create a new organization
 export const createOrganizationAction = async (data) => {
@@ -105,9 +106,19 @@ export const updateOrganizationAction = async (id, data) => {
 // Delete organization
 export const deleteOrganizationAction = async (id) => {
   try {
-    await db.organization.delete({
-      where: { id },
-    });
+    // Delete departments in this organization (cascades to dept users)
+    const departments = await db.department.findMany({ where: { organizationId: id }, select: { id: true } });
+    for (const dept of departments) {
+      await deleteDepartmentById(dept.id);
+    }
+    // Delete all remaining users in this organization
+    await db.user.deleteMany({ where: { organizationId: id } });
+    // Delete all admins in this organization
+    await db.admin.deleteMany({ where: { organizationId: id } });
+    // Delete organization settings
+    await db.organizationSettings.deleteMany({ where: { organizationId: id } });
+    // Finally, delete the organization
+    await db.organization.delete({ where: { id } });
     return { success: true, message: "Organization deleted successfully" };
   } catch (error) {
     return { success: false, message: error.message };

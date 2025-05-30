@@ -262,17 +262,15 @@ export const updateDepartmentById = async (id, updateData) => {
 // @desc    Delete department by ID
 export const deleteDepartmentById = async (id) => {
   try {
-    // First, update all sub-departments to remove their parent reference
+    // Delete all users in this department (cascades to their leave requests)
+    await db.user.deleteMany({ where: { departmentId: id } });
+    // Update all sub-departments to remove their parent reference
     await db.department.updateMany({
       where: { parentId: id },
       data: { parentId: null },
     });
-
-    // Then delete the department
-    await db.department.delete({
-      where: { id },
-    });
-
+    // Then delete the department itself
+    await db.department.delete({ where: { id } });
     return true;
   } catch (error) {
     throw error;

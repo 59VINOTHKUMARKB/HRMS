@@ -95,6 +95,10 @@ export const getDepartmentById = async (req, res, next) => {
 export const createDepartment = async (req, res, next) => {
   try {
     const department = await createNewDepartment(req.body);
+    // Assign department to head user if provided
+    if (req.body.headId) {
+      await db.user.update({ where: { id: req.body.headId }, data: { departmentId: department.id } });
+    }
     res.status(201).json({
       success: true,
       message: "Department created successfully",
@@ -116,12 +120,21 @@ export const createDepartment = async (req, res, next) => {
 // @access  Private (Admin only)
 export const updateDepartment = async (req, res, next) => {
   try {
+    // Preserve previous head for cleanup
+    const prevDept = await db.department.findUnique({ where: { id: req.params.id }, select: { headId: true } });
     const department = await updateDepartmentById(req.params.id, req.body);
     if (!department) {
       return res.status(404).json({
         success: false,
         message: "Department not found",
       });
+    }
+    // Update head-user relation
+    if (req.body.headId && req.body.headId !== prevDept.headId) {
+      await db.user.update({ where: { id: req.body.headId }, data: { departmentId: department.id } });
+    }
+    if (prevDept.headId && prevDept.headId !== req.body.headId) {
+      await db.user.update({ where: { id: prevDept.headId }, data: { departmentId: null } });
     }
     res.status(200).json({
       success: true,
@@ -166,12 +179,24 @@ export const deleteDepartment = async (req, res, next) => {
 export const assignDepartmentHead = async (req, res, next) => {
   try {
     const { userId } = req.body;
+    // Ensure only HR can be department head
+    const userRec = await db.user.findUnique({ where: { id: userId }, select: { role: true } });
+    if (!userRec || userRec.role !== 'HR') {
+      return res.status(400).json({ success: false, message: 'Department head must be an HR user' });
+    }
+    // Preserve previous head for cleanup
+    const prevDept = await db.department.findUnique({ where: { id: req.params.id }, select: { headId: true } });
     const department = await assignHead(req.params.id, userId);
     if (!department) {
       return res.status(404).json({
         success: false,
         message: "Department not found",
       });
+    }
+    // Update head-user relation
+    await db.user.update({ where: { id: userId }, data: { departmentId: req.params.id } });
+    if (prevDept.headId && prevDept.headId !== userId) {
+      await db.user.update({ where: { id: prevDept.headId }, data: { departmentId: null } });
     }
     res.status(200).json({
       success: true,

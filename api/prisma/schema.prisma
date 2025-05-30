@@ -89,7 +89,7 @@ model User {
   subordinates  User[]      @relation("UserHierarchy")
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   organizationId String     @db.ObjectId
   leaveRequests LeaveRequest[]
   leaveApprovals LeaveApproval[]
@@ -115,7 +115,7 @@ model Department {
   name          String
   code          String
   description   String?
-  head          User?        @relation("DepartmentHead", fields: [headId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  head          User?        @relation("DepartmentHead", fields: [headId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   headId        String?      @db.ObjectId
   parentDepartment Department? @relation("DepartmentHierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   parentId      String?      @db.ObjectId
@@ -125,7 +125,7 @@ model Department {
   location      String?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-  organization  Organization? @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  organization  Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   organizationId String?      @db.ObjectId
   @@unique([name, parentId, organizationId])
   @@unique([code, organizationId])
