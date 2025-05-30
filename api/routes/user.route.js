@@ -14,6 +14,8 @@ import {
   getHRProfile,
   getManagerProfile,
 } from "../actions/user.action.js";
+import { verifyToken } from "../middleware/verifyUser.js";
+import { authorizeRoles } from "../middleware/role.middleware.js";
 
 const router = express.Router();
 
@@ -60,7 +62,15 @@ router.get("/profile/manager/:id", getManagerProfile);
 router.get("/profile/employee/:id", getEmployeeProfile);
 
 
-router.get("/getEmployees", getEmployees);
+// @route   GET /api/users/getEmployees
+// @desc    Get employees for HR, Org Admin, Super Admin
+// @access  Private (HR, Org Admin, Super Admin)
+router.get(
+  "/getEmployees",
+  verifyToken,
+  authorizeRoles(["HR", "ORG_ADMIN", "SUPER_ADMIN"]),
+  getEmployees
+);
 
 
 export default router;

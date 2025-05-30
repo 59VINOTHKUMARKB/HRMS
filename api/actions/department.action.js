@@ -16,11 +16,11 @@ export const getAllDepartments = async ({ search, isActive, parentId, organizati
       where.isActive = isActive === "true";
     }
 
-    if (parentId) {
+    if (parentId && parentId !== 'null') {
       where.parentId = parentId;
     }
 
-    if (organizationId) {
+    if (organizationId && organizationId !== 'null') {
       where.organizationId = organizationId;
     }
 

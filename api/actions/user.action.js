@@ -23,11 +23,9 @@ export const getAllUsers = async () => {
           isActive: true,
           lastLogin: true,
           organizationId: true,
-          organization: {
-            select: {
-              name: true,
-            },
-          },
+          organization: { select: { name: true } },
+          departmentId: true,
+          department: { select: { name: true } },
         },
       }),
       db.admin.findMany({

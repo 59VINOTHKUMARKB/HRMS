@@ -1,3 +1,4 @@
+import db from "../prisma/prisma.js";
 import {
   createNewDepartment,
   getAllDepartments,
@@ -15,7 +16,10 @@ import {
 // @access  Private
 export const getDepartments = async (req, res, next) => {
   try {
-    const { search, isActive, parentId, organizationId } = req.query;
+    const { search, isActive } = req.query;
+    let { parentId, organizationId } = req.query;
+    if (parentId === 'null') parentId = undefined;
+    if (organizationId === 'null') organizationId = undefined;
     const departments = await getAllDepartments({ search, isActive, parentId, organizationId });
     res.status(200).json({
       success: true,
@@ -31,11 +35,34 @@ export const getDepartments = async (req, res, next) => {
 // @access  Private
 export const getDepartmentHierarchy = async (req, res, next) => {
   try {
-    const hierarchy = await getDepartmentTree();
-    res.status(200).json({
-      success: true,
-      data: hierarchy,
+    const { role, organizationId: queryOrg } = req.user || {};
+    // If ORG_ADMIN, scope to their organization; else allow all
+    const orgFilter =
+      req.user.role === 'ORG_ADMIN'
+        ? { organizationId: req.user.organizationId }
+        : {};
+    // Fetch departments with relations
+    const allDepartments = await db.department.findMany({
+      where: orgFilter,
+      include: {
+        head: { select: { id: true, name: true, email: true, role: true } },
+        members: { select: { id: true, name: true, email: true, role: true } },
+        parentDepartment: { select: { id: true, name: true, code: true } },
+        subDepartments: { select: { id: true, name: true, code: true } },
+      },
+      orderBy: { name: 'asc' },
     });
+    // Build tree
+    const buildTree = (departments, parentId = null) =>
+      departments
+        .filter((dept) => dept.parentId === parentId)
+        .map((dept) => ({
+          ...dept,
+          children: buildTree(departments, dept.id),
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+    const hierarchy = buildTree(allDepartments);
+    res.status(200).json({ success: true, data: hierarchy });
   } catch (error) {
     next(error);
   }

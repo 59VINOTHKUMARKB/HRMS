@@ -144,6 +144,7 @@ const DepartmentManagement = () => {
     setSelectedDepartment(department);
     setEditMode(true);
     form.setFieldsValue({
+      organizationId: department.organizationId,
       name: department.name,
       code: department.code,
       description: department.description,
@@ -194,17 +195,23 @@ const DepartmentManagement = () => {
       setLoading(true);
       let response;
 
-      // Always scope department to selected organization
-      const payload = editMode
-        ? values
-        : { ...values, organizationId: selectedOrg };
+      // Prepare payload for department
+      let payload = values;
+      if (!editMode) {
+        if (user.role === "SUPER_ADMIN") {
+          // organizationId expected from form
+          payload = values;
+        } else {
+          payload = { ...values, organizationId: selectedOrg };
+        }
+      }
       if (editMode) {
         response = await axios.put(
           `/api/departments/${selectedDepartment.id}`,
-          values
+          payload
         );
       } else {
-        response = await axios.post("/api/departments", values);
+        response = await axios.post("/api/departments", payload);
       }
 
       if (response.data.success) {
@@ -386,7 +393,7 @@ const DepartmentManagement = () => {
         <div className="bg-white rounded-lg shadow-sm">
           <div className="border-b">
             <div className="flex">
-              {["structure", "locations", "policies"].map((tab) => (
+              {['structure', 'locations'].map((tab) => (
                 <button
                   key={tab}
                   className={`px-6 py-3 text-sm font-medium ${
@@ -421,11 +428,14 @@ const DepartmentManagement = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {[
                       ...new Set(
-                        departments.map((d) => d.location).filter(Boolean)
+                        departments
+                          .filter((d) => d.organizationId === selectedOrg)
+                          .map((d) => d.location)
+                          .filter(Boolean)
                       ),
                     ].map((location) => {
                       const deptInLocation = departments.filter(
-                        (d) => d.location === location
+                        (d) => d.location === location && d.organizationId === selectedOrg
                       );
                       return (
                         <div key={location} className="border rounded-lg p-4">
@@ -459,13 +469,6 @@ const DepartmentManagement = () => {
                     })}
                   </div>
                 )}
-
-                {/* Policies Tab */}
-                {activeTab === "policies" && (
-                  <div className="text-center py-8 text-gray-500">
-                    Organization policies management to be implemented
-                  </div>
-                )}
               </>
             )}
           </div>
@@ -486,6 +489,23 @@ const DepartmentManagement = () => {
             onFinish={handleSubmit}
             autoComplete="off"
           >
+            {/* Organization selector for Super Admin in modal */}
+            {user.role === "SUPER_ADMIN" && (
+              <Form.Item
+                name="organizationId"
+                label="Organization"
+                rules={[{ required: true, message: "Please select organization!" }]}
+              >
+                <Select placeholder="Select organization">
+                  {organizations.map((org) => (
+                    <Option key={org.id} value={org.id}>
+                      {org.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            )}
+
             <Form.Item
               name="name"
               label="Department Name"
@@ -521,12 +541,14 @@ const DepartmentManagement = () => {
             </Form.Item>
 
             <Form.Item name="parentId" label="Parent Department">
-              <Select placeholder="Select parent department" allowClear>
-                {departments.map((dept) => (
-                  <Option key={dept.id} value={dept.id}>
-                    {dept.name}
-                  </Option>
-                ))}
+              <Select placeholder="Select parent department" allowClear disabled={!selectedOrg}>
+                {departments
+                  .filter((dept) => dept.organizationId === selectedOrg)
+                  .map((dept) => (
+                    <Option key={dept.id} value={dept.id}>
+                      {dept.name}
+                    </Option>
+                  ))}
               </Select>
             </Form.Item>
 

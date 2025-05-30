@@ -469,7 +469,6 @@ const OrganizationManagement = () => {
             <Form.Item
               name="adminId"
               label="Assign Admin"
-              rules={[{ required: true, message: "Please select an organization admin!" }]}
             >
               <Select
                 placeholder="Select an admin"

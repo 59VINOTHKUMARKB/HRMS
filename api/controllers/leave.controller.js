@@ -69,7 +69,27 @@ export const requestLeave = async (req, res) => {
   }
 };
 
-export const getLeaveRequests = async (req, res) => {};
+// @desc    Get all leave requests for the organization (and HR)
+// @route   GET /api/leave
+// @access  Private (HR, Manager)
+export const getLeaveRequests = async (req, res) => {
+  try {
+    const orgId = req.user.organizationId;
+    if (!orgId) {
+      return res.status(400).json({ success: false, message: 'Organization ID missing' });
+    }
+    // Fetch all leave requests in this org
+    const leaveRequests = await db.leaveRequest.findMany({
+      where: { organizationId: orgId },
+      include: { user: { select: { id: true, name: true, departmentId: true } } },
+      orderBy: { startDate: 'desc' },
+    });
+    return res.status(200).json({ success: true, data: leaveRequests });
+  } catch (error) {
+    console.error('Error fetching leave requests:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
+  }
+};
 
 export const getUserLeaves = async (req, res) => {
   try {

@@ -135,17 +135,17 @@ const App = () => {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="department" element={<DepartmentManagement />} />
             <Route path="users" element={<UserManagement />} />
-            <Route path="organizations" element={<OrganizationManagement />} />
+            {/* <Route path="organizations" element={<OrganizationManagement />} />
             <Route path="org-settings" element={<OrgSettings />} />
             <Route path="billing" element={<BillingManagement />} />
-            <Route path="security" element={<SecurityManagement />} />
+            <Route path="security" element={<SecurityManagement />} /> */}
             <Route path="database" element={<DatabaseManagement />} />
-            <Route path="analytics" element={<Analytics />} />
+            {/* <Route path="analytics" element={<Analytics />} />
             <Route path="integrations" element={<Integrations />} />
             <Route path="audit" element={<AuditLogs />} />
-            <Route path="alerts" element={<SystemAlerts />} />
+            <Route path="alerts" element={<SystemAlerts />} /> */}
             <Route path="settings" element={<SystemSettings />} />
-            <Route path="maintenance" element={<Maintenance />} />
+            {/* <Route path="maintenance" element={<Maintenance />} /> */}
           </Route>
         </Route>
       </Routes>

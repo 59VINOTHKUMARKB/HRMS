@@ -58,13 +58,13 @@ const UserManagement = () => {
 
   // Load departments for selected organization
   useEffect(() => {
+    setSelectedDept("");
     if (selectedOrg) {
       axios.get(`/api/departments?organizationId=${selectedOrg}`).then(res => {
         if (res.data.success) setDepartments(res.data.data);
       });
     } else {
       setDepartments([]);
-      setSelectedDept("");
     }
   }, [selectedOrg]);
 
