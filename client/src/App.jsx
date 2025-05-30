@@ -11,58 +11,28 @@ import UserSignIn from "./pages/auth/UserSignIn";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/Dashboard";
-import OrganizationManagement from "./pages/admin/OrganizationManagement";
 import DepartmentManagement from "./pages/admin/DepartmentManagement";
-import UserManagement from "./pages/admin/UserManagement";
-import DatabaseManagement from "./pages/admin/DatabaseManagement";
-import BillingManagement from "./pages/admin/BillingManagement";
-import SecurityManagement from "./pages/admin/SecurityManagement";
-import Analytics from "./pages/admin/Analytics";
-import AuditLogs from "./pages/admin/AuditLogs";
-import SystemAlerts from "./pages/admin/SystemAlerts";
+import OrganizationManagement from "./pages/admin/OrganizationManagement";
 import SystemSettings from "./pages/admin/SystemSettings";
-import Integrations from "./pages/admin/Integrations";
-import Maintenance from "./pages/admin/Maintenance";
-import OrgSettings from "./pages/admin/OrgSettings";
+import UserManagement from "./pages/admin/UserManagement";
 
 // Manager Pages
 import ManagerDashboard from "./pages/manager/Dashboard";
-import ManagerAttendance from "./pages/manager/Attendance";
-import ManagerExpenses from "./pages/manager/Expenses";
-import ManagerFeedback from "./pages/manager/Feedback";
 import ManagerLeave from "./pages/manager/Leave";
-import ManagerPerformance from "./pages/manager/Performance";
-import ManagerReports from "./pages/manager/Reports";
-import ManagerTasks from "./pages/manager/Tasks";
+import ManagerTeam from "./pages/manager/TeamManagement";
 import ManagerTeams from "./pages/manager/Teams";
-import ManagerTraining from "./pages/manager/Training";
 
 // Employee Pages
-import EmployeeDashboard from "./pages/employee/Dashboard";
 import EmployeeAttendance from "./pages/employee/Attendance";
+import EmployeeDashboard from "./pages/employee/Dashboard";
 import EmployeeLeave from "./pages/employee/Leave";
-import EmployeePayroll from "./pages/employee/Payroll";
-import EmployeeExpenses from "./pages/employee/Expenses";
-import EmployeeTraining from "./pages/employee/Training";
 import EmployeeProfile from "./pages/employee/Profile";
-import EmployeeSupport from "./pages/employee/Support";
-import EmployeeAnnouncements from "./pages/employee/Announcements";
 
 // Other Management Pages
 
-import HRDashBoard from "./pages/hr/HRDashboard";
-import EmployeeList from "./pages/hr/EmployeeList";
 import AttendanceManagement from "./pages/hr/AttendanceManagement";
-import PayrollManagement from "./pages/hr/PayrollManagement";
-import PerformanceManagement from "./pages/hr/PerformanceManagement";
-import ComplianceManagement from "./pages/hr/ComplianceManagement";
-import DocumentsManagement from "./pages/hr/DocumentsManagement";
-import ExitManagement from "./pages/hr/ExitManagement";
-import ExpensesManagement from "./pages/hr/ExpensesManagement";
-import OnboardingManagement from "./pages/hr/OnboardingManagement";
-import RecruitmentManagement from "./pages/hr/RecruitmentManagement";
-import ReportsManagement from "./pages/hr/ReportsManagement";
-import TrainingManagement from "./pages/hr/TrainingManagement";
+import EmployeeList from "./pages/hr/EmployeeList";
+import HRDashBoard from "./pages/hr/HRDashboard";
 
 const App = () => {
   return (
@@ -77,9 +47,10 @@ const App = () => {
         <Route element={<PrivateRoute allowedRoles={["HR"]} />}>
           <Route path="/hr" element={<Layout />}>
             <Route path="dashboard" element={<HRDashBoard />} />
+            <Route path="team" element={<ManagerTeams />} />
             <Route path="employees" element={<EmployeeList />} />
             <Route path="attendance" element={<AttendanceManagement />} />
-            <Route path="payroll" element={<PayrollManagement />} />
+            {/* <Route path="payroll" element={<PayrollManagement />} />
             <Route path="recruitment" element={<RecruitmentManagement />} />
             <Route path="performance" element={<PerformanceManagement />} />
             <Route path="training" element={<TrainingManagement />} />
@@ -89,7 +60,7 @@ const App = () => {
             <Route path="compliance" element={<ComplianceManagement />} />
             <Route path="exit" element={<ExitManagement />} />
             <Route path="department" element={<DepartmentManagement />} />
-            <Route path="onboarding" element={<OnboardingManagement />} />
+            <Route path="onboarding" element={<OnboardingManagement />} /> */}
           </Route>
         </Route>
 
@@ -101,11 +72,11 @@ const App = () => {
             <Route path="profile" element={<EmployeeProfile />} />
             <Route path="attendance" element={<EmployeeAttendance />} />
             <Route path="leave" element={<EmployeeLeave />} />
-            <Route path="payroll" element={<EmployeePayroll />} />
+            {/* <Route path="payroll" element={<EmployeePayroll />} />
             <Route path="training" element={<EmployeeTraining />} />
             <Route path="expenses" element={<EmployeeExpenses />} />
             <Route path="announcements" element={<EmployeeAnnouncements />} />
-            <Route path="support" element={<EmployeeSupport />} />
+            <Route path="support" element={<EmployeeSupport />} /> */}
           </Route>
         </Route>
 
@@ -114,15 +85,14 @@ const App = () => {
           <Route path="/manager" element={<Layout />}>
             <Route index element={<ManagerDashboard />} />
             <Route path="dashboard" element={<ManagerDashboard />} />
-            <Route path="team" element={<ManagerTeams />} />
-            <Route path="attendance" element={<ManagerAttendance />} />
-            <Route path="leave" element={<ManagerLeave />} />
-            <Route path="performance" element={<ManagerPerformance />} />
+            <Route path="leave" element={<AttendanceManagement />} />
+            <Route path="teams" element={<ManagerTeam />} />
+            {/* <Route path="performance" element={<ManagerPerformance />} />
             <Route path="training" element={<ManagerTraining />} />
             <Route path="expenses" element={<ManagerExpenses />} />
             <Route path="reports" element={<ManagerReports />} />
             <Route path="feedback" element={<ManagerFeedback />} />
-            <Route path="tasks" element={<ManagerTasks />} />
+            <Route path="tasks" element={<ManagerTasks />} /> */}
           </Route>
         </Route>
 
@@ -136,7 +106,8 @@ const App = () => {
             <Route path="department" element={<DepartmentManagement />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="organizations" element={<OrganizationManagement />} />
-            <Route path="org-settings" element={<OrgSettings />} />
+            <Route path="settings" element={<SystemSettings />} />
+            {/* <Route path="org-settings" element={<OrgSettings />} />
             <Route path="billing" element={<BillingManagement />} />
             <Route path="security" element={<SecurityManagement />} />
             <Route path="database" element={<DatabaseManagement />} />
@@ -144,8 +115,7 @@ const App = () => {
             <Route path="integrations" element={<Integrations />} />
             <Route path="audit" element={<AuditLogs />} />
             <Route path="alerts" element={<SystemAlerts />} />
-            <Route path="settings" element={<SystemSettings />} />
-            <Route path="maintenance" element={<Maintenance />} />
+            <Route path="maintenance" element={<Maintenance />} /> */}
           </Route>
         </Route>
       </Routes>

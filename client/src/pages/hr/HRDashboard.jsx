@@ -1,12 +1,10 @@
-import { FiClock, FiCalendar, FiUser } from "react-icons/fi";
+import { FiClock, FiCalendar, FiUser, FiCheckCircle, FiXCircle } from "react-icons/fi";
 import { useState, useEffect } from "react";
-import AddEmployeeForm from "../../components/forms/AddEmployeeForm";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Row, Col, Card, Statistic, Spin, notification } from "antd";
 
 const HRDashBoard = () => {
-  const [showAddEmployeeForm, setShowAddEmployeeForm] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [employeesUnderHR, setEmployeesUnderHR] = useState([]);
   const [leaveRequests, setLeaveRequests] = useState([]);
@@ -46,57 +44,40 @@ const HRDashBoard = () => {
     fetchStats();
   }, [currentUser]);
 
-  const handleAddEmployee = async (formData) => {
-    try {
-      const response = await axios.post("/api/users", formData);
-      if (response.data.success) {
-        setShowAddEmployeeForm(false);
-        notification.success({ message: "User Added Successfully", placement: "bottomRight" });
-      }
-    } catch (error) {
-      console.error("Error adding employee:", error);
-    }
-  };
+  // compute statistics
+  const totalEmployees = employeesUnderHR.length;
+  const onLeaveToday = leaveRequests.filter(
+    (lr) => new Date(lr.startDate) <= new Date() && new Date(lr.endDate) >= new Date()
+  ).length;
+  const totalRequests = leaveRequests.length;
+  const pendingCount = leaveRequests.filter((lr) => lr.status === 'PENDING').length;
+  const approvedCount = leaveRequests.filter((lr) => lr.status === 'APPROVED').length;
+  const rejectedCount = leaveRequests.filter((lr) => lr.status === 'REJECTED').length;
+  const avgLeaveDays = totalRequests
+    ? (
+        leaveRequests.reduce((sum, lr) => sum + (lr.totalDays || 0), 0) /
+        totalRequests
+      ).toFixed(1)
+    : 0;
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">HR Dashboard</h1>
-        <button
-          onClick={() => setShowAddEmployeeForm(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Add Employee
-        </button>
       </div>
-
-      {showAddEmployeeForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Add New Employee</h2>
-              <button
-                onClick={() => setShowAddEmployeeForm(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >×</button>
-            </div>
-            <AddEmployeeForm onSubmit={handleAddEmployee} loading={loading} />
-          </div>
-        </div>
-      )}
 
       {/* Dynamic Stats */}
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} md={6}>
           <Card>
-            <Statistic title="Total Employees" value={employeesUnderHR.length} prefix={<FiUser />} />
+            <Statistic title="Total Employees" value={totalEmployees} prefix={<FiUser />} />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic
               title="On Leave Today"
-              value={leaveRequests.filter(lr => new Date(lr.startDate) <= new Date() && new Date(lr.endDate) >= new Date()).length}
+              value={onLeaveToday}
               prefix={<FiClock />}
             />
           </Card>
@@ -105,7 +86,7 @@ const HRDashBoard = () => {
           <Card>
             <Statistic
               title="Total Leave Requests"
-              value={leaveRequests.length}
+              value={totalRequests}
               prefix={<FiCalendar />}
             />
           </Card>
@@ -114,8 +95,36 @@ const HRDashBoard = () => {
           <Card>
             <Statistic
               title="Pending Leaves"
-              value={leaveRequests.filter(lr => lr.status === 'PENDING').length}
+              value={pendingCount}
               prefix={<FiClock />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <Card>
+            <Statistic
+              title="Approved Leaves"
+              value={approvedCount}
+              prefix={<FiCheckCircle />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <Card>
+            <Statistic
+              title="Rejected Leaves"
+              value={rejectedCount}
+              prefix={<FiXCircle />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <Card>
+            <Statistic
+              title="Avg Leave Days"
+              value={avgLeaveDays}
+              suffix="days"
+              prefix={<FiCalendar />}
             />
           </Card>
         </Col>

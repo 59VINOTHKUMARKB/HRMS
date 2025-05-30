@@ -84,6 +84,9 @@ model User {
   department    Department? @relation(fields: [departmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   departmentId  String?     @db.ObjectId
   managedDepartments Department[] @relation("DepartmentHead")
+  teamsManaged  Team[]      @relation("UserTeamsManaged")
+  team          Team?       @relation("TeamMembers", fields: [teamId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  teamId        String?     @db.ObjectId
   reportsTo     User?       @relation("UserHierarchy", fields: [reportsToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   reportsToId   String?     @db.ObjectId
   subordinates  User[]      @relation("UserHierarchy")
@@ -121,6 +124,7 @@ model Department {
   parentId      String?      @db.ObjectId
   subDepartments Department[] @relation("DepartmentHierarchy")
   members       User[]
+  teams         Team[]       // Teams under this department
   isActive      Boolean      @default(true)
   location      String?
   createdAt     DateTime     @default(now())
@@ -131,6 +135,19 @@ model Department {
   @@unique([code, organizationId])
   @@index([headId])
   @@index([parentId])
+}
+
+/// Team model representing a team under a department
+model Team {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  department    Department @relation(fields: [departmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  departmentId  String     @db.ObjectId
+  manager       User?      @relation("UserTeamsManaged", fields: [managerId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  managerId     String?    @db.ObjectId
+  members       User[]     @relation("TeamMembers")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 }
 
 enum ApprovalStatus {

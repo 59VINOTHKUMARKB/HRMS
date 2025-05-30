@@ -20,7 +20,6 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 const EmployeeLeave = () => {
-  const [activeTab, setActiveTab] = useState("overview");
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const { user } = useUser();

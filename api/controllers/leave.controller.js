@@ -119,9 +119,55 @@ export const getUserLeaves = async (req, res) => {
   }
 };
 
-export const approveLeave = async (req, res) => {};
+export const approveLeave = async (req, res) => {
+  try {
+    const { leaveId } = req.params;
+    const approverId = req.user.id;
+    const approverRole = req.user.role === 'HR' ? 'HR' : 'MANAGER';
+    const updatedLeave = await db.leaveRequest.update({
+      where: { id: leaveId },
+      data: { status: 'APPROVED' },
+    });
+    await db.leaveApproval.create({
+      data: {
+        leaveRequestId: leaveId,
+        approverId,
+        role: approverRole,
+        status: 'APPROVED',
+        approvedAt: new Date(),
+      },
+    });
+    return res.status(200).json({ success: true, message: 'Leave approved', data: updatedLeave });
+  } catch (error) {
+    console.error('Error approving leave:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
+  }
+}
 
-export const rejectLeave = async (req, res) => {};
+export const rejectLeave = async (req, res) => {
+  try {
+    const { leaveId } = req.params;
+    const approverId = req.user.id;
+    const approverRole = req.user.role === 'HR' ? 'HR' : 'MANAGER';
+    const updatedLeave = await db.leaveRequest.update({
+      where: { id: leaveId },
+      data: { status: 'REJECTED' },
+    });
+    await db.leaveApproval.create({
+      data: {
+        leaveRequestId: leaveId,
+        approverId,
+        role: approverRole,
+        status: 'REJECTED',
+        approvedAt: new Date(),
+      },
+    });
+    return res.status(200).json({ success: true, message: 'Leave rejected', data: updatedLeave });
+  } catch (error) {
+    console.error('Error rejecting leave:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
+  }
+}
 
 export const getLeaveById = async (req, res) => {};
 

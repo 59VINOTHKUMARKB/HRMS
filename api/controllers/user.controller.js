@@ -186,9 +186,11 @@ export const getEmployees = async (req, res, next) => {
   try {
     // Scope to current user's organization
     const where = { organizationId: req.user.organizationId };
-    // If HR, restrict to employees assigned to this HR
+    // Role-specific scoping
     if (req.user.role === 'HR') {
       where.hrAssignedId = req.user.id;
+    } else if (req.user.role === 'MANAGER') {
+      where.managerAssignedId = req.user.id;
     } else {
       // Allow super and org admins to filter by HR
       const { hrId } = req.query;
@@ -199,6 +201,61 @@ export const getEmployees = async (req, res, next) => {
     if (role) where.role = role;
     if (departmentId) where.departmentId = departmentId;
     const employees = await db.user.findMany({ where });
+    res.status(200).json({ success: true, data: employees });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Add manager available employees endpoint
+export const getAvailableEmployees = async (req, res, next) => {
+  try {
+    const manager = req.user;
+    if (!manager.departmentId) {
+      return res.status(400).json({ success: false, message: 'Manager has no department assigned' });
+    }
+    const available = await db.user.findMany({
+      where: {
+        organizationId: manager.organizationId,
+        departmentId: manager.departmentId,
+        role: 'EMPLOYEE',
+        managerAssignedId: null,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        departmentId: true,
+      }
+    });
+    res.status(200).json({ success: true, data: available });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get employees in manager's department unassigned to any team
+// @route   GET /api/users/departmentEmployees
+// @access  Private (Manager only)
+export const getDepartmentEmployees = async (req, res, next) => {
+  try {
+    const deptId = req.user.departmentId;
+    if (!deptId) {
+      return res.status(400).json({ success: false, message: 'No department assigned' });
+    }
+    const employees = await db.user.findMany({
+      where: {
+        organizationId: req.user.organizationId,
+        departmentId: deptId,
+        role: 'EMPLOYEE',
+        teamId: null,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
     res.status(200).json({ success: true, data: employees });
   } catch (error) {
     next(error);

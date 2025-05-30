@@ -8,6 +8,8 @@ import {
   updateUserPasswordById,
   deleteUserById,
   getEmployees,
+  getAvailableEmployees,
+  getDepartmentEmployees,
 } from "../controllers/user.controller.js";
 import {
   getEmployeeProfile,
@@ -63,14 +65,33 @@ router.get("/profile/employee/:id", getEmployeeProfile);
 
 
 // @route   GET /api/users/getEmployees
-// @desc    Get employees for HR, Org Admin, Super Admin
-// @access  Private (HR, Org Admin, Super Admin)
+// @desc    Get employees for HR, Org Admin, Super Admin, and Manager
+// @access  Private (HR, Org Admin, Super Admin, Manager)
 router.get(
   "/getEmployees",
   verifyToken,
-  authorizeRoles(["HR", "ORG_ADMIN", "SUPER_ADMIN"]),
+  authorizeRoles(["HR", "ORG_ADMIN", "SUPER_ADMIN", "MANAGER"]),
   getEmployees
 );
 
+// @route   GET /api/users/availableEmployees
+// @desc    Get unassigned employees for Manager
+// @access  Private (Manager only)
+router.get(
+  "/availableEmployees",
+  verifyToken,
+  authorizeRoles(["MANAGER"]),
+  getAvailableEmployees
+);
+
+// @route   GET /api/users/departmentEmployees
+// @desc    Get unassigned employees in manager's department
+// @access  Private (Manager only)
+router.get(
+  "/departmentEmployees",
+  verifyToken,
+  authorizeRoles(["MANAGER"]),
+  getDepartmentEmployees
+);
 
 export default router;

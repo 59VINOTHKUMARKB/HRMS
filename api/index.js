@@ -10,6 +10,7 @@ import departmentRoutes from "./routes/department.route.js";
 import dbRoutes from "./routes/db.route.js";
 import organizationRoutes from "./routes/organization.route.js";
 import leaveRoutes from "./routes/leave.route.js";
+import teamRoutes from "./routes/team.route.js";
 dotenv.config();
 
 mongoose
@@ -40,6 +41,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api/organizations", organizationRoutes);
 app.use("/api/leave", leaveRoutes);
+app.use("/api/teams", teamRoutes);
 app.use("/api/db", dbRoutes);
 
 app.use(express.static(path.join(__dirname, "client", "dist")));
