@@ -19,6 +19,17 @@ enum UserRole {
   EMPLOYEE
 }
 
+enum LeaveType {
+  ANNUAL
+  SICK
+  UNPAID
+}
+
+enum ApproverRole {
+  MANAGER
+  HR
+}
+
 model Organization {
   id          String               @id @default(auto()) @map("_id") @db.ObjectId
   name        String
@@ -58,8 +69,8 @@ model Admin {
   lastLogin DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  organizationId String? @db.ObjectId
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  organizationId String?    @db.ObjectId
 }
 
 model User {
@@ -78,8 +89,8 @@ model User {
   subordinates  User[]      @relation("UserHierarchy")
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  organizationId String?     @db.ObjectId
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  organizationId String     @db.ObjectId
   leaveRequests LeaveRequest[]
   leaveApprovals LeaveApproval[]
 
@@ -91,12 +102,18 @@ model User {
   managerAssignedId   String?     @db.ObjectId
   employeesUnderManager User[]    @relation("UserManager")
 
+  @@index([name])
+  @@index([departmentId])
+  @@index([reportsToId])
+  @@index([organizationId])
+  @@index([hrAssignedId])
+  @@index([managerAssignedId])
 }
 
 model Department {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
   name          String
-  code          String       @unique
+  code          String
   description   String?
   head          User?        @relation("DepartmentHead", fields: [headId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   headId        String?      @db.ObjectId
@@ -110,7 +127,10 @@ model Department {
   updatedAt     DateTime     @updatedAt
   organization  Organization? @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   organizationId String?      @db.ObjectId
-  @@unique([name, parentId])
+  @@unique([name, parentId, organizationId])
+  @@unique([code, organizationId])
+  @@index([headId])
+  @@index([parentId])
 }
 
 enum ApprovalStatus {
@@ -134,13 +154,15 @@ model LeaveApproval {
   approver       User?         @relation(fields: [approverId], references: [id], onDelete: SetNull)
   approverId     String?       @db.ObjectId
 
-  role           String        // "MANAGER" or "HR"
+  role           ApproverRole  // now an enum of allowed roles
   status         ApprovalStatus @default(PENDING)
   comments       String?
   approvedAt     DateTime?
 
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
+
+  @@index([approverId])
 }
 
 model LeaveRequest {
@@ -151,7 +173,7 @@ model LeaveRequest {
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String       @db.ObjectId
 
-  leaveType      String      
+  leaveType      LeaveType
   startDate      DateTime
   endDate        DateTime
   totalDays      Int
@@ -164,6 +186,7 @@ model LeaveRequest {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
+  @@index([startDate, endDate])
   @@index([organizationId])
   @@index([userId])
 }

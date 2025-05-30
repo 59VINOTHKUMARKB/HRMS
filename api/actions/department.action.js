@@ -1,7 +1,7 @@
 import db from "../prisma/prisma.js";
 
 // @desc    Get all departments with optional filters
-export const getAllDepartments = async ({ search, isActive, parentId }) => {
+export const getAllDepartments = async ({ search, isActive, parentId, organizationId }) => {
   try {
     const where = {};
 
@@ -18,6 +18,10 @@ export const getAllDepartments = async ({ search, isActive, parentId }) => {
 
     if (parentId) {
       where.parentId = parentId;
+    }
+
+    if (organizationId) {
+      where.organizationId = organizationId;
     }
 
     const departments = await db.department.findMany({
@@ -183,6 +187,7 @@ export const createNewDepartment = async (departmentData) => {
         isActive: departmentData.isActive ?? true,
         parentId: departmentData.parentId,
         headId: departmentData.headId,
+        organizationId: departmentData.organizationId,
       },
       include: {
         head: {

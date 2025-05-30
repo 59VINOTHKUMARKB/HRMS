@@ -15,8 +15,8 @@ import {
 // @access  Private
 export const getDepartments = async (req, res, next) => {
   try {
-    const { search, isActive, parentId } = req.query;
-    const departments = await getAllDepartments({ search, isActive, parentId });
+    const { search, isActive, parentId, organizationId } = req.query;
+    const departments = await getAllDepartments({ search, isActive, parentId, organizationId });
     res.status(200).json({
       success: true,
       data: departments,

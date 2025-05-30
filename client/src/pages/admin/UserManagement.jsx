@@ -22,7 +22,11 @@ const { Option } = Select;
 
 const UserManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterRole, setFilterRole] = useState("all");
+  // Organization & Department filters
+  const [organizations, setOrganizations] = useState([]);
+  const [selectedOrg, setSelectedOrg] = useState("");
+  const [departments, setDepartments] = useState([]);
+  const [selectedDept, setSelectedDept] = useState("");
   const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -35,6 +39,34 @@ const UserManagement = () => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
   const isOrgAdmin = user?.role === "ORG_ADMIN";
+
+  // Load organization list
+  useEffect(() => {
+    if (user?.role === "SUPER_ADMIN") {
+      axios.get("/api/organizations").then(res => {
+        if (res.data.success) setOrganizations(res.data.data);
+      });
+    } else if (user?.role === "ORG_ADMIN") {
+      axios.get(`/api/organizations/${user.organizationId}`).then(res => {
+        if (res.data.success) {
+          setOrganizations([res.data.data]);
+          setSelectedOrg(user.organizationId);
+        }
+      });
+    }
+  }, [user]);
+
+  // Load departments for selected organization
+  useEffect(() => {
+    if (selectedOrg) {
+      axios.get(`/api/departments?organizationId=${selectedOrg}`).then(res => {
+        if (res.data.success) setDepartments(res.data.data);
+      });
+    } else {
+      setDepartments([]);
+      setSelectedDept("");
+    }
+  }, [selectedOrg]);
 
   const fetchUsers = async () => {
     try {
@@ -68,36 +100,23 @@ const UserManagement = () => {
     fetchUsers();
   }, []);
 
-  // Filter users based on role
+  // Filter users by search, organization, and department
   const filteredUsers = users.filter((targetUser) => {
-    console.log("Current logged in user:", user);
-    console.log("Target user:", targetUser);
-
     const matchesSearch =
       targetUser.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       targetUser.email.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesRole =
-      filterRole === "all" ||
-      targetUser.role.toLowerCase() === filterRole.toLowerCase();
-
-    // For ORG_ADMIN, only show users in their organization
-    if (isOrgAdmin) {
-      console.log("Checking organization match:", {
-        targetOrgId: targetUser.organizationId,
-        userOrgId: user.organizationId,
-        userRole: user.role,
-      });
+    // No org selected: only global admins
+    if (!selectedOrg) {
       return (
         matchesSearch &&
-        matchesRole &&
-        targetUser.organizationId === user.organizationId &&
-        targetUser.organizationId !== undefined &&
-        targetUser.role != "ORG_ADMIN"
+        (targetUser.role === "SUPER_ADMIN" || targetUser.role === "ORG_ADMIN")
       );
     }
-
-    return matchesSearch && matchesRole;
+    // Filter by organization
+    if (targetUser.organizationId !== selectedOrg) return false;
+    // Filter by department if chosen
+    if (selectedDept && targetUser.departmentId !== selectedDept) return false;
+    return matchesSearch;
   });
 
   // Function to check if current user can edit target user
@@ -197,6 +216,8 @@ const UserManagement = () => {
       email: record.email,
       role: record.role,
       isActive: record.isActive,
+      organizationId: record.organizationId,
+      departmentId: record.departmentId,
     });
     setOpen(true);
   };
@@ -283,7 +304,8 @@ const UserManagement = () => {
       const formattedUserData = {
         ...userData,
         role: userData.role.toUpperCase(),
-        organizationId: user.organizationId,
+        organizationId: user.role === "SUPER_ADMIN" ? values.organizationId : user.organizationId,
+        departmentId: values.departmentId || null,
       };
       console.log(formattedUserData);
 
@@ -335,6 +357,10 @@ const UserManagement = () => {
     setEditMode(false);
     setSelectedUser(null);
     form.resetFields();
+    // Prefill organization if filtered
+    if (user.role === "SUPER_ADMIN" && selectedOrg) {
+      form.setFieldsValue({ organizationId: selectedOrg });
+    }
     setOpen(true);
   };
 
@@ -460,6 +486,39 @@ const UserManagement = () => {
               </div>
             )}
 
+            {/* New Organization + Department fields */}
+            {user.role === "SUPER_ADMIN" && (
+              <Form.Item
+                name="organizationId"
+                label="Organization"
+                rules={[{ required: true, message: "Please select organization!" }]}
+              >
+                <Select
+                  placeholder="Select organization"
+                  onChange={(val) => setSelectedOrg(val)}
+                >
+                  {organizations.map((org) => (
+                    <Option key={org.id} value={org.id}>
+                      {org.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            )}
+            {selectedOrg && (
+              <Form.Item
+                name="departmentId"
+                label="Department (optional)"
+              >
+                <Select placeholder="Select department" allowClear>
+                  {departments.map((dept) => (
+                    <Option key={dept.id} value={dept.id}>
+                      {dept.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            )}
             <Form.Item
               name="role"
               label="Role"
@@ -610,7 +669,7 @@ const UserManagement = () => {
         </div>
       </Modal>
 
-      {/* Filters and Search */}
+      {/* Filters: Search, Organization, Department */}
       <div className="flex justify-between items-center space-x-4">
         <div className="flex-1 max-w-md">
           <div className="relative">
@@ -624,22 +683,36 @@ const UserManagement = () => {
             />
           </div>
         </div>
-        <select
-          className="border rounded-lg px-4 py-2"
-          value={filterRole}
-          onChange={(e) => setFilterRole(e.target.value)}
-        >
-          <option value="all">All Roles</option>
-          {!isOrgAdmin && (
-            <>
-              <option value="SUPER_ADMIN">Super Admin</option>
-              <option value="ORG_ADMIN">Organization Admin</option>
-            </>
-          )}
-          <option value="HR">HR</option>
-          <option value="MANAGER">Manager</option>
-          <option value="EMPLOYEE">Employee</option>
-        </select>
+        {user.role === "SUPER_ADMIN" && (
+          <Select
+            placeholder="Organization"
+            className="w-60"
+            value={selectedOrg}
+            onChange={(val) => setSelectedOrg(val)}
+            allowClear
+          >
+            {organizations.map((org) => (
+              <Option key={org.id} value={org.id}>
+                {org.name}
+              </Option>
+            ))}
+          </Select>
+        )}
+        {selectedOrg && (
+          <Select
+            placeholder="Department"
+            className="w-60"
+            value={selectedDept}
+            onChange={(val) => setSelectedDept(val)}
+            allowClear
+          >
+            {departments.map((dept) => (
+              <Option key={dept.id} value={dept.id}>
+                {dept.name}
+              </Option>
+            ))}
+          </Select>
+        )}
       </div>
 
       {/* Users Table */}
