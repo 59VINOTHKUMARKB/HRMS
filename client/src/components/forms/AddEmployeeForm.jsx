@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UserRole } from "@prisma/client";
+import {UserRole} from "../../utils/utilities.js"
 import { useSelector } from "react-redux";
 
 const AddEmployeeForm = ({

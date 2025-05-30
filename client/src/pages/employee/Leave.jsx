@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import dayjs from "dayjs";
 import { useUser } from "../../components/Layout";
-import { LeaveStatus } from "@prisma/client";
+import { LeaveStatus } from "../../utils/utilities.js";
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
