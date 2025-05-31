@@ -24,7 +24,7 @@ const router = express.Router();
 // @route   GET /api/users
 // @desc    Get all users
 // @access  Private (Admin only)
-router.get("/", getUsers);
+router.get("/", verifyToken, authorizeRoles(["HR", "MANAGER", "ORG_ADMIN", "SUPER_ADMIN"]), getUsers);
 
 
 // @route   GET /api/users/:id

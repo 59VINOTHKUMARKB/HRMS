@@ -75,10 +75,15 @@ export const requestLeave = async (req, res) => {
 export const getLeaveRequests = async (req, res) => {
   try {
     const orgId = req.user.organizationId;
+    const userRole = req.user.role;
+    const userId = req.user.id;
+    const userDepartmentId = req.user.departmentId;
+
     if (!orgId) {
       return res.status(400).json({ success: false, message: 'Organization ID missing' });
     }
-    const { startDate, endDate } = req.query;
+
+    const { startDate, endDate, status, leaveType, sortField, sortOrder } = req.query;
     const where = { organizationId: orgId };
 
     if (startDate && endDate) {
@@ -89,10 +94,57 @@ export const getLeaveRequests = async (req, res) => {
         lte: new Date(endDate),
       };
     }
+    if (status) {
+      where.status = status;
+    }
+    if (leaveType) {
+      where.leaveType = leaveType;
+    }
+
+    // Role-based filtering
+    if (userRole === 'HR') {
+      // HR sees all leave requests for employees and managers in their department
+      where.user = {
+        departmentId: userDepartmentId,
+      };
+    } else if (userRole === 'MANAGER') {
+      // Manager sees leave requests for their team members
+      // Fetch team members under this manager's team(s)
+      const teamMembers = await db.user.findMany({
+        where: {
+          organizationId: orgId,
+          role: { in: ['EMPLOYEE', 'MANAGER'] }, // Managers can also be part of teams
+          OR: [
+            { team: { managerId: userId } }, // Direct team members
+            { id: userId }, // The manager themselves, if they apply for leave
+          ],
+        },
+        select: { id: true },
+      });
+      const memberIds = teamMembers.map(u => u.id);
+      if (memberIds.length > 0) {
+        where.userId = { in: memberIds };
+      } else {
+        // If no team members, return no leave requests
+        where.userId = null; // Effectively returns an empty array
+      }
+    }
+
+    const orderBy = {};
+    if (sortField && sortOrder) {
+      if (sortField === 'employee') {
+        orderBy.user = { name: sortOrder };
+      } else {
+        orderBy[sortField] = sortOrder;
+      }
+    } else {
+      orderBy.startDate = 'desc'; // Default sort
+    }
+
     const leaveRequests = await db.leaveRequest.findMany({
       where,
-      include: { user: { select: { id: true, name: true, departmentId: true } } },
-      orderBy: { startDate: 'desc' },
+      include: { user: { select: { id: true, name: true, departmentId: true, role: true } } },
+      orderBy,
     });
     return res.status(200).json({ success: true, data: leaveRequests });
   } catch (error) {
@@ -181,7 +233,19 @@ export const rejectLeave = async (req, res) => {
 
 export const getLeaveById = async (req, res) => {};
 
-export const cancelLeave = async (req, res) => {};
+export const cancelLeave = async (req, res) => {
+  try {
+    const { leaveId } = req.params;
+    const updatedLeave = await db.leaveRequest.update({
+      where: { id: leaveId },
+      data: { status: 'CANCELLED' },
+    });
+    return res.status(200).json({ success: true, message: 'Leave cancelled', data: updatedLeave });
+  } catch (error) {
+    console.error('Error cancelling leave:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
+  }
+};
 
 export const getLeaveBalance = async (req, res) => {
   try {
@@ -197,39 +261,31 @@ export const getLeaveBalance = async (req, res) => {
       ANNUAL: 21,
       SICK: 10,
       PERSONAL: 6,
-      UNPAID: "No Limit", 
+      UNPAID: "No Limit",
     };
 
-   const approvedLeaves = await db.leaveRequest.findMany({
-      where: { userId, status: "APPROVED" },
+    const leavesTaken = await db.leaveRequest.groupBy({
+      by: ['leaveType'],
+      where: { userId, status: 'APPROVED' },
+      _sum: {
+        totalDays: true,
+      },
     });
 
-    const leaveUsage = approvedLeaves.reduce((acc, leave) => {
-      acc[leave.leaveType] = (acc[leave.leaveType] || 0) + leave.totalDays;
-      return acc;
-    }, {});
-
-    const leaveBalance = Object.keys(leaveLimits).map((type) => {
-      const total = leaveLimits[type];
-      const used = leaveUsage[type] || 0;
-      return {
-        type,
-        total,
-        used,
-        remaining: total === "No Limit" ? "-" : Math.max(total - used, 0),
+    const balance = {};
+    for (const type in leaveLimits) {
+      const limit = leaveLimits[type];
+      const taken = leavesTaken.find(lt => lt.leaveType === type)?._sum.totalDays || 0;
+      balance[type] = {
+        limit,
+        taken,
+        remaining: limit === "No Limit" ? "No Limit" : limit - taken,
       };
-    });
+    }
 
-    return res.status(200).json({
-      success: true,
-      data: leaveBalance,
-    });
+    return res.status(200).json({ success: true, data: balance });
   } catch (error) {
-    console.error("Error fetching leave balance:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      error: error.message,
-    });
+    console.error('Error fetching leave balance:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
   }
 };

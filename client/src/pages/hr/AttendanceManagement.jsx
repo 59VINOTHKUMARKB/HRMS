@@ -4,26 +4,27 @@ import {
   FiXCircle,
   FiClock,
   FiUser,
+  FiUsers,
 } from "react-icons/fi";
-import { DatePicker, notification, Spin } from "antd";
+import { DatePicker, notification, Spin, Table, Tag, Tooltip, Button, Card, Row, Col, Statistic } from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
+import { motion } from "framer-motion";
 
 const AttendanceManagement = () => {
-  const [employees, setEmployees] = useState([]);
+  const [users, setUsers] = useState([]);
   const [attendance, setAttendance] = useState([]);
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(dayjs().startOf("day"));
 
-  const fetchEmployees = async () => {
+  const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        "/api/users/getEmployees?role=EMPLOYEE"
-      );
-      if (res.data.success) setEmployees(res.data.data);
-    } catch {
-      notification.error({ message: "Error fetching employees" });
+      const res = await axios.get("/api/users/getEmployees");
+      if (res.data.success) setUsers(res.data.data);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+      notification.error({ message: "Error fetching users" });
     } finally {
       setLoading(false);
     }
@@ -36,7 +37,8 @@ const AttendanceManagement = () => {
         `/api/attendance?date=${date.toISOString()}`
       );
       if (res.data.success) setAttendance(res.data.data);
-    } catch {
+    } catch (err) {
+      console.error("Error fetching attendance records:", err);
       notification.error({ message: "Error fetching attendance records" });
     } finally {
       setLoading(false);
@@ -44,20 +46,22 @@ const AttendanceManagement = () => {
   };
 
   useEffect(() => {
-    fetchEmployees();
+    fetchUsers();
   }, []);
 
   useEffect(() => {
-    if (employees.length) fetchAttendance();
-  }, [employees, date]);
+    if (users.length) fetchAttendance();
+  }, [users, date]);
+
+  const relevantUsers = users.filter(user => user.role === 'EMPLOYEE' || user.role === 'MANAGER');
 
   const presentCount = attendance.filter((r) => r.status === "PRESENT").length;
   const absentCount = attendance.filter((r) => r.status === "ABSENT").length;
   const lateCount = attendance.filter((r) => r.status === "LATE").length;
-  const notMarkedCount = employees.length - attendance.length;
+  const notMarkedCount = relevantUsers.length - attendance.length;
 
   const handleMark = async (userId, status) => {
-    if (!window.confirm(`Mark ${status.toLowerCase()} for this employee?`)) return;
+    if (!window.confirm(`Mark ${status.toLowerCase()} for this user?`)) return;
     try {
       await axios.post("/api/attendance", {
         userId,
@@ -66,7 +70,8 @@ const AttendanceManagement = () => {
       });
       notification.success({ message: "Attendance marked" });
       fetchAttendance();
-    } catch {
+    } catch (err) {
+      console.error("Error marking attendance:", err);
       notification.error({ message: "Error marking attendance" });
     }
   };
@@ -77,13 +82,134 @@ const AttendanceManagement = () => {
       await axios.put(`/api/attendance/${id}`, { status });
       notification.success({ message: "Attendance updated" });
       fetchAttendance();
-    } catch {
+    } catch (err) {
+      console.error("Error updating attendance:", err);
       notification.error({ message: "Error updating attendance" });
     }
   };
 
+  const columns = [
+    {
+      title: 'User',
+      dataIndex: 'name',
+      key: 'user',
+      render: (text, record) => (
+        <div className="flex items-center">
+          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-lg font-semibold capitalize">
+            {record.name.charAt(0)}
+          </div>
+          <div className="ml-4">
+            <div className="text-sm font-medium text-gray-900">
+              {record.name}
+            </div>
+            {record.email && (
+              <div className="text-sm text-gray-500">
+                {record.email}
+              </div>
+            )}
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: 'Role',
+      dataIndex: 'role',
+      key: 'role',
+      render: (role) => <Tag color={role === 'MANAGER' ? 'blue' : 'green'}>{role}</Tag>,
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (text, record) => {
+        const currentStatus = attendance.find(a => a.userId === record.id)?.status || "NOT_MARKED";
+        let color = 'gray';
+        let displayText = 'Not Marked';
+        if (currentStatus === 'PRESENT') { color = 'green'; displayText = 'Present'; }
+        else if (currentStatus === 'ABSENT') { color = 'red'; displayText = 'Absent'; }
+        else if (currentStatus === 'LATE') { color = 'yellow'; displayText = 'Late'; }
+        return <Tag color={color}>{displayText}</Tag>;
+      }
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (text, record) => {
+        const rec = attendance.find((a) => a.userId === record.id);
+        return (
+          <div className="flex items-center space-x-2">
+            {!rec ? (
+              <>
+                <Tooltip title="Mark Present">
+                  <Button
+                    type="primary"
+                    icon={<FiCheckCircle />}
+                    onClick={() => handleMark(record.id, "PRESENT")}
+                    size="small"
+                  />
+                </Tooltip>
+                <Tooltip title="Mark Absent">
+                  <Button
+                    type="primary"
+                    danger
+                    icon={<FiXCircle />}
+                    onClick={() => handleMark(record.id, "ABSENT")}
+                    size="small"
+                  />
+                </Tooltip>
+                <Tooltip title="Mark Late">
+                  <Button
+                    type="primary"
+                    style={{ backgroundColor: '#faad14', borderColor: '#faad14' }}
+                    icon={<FiClock />}
+                    onClick={() => handleMark(record.id, "LATE")}
+                    size="small"
+                  />
+                </Tooltip>
+              </>
+            ) : (
+              <>
+                <Tooltip title="Update to Present">
+                  <Button
+                    type="primary"
+                    icon={<FiCheckCircle />}
+                    onClick={() => handleUpdate(rec.id, "PRESENT")}
+                    size="small"
+                  />
+                </Tooltip>
+                <Tooltip title="Update to Absent">
+                  <Button
+                    type="primary"
+                    danger
+                    icon={<FiXCircle />}
+                    onClick={() => handleUpdate(rec.id, "ABSENT")}
+                    size="small"
+                  />
+                </Tooltip>
+                <Tooltip title="Update to Late">
+                  <Button
+                    type="primary"
+                    style={{ backgroundColor: '#faad14', borderColor: '#faad14' }}
+                    icon={<FiClock />}
+                    onClick={() => handleUpdate(rec.id, "LATE")}
+                    size="small"
+                  />
+                </Tooltip>
+              </>
+            )}
+          </div>
+        );
+      },
+    },
+  ];
+
   return (
-    <div className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Attendance Management</h1>
         <DatePicker
@@ -94,138 +220,61 @@ const AttendanceManagement = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <Row gutter={[16, 16]}>
         {[
           {
             label: "Present",
             value: presentCount,
             icon: FiCheckCircle,
-            color: "green",
+            color: "#52c41a",
+            bgColor: "#f6ffed",
           },
           {
             label: "Absent",
             value: absentCount,
             icon: FiXCircle,
-            color: "red",
+            color: "#f5222d",
+            bgColor: "#fff1f0",
           },
-          { label: "Late", value: lateCount, icon: FiClock, color: "yellow" },
+          { label: "Late", value: lateCount, icon: FiClock, color: "#faad14", bgColor: "#fffbe6" },
           {
             label: "Not Marked",
             value: notMarkedCount,
             icon: FiUser,
-            color: "blue",
+            color: "#1890ff",
+            bgColor: "#e6f7ff",
           },
         ].map((stat, index) => (
-          <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">{stat.label}</p>
-                <h3 className="text-2xl font-bold mt-1">{stat.value}</h3>
-              </div>
-              <div className={`p-3 bg-${stat.color}-100 rounded-full`}>            
-                <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
-              </div>
-            </div>
-          </div>
+          <Col xs={24} sm={12} md={6} key={index}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              <Card className="h-full">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Statistic title={stat.label} value={stat.value} valueStyle={{ color: stat.color }} />
+                  </div>
+                  <div className={`p-3 rounded-full`} style={{ backgroundColor: stat.bgColor }}>
+                    <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          </Col>
         ))}
-      </div>
+      </Row>
 
-      <div className="bg-white rounded-lg shadow-sm">
-        {loading ? (
-          <div className="flex justify-center items-center py-8">
-            <Spin size="large" />
-          </div>
-        ) : (
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Employee
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {employees.map((emp) => {
-                const rec = attendance.find((a) => a.userId === emp.id);
-                return (
-                  <tr key={emp.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {emp.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          rec?.status === "PRESENT"
-                            ? "bg-green-100 text-green-800"
-                            : rec?.status === "LATE"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : rec?.status === "ABSENT"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
-                      >
-                        {rec?.status || "Not Marked"}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      {!rec ? (
-                        <>
-                          <button
-                            onClick={() => handleMark(emp.id, "PRESENT")}
-                            className="text-green-600 hover:text-green-900 mr-3"
-                          >
-                            <FiCheckCircle className="w-5 h-5" />
-                          </button>
-                          <button
-                            onClick={() => handleMark(emp.id, "ABSENT")}
-                            className="text-red-600 hover:text-red-900 mr-3"
-                          >
-                            <FiXCircle className="w-5 h-5" />
-                          </button>
-                          <button
-                            onClick={() => handleMark(emp.id, "LATE")}
-                            className="text-yellow-600 hover:text-yellow-900"
-                          >
-                            <FiClock className="w-5 h-5" />
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            onClick={() => handleUpdate(rec.id, "PRESENT")}
-                            className="text-green-600 hover:text-green-900 mr-3"
-                          >
-                            <FiCheckCircle className="w-5 h-5" />
-                          </button>
-                          <button
-                            onClick={() => handleUpdate(rec.id, "ABSENT")}
-                            className="text-red-600 hover:text-red-900 mr-3"
-                          >
-                            <FiXCircle className="w-5 h-5" />
-                          </button>
-                          <button
-                            onClick={() => handleUpdate(rec.id, "LATE")}
-                            className="text-yellow-600 hover:text-yellow-900"
-                          >
-                            <FiClock className="w-5 h-5" />
-                          </button>
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
-      </div>
-    </div>
+      <Table
+        columns={columns}
+        dataSource={relevantUsers}
+        rowKey="id"
+        loading={loading}
+        className="shadow-lg rounded-lg overflow-hidden"
+        rowClassName={(record, index) => (index % 2 === 0 ? 'bg-gray-50' : 'bg-white')}
+      />
+    </motion.div>
   );
 };
 

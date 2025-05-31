@@ -47,6 +47,7 @@ export const userSignIn = async (req, res, next) => {
         id: validUser.id,
         role: validUser.role,
         organizationId: validUser.organizationId,
+        departmentId: validUser.departmentId,
         isUser: validUser.isUser,
       },
       process.env.JWT_SECRET
@@ -100,6 +101,7 @@ export const adminSignIn = async (req, res, next) => {
         id: validAdmin.id,
         role: validAdmin.role,
         organizationId: validAdmin.organizationId,
+        departmentId: validAdmin.departmentId,
         isAdmin: validAdmin.isAdmin,
       },
       process.env.JWT_SECRET

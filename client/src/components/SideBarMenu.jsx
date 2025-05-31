@@ -181,7 +181,7 @@ const SideBarMenu = ({ user }) => {
       roles: ["EMPLOYEE"],
     },
     {
-      path: "/employee/leave",
+      path: "/employee/my-leave",
       icon: FiCalendar,
       label: "My Leave Request",
       roles: ["EMPLOYEE"],
