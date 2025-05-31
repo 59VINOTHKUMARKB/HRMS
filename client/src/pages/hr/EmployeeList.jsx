@@ -12,60 +12,86 @@ const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [addLoading, setAddLoading] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
   const [form] = Form.useForm();
+  const [editingEmployee, setEditingEmployee] = useState(null);
 
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get(
-          `/api/users/getEmployees?hrId=${currentUser.id}`
-        );
-        if (res.data.success) setEmployees(res.data.data);
-      } catch (err) {
-        console.error('Error fetching employees:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchEmployees();
-  }, [currentUser]);
+  // Fetch employees list
+  const fetchEmployees = async () => {
+    setLoading(true);
+    try {
+      const hrIdParam = currentUser.role === 'HR' ? `?hrId=${currentUser.id}` : '';
+      const res = await axios.get(`/api/users/getEmployees${hrIdParam}`);
+      if (res.data.success) setEmployees(res.data.data);
+    } catch (err) {
+      console.error('Error fetching employees:', err);
+      notification.error({ message: 'Error fetching employees' });
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => { if (currentUser) fetchEmployees(); }, [currentUser]);
 
   const showAddModal = () => {
     form.resetFields();
+    setEditingEmployee(null);
     setModalVisible(true);
   };
 
   const handleAddCancel = () => {
     setModalVisible(false);
+    setEditingEmployee(null);
   };
 
-  const handleAddSubmit = async (values) => {
-    setAddLoading(true);
+  const handleFormSubmit = async (values) => {
+    setFormLoading(true);
     try {
-      const payload = {
-        ...values,
-        organizationId: currentUser.organizationId,
-        departmentId: currentUser.departmentId,
-        hrAssignedId: currentUser.id,
-      };
-      const res = await axios.post('/api/users', payload);
+      if (editingEmployee) {
+        // Update existing employee
+        const res = await axios.put(`/api/users/${editingEmployee.id}`, values);
+        if (res.data.success) notification.success({ message: 'User updated successfully' });
+      } else {
+        // Create new employee
+        const payload = {
+          ...values,
+          organizationId: currentUser.organizationId,
+          departmentId: currentUser.departmentId,
+          hrAssignedId: currentUser.id,
+        };
+        const res = await axios.post('/api/users', payload);
+        if (res.data.success) notification.success({ message: 'User added successfully' });
+      }
+      setModalVisible(false);
+      form.resetFields();
+      setEditingEmployee(null);
+      fetchEmployees();
+    } catch (err) {
+      notification.error({ message: editingEmployee ? 'Error updating user' : 'Error adding user' });
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this user?')) return;
+    setLoading(true);
+    try {
+      const res = await axios.delete(`/api/users/${id}`);
       if (res.data.success) {
-        notification.success({ message: 'User added successfully' });
-        setModalVisible(false);
-        form.resetFields();
-        // refresh list
-        const listRes = await axios.get(
-          `/api/users/getEmployees?hrId=${currentUser.id}`
-        );
-        if (listRes.data.success) setEmployees(listRes.data.data);
+        notification.success({ message: 'User deleted successfully' });
+        fetchEmployees();
       }
     } catch (err) {
-      notification.error({ message: 'Error adding user' });
+      notification.error({ message: 'Error deleting user' });
     } finally {
-      setAddLoading(false);
+      setLoading(false);
     }
+  };
+
+  const showEditModal = (employee) => {
+    form.setFieldsValue({ name: employee.name, email: employee.email, role: employee.role });
+    setEditingEmployee(employee);
+    setModalVisible(true);
   };
 
   return (
@@ -81,12 +107,12 @@ const EmployeeList = () => {
 
       {/* Add User Modal */}
       <Modal
-        title="Add User"
+        title={editingEmployee ? 'Edit User' : 'Add User'}
         open={modalVisible}
         onCancel={handleAddCancel}
         footer={null}
       >
-        <Form form={form} layout="vertical" onFinish={handleAddSubmit}>
+        <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
           <Form.Item
             name="name"
             label="Full Name"
@@ -101,13 +127,15 @@ const EmployeeList = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="password"
-            label="Password"
-            rules={[{ required: true, message: 'Please input password' }]}
-          >
-            <Input.Password />
-          </Form.Item>
+          {!editingEmployee && (
+            <Form.Item
+              name="password"
+              label="Password"
+              rules={[{ required: !editingEmployee, message: 'Please input password' }]}
+            >
+              <Input.Password />
+            </Form.Item>
+          )}
           <Form.Item name="role" label="Role" rules={[{ required: true }]}> 
             <Select>
               <Option value="MANAGER">Manager</Option>
@@ -118,8 +146,8 @@ const EmployeeList = () => {
             <Button onClick={handleAddCancel} style={{ marginRight: 8 }}>
               Cancel
             </Button>
-            <Button type="primary" htmlType="submit" loading={addLoading}>
-              Add
+            <Button type="primary" htmlType="submit" loading={formLoading}>
+              {editingEmployee ? 'Update' : 'Add'}
             </Button>
           </div>
         </Form>
@@ -201,10 +229,16 @@ const EmployeeList = () => {
                     {employee.createdAt ? new Date(employee.createdAt).toLocaleDateString() : '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button className="text-blue-600 hover:text-blue-900 mr-3">
+                    <button
+                      onClick={() => showEditModal(employee)}
+                      className="text-blue-600 hover:text-blue-900 mr-3"
+                    >
                       <FiEdit2 className="w-5 h-5" />
                     </button>
-                    <button className="text-red-600 hover:text-red-900">
+                    <button
+                      onClick={() => handleDelete(employee.id)}
+                      className="text-red-600 hover:text-red-900"
+                    >
                       <FiTrash2 className="w-5 h-5" />
                     </button>
                   </td>

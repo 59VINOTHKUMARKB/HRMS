@@ -18,6 +18,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "flowbite-react": "^0.10.2",
+    "framer-motion": "^12.15.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.0",
     "node-schedule": "^2.1.1",

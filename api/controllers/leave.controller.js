@@ -78,9 +78,19 @@ export const getLeaveRequests = async (req, res) => {
     if (!orgId) {
       return res.status(400).json({ success: false, message: 'Organization ID missing' });
     }
-    // Fetch all leave requests in this org
+    const { startDate, endDate } = req.query;
+    const where = { organizationId: orgId };
+
+    if (startDate && endDate) {
+      where.startDate = {
+        gte: new Date(startDate),
+      };
+      where.endDate = {
+        lte: new Date(endDate),
+      };
+    }
     const leaveRequests = await db.leaveRequest.findMany({
-      where: { organizationId: orgId },
+      where,
       include: { user: { select: { id: true, name: true, departmentId: true } } },
       orderBy: { startDate: 'desc' },
     });

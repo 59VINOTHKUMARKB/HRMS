@@ -1,51 +1,60 @@
-import { useState } from 'react';
-import { 
-  FiClock, FiCalendar, FiCheckCircle, 
-  FiXCircle, FiArrowLeft, FiArrowRight 
-} from 'react-icons/fi';
+import { useState, useEffect } from 'react';
+import { FiClock, FiCheckCircle, FiXCircle } from 'react-icons/fi';
+import { useSelector } from 'react-redux';
+import { DatePicker, notification, Spin } from 'antd';
+import axios from 'axios';
+import dayjs from 'dayjs';
 
 const EmployeeAttendance = () => {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const { currentUser } = useSelector((state) => state.user);
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [stats, setStats] = useState({ present: 0, absent: 0, late: 0 });
+  const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState(dayjs().startOf('day'));
 
-  const attendanceData = [
-    {
-      date: '2024-03-20',
-      checkIn: '09:00 AM',
-      checkOut: '06:00 PM',
-      status: 'Present',
-      workHours: '9h 0m',
-      breakTime: '1h 0m'
-    },
-    {
-      date: '2024-03-19',
-      checkIn: '09:15 AM',
-      checkOut: '06:15 PM',
-      status: 'Late',
-      workHours: '9h 0m',
-      breakTime: '1h 0m'
+  const fetchAttendance = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `/api/attendance/user/${currentUser.id}?date=${date.toISOString()}`
+      );
+      if (res.data.success) setAttendanceData(res.data.data);
+    } catch {
+      notification.error({ message: 'Error fetching attendance' });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  const stats = [
-    { label: 'Present Days', value: '18', icon: FiCheckCircle, color: 'green' },
-    { label: 'Absent Days', value: '2', icon: FiXCircle, color: 'red' },
-    { label: 'Late Arrivals', value: '3', icon: FiClock, color: 'yellow' },
-    { label: 'Early Departures', value: '1', icon: FiClock, color: 'orange' },
-  ];
+  useEffect(() => {
+    if (currentUser) fetchAttendance();
+  }, [currentUser, date]);
+
+  useEffect(() => {
+    const present = attendanceData.filter((r) => r.status === 'PRESENT').length;
+    const absent = attendanceData.filter((r) => r.status === 'ABSENT').length;
+    const late = attendanceData.filter((r) => r.status === 'LATE').length;
+    setStats({ present, absent, late });
+  }, [attendanceData]);
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">My Attendance</h1>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
-          <FiClock className="mr-2" /> Mark Attendance
-        </button>
+        <DatePicker
+          value={date}
+          onChange={(val) => {
+            if (val) setDate(val.startOf('day'));
+          }}
+        />
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          { label: 'Present Days', value: stats.present, icon: FiCheckCircle, color: 'green' },
+          { label: 'Absent Days', value: stats.absent, icon: FiXCircle, color: 'red' },
+          { label: 'Late Arrivals', value: stats.late, icon: FiClock, color: 'yellow' },
+        ].map((stat, index) => (
           <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
@@ -60,40 +69,21 @@ const EmployeeAttendance = () => {
         ))}
       </div>
 
-      {/* Attendance Log */}
       <div className="bg-white rounded-lg shadow-sm">
-        <div className="border-b px-6 py-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-medium">Attendance Log</h2>
-            <div className="flex items-center space-x-4">
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <FiArrowLeft className="w-5 h-5" />
-              </button>
-              <span className="font-medium">March 2024</span>
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <FiArrowRight className="w-5 h-5" />
-              </button>
-            </div>
+        {loading ? (
+          <div className="flex justify-center items-center py-8">
+            <Spin size="large" />
           </div>
-        </div>
-        <div className="p-6">
+        ) : attendanceData.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            No attendance records found
+          </div>
+        ) : (
           <table className="min-w-full divide-y divide-gray-200">
-            <thead>
+            <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Check In
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Check Out
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Work Hours
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Break Time
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
@@ -101,39 +91,28 @@ const EmployeeAttendance = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {attendanceData.map((record, index) => (
-                <tr key={index}>
+              {attendanceData.map((rec) => (
+                <tr key={rec.id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {record.date}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {record.checkIn}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {record.checkOut}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {record.workHours}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {record.breakTime}
+                    {new Date(rec.date).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      record.status === 'Present'
-                        ? 'bg-green-100 text-green-800'
-                        : record.status === 'Late'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {record.status}
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        rec.status === 'PRESENT'
+                          ? 'bg-green-100 text-green-800'
+                          : rec.status === 'LATE'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                      {rec.status}
                     </span>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
+        )}
       </div>
     </div>
   );

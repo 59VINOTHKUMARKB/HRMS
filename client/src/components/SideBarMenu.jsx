@@ -7,7 +7,8 @@ import {
   FiLayers,
   FiSettings,
   FiUser,
-  FiUsers
+  FiUsers,
+  FiClock
 } from "react-icons/fi";
 import { Link, useLocation } from "react-router-dom";
 import SignOutButton from "./SignOutButton";
@@ -107,10 +108,10 @@ const SideBarMenu = ({ user }) => {
       roles: ["MANAGER"],
     },
     {
-      path: "/hr/team",
+      path: "/manager/teams",
       icon: FiUsers,
-      label: "Teams",
-      roles: ["HR"],
+      label: "My Team",
+      roles: ["MANAGER"],
     },
     {
       path: "/manager/leave",
@@ -119,9 +120,15 @@ const SideBarMenu = ({ user }) => {
       roles: ["MANAGER"],
     },
     {
-      path: "/manager/teams",
-      icon: FiUsers,
-      label: "My Team",
+      path: "/manager/attendance",
+      icon: FiCalendar,
+      label: "Attendance",
+      roles: ["MANAGER"],
+    },
+    {
+      path: "/manager/my-leave",
+      icon: FiCheckSquare,
+      label: "My Leave Requests",
       roles: ["MANAGER"],
     },
     // {
@@ -176,15 +183,15 @@ const SideBarMenu = ({ user }) => {
     {
       path: "/employee/leave",
       icon: FiCalendar,
-      label: "Leave Management",
+      label: "My Leave Request",
       roles: ["EMPLOYEE"],
     },
-    // {
-    //   path: "/employee/attendance",
-    //   icon: FiClock,
-    //   label: "Attendance",
-    //   roles: ["EMPLOYEE"],
-    // },
+    {
+      path: "/employee/attendance",
+      icon: FiClock,
+      label: "Attendance",
+      roles: ["EMPLOYEE"],
+    },
 
     // {
     //   path: "/employee/payroll",
@@ -218,7 +225,19 @@ const SideBarMenu = ({ user }) => {
     // },
 
     { path: "/hr/dashboard", icon: FiHome, label: "Dashboard", roles: ["HR"] },
+    {
+      path: "/hr/team",
+      icon: FiUsers,
+      label: "Teams",
+      roles: ["HR"],
+    },
     { path: "/hr/employees", icon: FiUsers, label: "Employees", roles: ["HR"] },
+    {
+      path: "/hr/leave",
+      icon: FiCheckSquare,
+      label: "Leave Management",
+      roles: ["HR"],
+    },
     {
       path: "/hr/attendance",
       icon: FiCalendar,

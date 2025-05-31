@@ -20,17 +20,30 @@ const ManagerLeave = () => {
     const loadData = async () => {
       setLoading(true);
       try {
-        // fetch employees under this manager
-        const empRes = await axios.get('/api/users/getEmployees?role=EMPLOYEE');
-        const members = empRes.data.success ? empRes.data.data : [];
+        // fetch team members: for manager only employees; for HR include managers and employees
+        let members = [];
+        if (currentUser.role === 'MANAGER') {
+          const empRes = await axios.get('/api/users/getEmployees?role=EMPLOYEE');
+          members = empRes.data.success ? empRes.data.data : [];
+        } else if (currentUser.role === 'HR') {
+          const deptId = currentUser.departmentId;
+          const empRes = await axios.get(
+            `/api/users/getEmployees?role=EMPLOYEE&departmentId=${deptId}`
+          );
+          const mgrRes = await axios.get(
+            `/api/users/getEmployees?role=MANAGER&departmentId=${deptId}`
+          );
+          members = [
+            ...(empRes.data.success ? empRes.data.data : []),
+            ...(mgrRes.data.success ? mgrRes.data.data : []),
+          ];
+        }
         setTeamMembers(members);
         // fetch all leave requests
         const leaveRes = await axios.get('/api/leave');
         const all = leaveRes.data.success ? leaveRes.data.data : [];
         // filter to this manager's team
-        const filtered = all.filter((lr) =>
-          members.some((m) => m.id === lr.userId)
-        );
+        const filtered = all.filter((lr) => members.some((m) => m.id === lr.userId));
         setLeaveRequests(filtered);
       } catch (error) {
         notification.error({ message: 'Error loading leave data' });
@@ -73,11 +86,17 @@ const ManagerLeave = () => {
   const approvedCount = leaveRequests.filter((lr) => lr.status === 'APPROVED').length;
   const rejectedCount = leaveRequests.filter((lr) => lr.status === 'REJECTED').length;
   const avgDays = totalRequests
-    ? (
-        leaveRequests.reduce((sum, lr) => sum + (lr.totalDays || 0), 0) /
-        totalRequests
-      ).toFixed(1)
+    ? (leaveRequests.reduce((sum, lr) => sum + (lr.totalDays || 0), 0) / totalRequests).toFixed(1)
     : 0;
+
+  // enhanced stats with colors
+  const stats = [
+    { title: 'Total', value: totalRequests, icon: FiCalendar, color: '#1890ff', bg: '#e6f7ff' },
+    { title: 'Pending', value: pendingCount, icon: FiClock, color: '#faad14', bg: '#fffbe6' },
+    { title: 'Approved', value: approvedCount, icon: FiCheckCircle, color: '#52c41a', bg: '#f6ffed' },
+    { title: 'Rejected', value: rejectedCount, icon: FiXCircle, color: '#f5222d', bg: '#fff1f0' },
+    { title: 'Avg Days', value: avgDays, icon: FiUsers, color: '#722ed1', bg: '#f9f0ff' },
+  ];
 
   const columns = [
     { title: 'Employee', dataIndex: ['user', 'name'], key: 'employee' },
@@ -100,10 +119,10 @@ const ManagerLeave = () => {
         lr.status === 'PENDING' && (
           <Space>
             <Button type="link" onClick={() => handleApprove(lr.id)}>
-              <FiCheckCircle />
+              <FiCheckCircle size={20}/>
             </Button>
             <Button type="link" danger onClick={() => handleReject(lr.id)}>
-              <FiXCircle />
+              <FiXCircle size={20}/>
             </Button>
           </Space>
         ),
@@ -116,31 +135,18 @@ const ManagerLeave = () => {
         <h1 className="text-2xl font-bold">Leave Management</h1>
       </div>
       <Row gutter={[16, 16]}>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Total Requests" value={totalRequests} prefix={<FiCalendar />} />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Pending" value={pendingCount} prefix={<FiClock />} />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Approved" value={approvedCount} prefix={<FiCheckCircle />} />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Rejected" value={rejectedCount} prefix={<FiXCircle />} />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Avg Days" value={avgDays} suffix="days" prefix={<FiUsers />} />
-          </Card>
-        </Col>
+        {stats.map((stat) => (
+          <Col key={stat.title} xs={24} sm={12} md={8} lg={6} xl={4}>
+            <Card style={{ backgroundColor: stat.bg, borderColor: stat.color }}>
+              <Statistic
+                title={stat.title}
+                value={stat.value}
+                prefix={<stat.icon style={{ color: stat.color }} />}
+                valueStyle={{ color: stat.color }}
+              />
+            </Card>
+          </Col>
+        ))}
       </Row>
       <div className="bg-white rounded-lg shadow-sm p-4">
         {loading ? (

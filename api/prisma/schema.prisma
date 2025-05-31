@@ -30,6 +30,13 @@ enum ApproverRole {
   HR
 }
 
+// Add AttendanceStatus enum and Attendance model for attendance tracking
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+}
+
 model Organization {
   id          String               @id @default(auto()) @map("_id") @db.ObjectId
   name        String
@@ -40,6 +47,7 @@ model Organization {
   departments Department[]
   settings    OrganizationSettings?
   leaveRequests LeaveRequest[]
+  attendances    Attendance[]
   isActive    Boolean              @default(true)
   createdAt   DateTime             @default(now())
   updatedAt   DateTime             @updatedAt
@@ -96,6 +104,8 @@ model User {
   organizationId String     @db.ObjectId
   leaveRequests LeaveRequest[]
   leaveApprovals LeaveApproval[]
+  attendanceRecords Attendance[] @relation("AttendanceUser")
+  recordedAttendances Attendance[] @relation("AttendanceRecorder")
 
   hrAssigned     User?       @relation("UserHR", fields: [hrAssignedId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   hrAssignedId   String?     @db.ObjectId
@@ -208,10 +218,20 @@ model LeaveRequest {
   @@index([userId])
 }
 
-model MaintenanceMode {
-  id      String  @id @default("MAINTENANCE_FLAG") @map("_id")
-  enabled Boolean @default(false)
-  updatedAt DateTime @default(now())
+model Attendance {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  user           User         @relation("AttendanceUser", fields: [userId], references: [id], onDelete: Cascade)
+  userId         String       @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String       @db.ObjectId
+  status         AttendanceStatus
+  date           DateTime
+  recordedBy     User?        @relation("AttendanceRecorder", fields: [recordedById], references: [id], onDelete: SetNull)
+  recordedById   String?      @db.ObjectId
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([userId, date])
+  @@index([organizationId])
+  @@index([date])
 }
-
-

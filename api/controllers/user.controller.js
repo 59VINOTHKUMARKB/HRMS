@@ -182,22 +182,19 @@ export const updateUserPasswordById = async (req, res, next) => {
 // @route   GET /api/users/getEmployees
 // @access  Private (Admin only)
 export const getEmployees = async (req, res, next) => {
-  const { role, departmentId } = req.query;
+  const { role, departmentId, hrId } = req.query;
   try {
     // Scope to current user's organization
     const where = { organizationId: req.user.organizationId };
     // Role-specific scoping
-    if (req.user.role === 'HR') {
-      where.hrAssignedId = req.user.id;
-    } else if (req.user.role === 'MANAGER') {
-      where.managerAssignedId = req.user.id;
-    } else {
-      // Allow super and org admins to filter by HR
-      const { hrId } = req.query;
-      if (hrId && (req.user.role === 'SUPER_ADMIN' || req.user.role === 'ORG_ADMIN')) {
-        where.hrAssignedId = hrId;
-      }
+    if (req.user.role === 'MANAGER') {
+      // Managers see only team members
+      where.team = { managerId: req.user.id };
+    } else if (req.user.role === 'SUPER_ADMIN' || req.user.role === 'ORG_ADMIN') {
+      // Super admins and org admins can filter by HR
+      if (hrId) where.hrAssignedId = hrId;
     }
+    // HR sees all employees in their organization (no additional filters)
     if (role) where.role = role;
     if (departmentId) where.departmentId = departmentId;
     const employees = await db.user.findMany({ where });
