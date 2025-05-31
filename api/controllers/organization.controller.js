@@ -72,9 +72,16 @@ export const getOrganizationSettings = async (req, res) => {
       },
     });
     if (!settings) {
-      return res.status(404).json({
-        success: false,
-        message: "Organization settings not found",
+      // Return default settings if none exist
+      return res.status(200).json({
+        success: true,
+        data: {
+          general: {},
+          email: {},
+          security: {},
+          notifications: {},
+          leaveApproval: {},
+        },
       });
     }
     return res.status(200).json({

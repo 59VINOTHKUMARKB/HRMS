@@ -31,15 +31,15 @@ const ManagerDashboard = () => {
 
   // Function to fetch report data (attendance and leave) based on date range
   const fetchReportData = async (startDate, endDate) => {
-    setLoadingStats(true);
-    try {
+      setLoadingStats(true);
+      try {
       const start = startDate ? startDate.toISOString() : '';
       const end = endDate ? endDate.toISOString() : '';
 
       // Fetch leave requests for the manager's team (backend handles filtering)
       const leaveRes = await axios.get(`/api/leave?startDate=${start}&endDate=${end}`);
       const teamLeaves = leaveRes.data.success ? leaveRes.data.data : [];
-      setLeaveRequests(teamLeaves);
+          setLeaveRequests(teamLeaves);
 
       // Fetch attendance records for the manager's team (frontend filters by teamMembers)
       const attRes = await axios.get(`/api/attendance?startDate=${start}&endDate=${end}`);
@@ -50,13 +50,13 @@ const ManagerDashboard = () => {
       const filteredAttendance = allAttendance.filter(record => teamMemberIds.has(record.userId));
       setAttendanceRecords(filteredAttendance);
 
-    } catch (error) {
+      } catch (error) {
       console.error("Error fetching report data:", error);
       notification.error({ message: 'Error fetching report data' });
-    } finally {
-      setLoadingStats(false);
-    }
-  };
+      } finally {
+        setLoadingStats(false);
+      }
+    };
 
   // Initial data fetch (team members and then reports for default range)
   useEffect(() => {
@@ -138,7 +138,7 @@ const ManagerDashboard = () => {
       className="space-y-6"
     >
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Manager Dashboard</h1>
+      <h1 className="text-2xl font-bold">Manager Dashboard</h1>
         <Space>
           <CSVLink data={attendanceCsvData} filename={`attendance_report_${dayjs().format('YYYY-MM-DD')}.csv`}>
             <Button icon={<FiDownload />}>Download Attendance</Button>
@@ -165,11 +165,11 @@ const ManagerDashboard = () => {
         </Space>
       </div>
 
-      {loadingStats ? (
+        {loadingStats ? (
         <div className="flex justify-center py-8">
-          <Spin size="large" />
-        </div>
-      ) : (
+            <Spin size="large" />
+          </div>
+        ) : (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -279,17 +279,17 @@ const ManagerDashboard = () => {
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
                   <Card className="h-full flex flex-col justify-between">
-                    <div className="flex items-center justify-between">
-                      <div>
+              <div className="flex items-center justify-between">
+                <div>
                         <p className="text-sm text-gray-500">{stat.title}</p>
                         <h3 className="text-2xl font-bold mt-1" style={{ color: stat.color }}>
                           {stat.value} {stat.suffix}
                         </h3>
-                      </div>
+                </div>
                       <div className={`p-3 rounded-full`} style={{ backgroundColor: stat.bg }}>
                         <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
-                      </div>
-                    </div>
+                </div>
+              </div>
                   </Card>
                 </motion.div>
               </Col>
@@ -310,14 +310,14 @@ const ManagerDashboard = () => {
                         <h3 className="text-2xl font-bold mt-1" style={{ color: leaveSummaryStats[4].color }}>
                           {leaveSummaryStats[4].value} {leaveSummaryStats[4].suffix}
                         </h3>
-                      </div>
+            </div>
                       <div className={`p-3 rounded-full`} style={{ backgroundColor: leaveSummaryStats[4].bg }}>
                         {(() => {
                           const IconComponent = leaveSummaryStats[4].icon;
                           return <IconComponent className="w-6 h-6" style={{ color: leaveSummaryStats[4].color }} />;
                         })()}
-                      </div>
-                    </div>
+      </div>
+    </div>
                   </Card>
                 </motion.div>
               </Col>

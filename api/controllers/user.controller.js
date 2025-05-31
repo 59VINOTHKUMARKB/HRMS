@@ -182,11 +182,20 @@ export const updateUserPasswordById = async (req, res, next) => {
 // @route   GET /api/users/getEmployees
 // @access  Private (Admin only)
 export const getEmployees = async (req, res, next) => {
-  const { role, departmentId, hrId } = req.query;
+  const { role, departmentId, hrId, organizationId: orgId } = req.query;
   console.log("Cur user Dept id backend", departmentId);
   try {
-    // Scope to current user's organization
-    const where = { organizationId: req.user.organizationId };
+    // Scope to organization: SUPER_ADMIN can fetch across all if no orgId provided
+    let where = {};
+    if (req.user.role === 'SUPER_ADMIN') {
+      if (orgId) {
+        where.organizationId = orgId;
+      }
+      // if no orgId for SUPER_ADMIN, skip organization filter
+    } else {
+      // Other roles are scoped to their organization
+      where.organizationId = req.user.organizationId;
+    }
     // Role-specific scoping
     if (req.user.role === 'MANAGER') {
       // Managers see only team members

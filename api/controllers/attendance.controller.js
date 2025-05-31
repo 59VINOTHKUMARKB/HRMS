@@ -33,8 +33,14 @@ export const recordAttendance = async (req, res, next) => {
 // Get attendance records for HR or Manager scoped to their employees
 export const getAttendance = async (req, res, next) => {
   try {
-    const { date, startDate, endDate } = req.query;
-    const where = { organizationId: req.user.organizationId };
+    const { date, startDate, endDate, organizationId: orgId } = req.query;
+    // Scope to organization based on role and optional orgId query
+    let where = {};
+    if (req.user.role === 'SUPER_ADMIN' && orgId) {
+      where.organizationId = orgId;
+    } else {
+      where.organizationId = req.user.organizationId;
+    }
 
     if (startDate && endDate) {
       where.date = {

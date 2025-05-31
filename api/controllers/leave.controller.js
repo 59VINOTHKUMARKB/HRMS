@@ -74,16 +74,18 @@ export const requestLeave = async (req, res) => {
 // @access  Private (HR, Manager)
 export const getLeaveRequests = async (req, res) => {
   try {
-    const orgId = req.user.organizationId;
+    // Extract filters including optional organizationId for SUPER_ADMIN
+    const { startDate, endDate, status, leaveType, sortField, sortOrder, organizationId: orgIdQuery } = req.query;
     const userRole = req.user.role;
     const userId = req.user.id;
     const userDepartmentId = req.user.departmentId;
 
+    // Determine organization scope: SUPER_ADMIN can specify, others use their own org
+    const orgId = (userRole === 'SUPER_ADMIN' && orgIdQuery) ? orgIdQuery : req.user.organizationId;
     if (!orgId) {
       return res.status(400).json({ success: false, message: 'Organization ID missing' });
     }
 
-    const { startDate, endDate, status, leaveType, sortField, sortOrder } = req.query;
     const where = { organizationId: orgId };
 
     if (startDate && endDate) {

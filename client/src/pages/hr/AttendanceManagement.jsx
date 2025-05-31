@@ -252,14 +252,14 @@ const AttendanceManagement = () => {
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
               <Card className="h-full">
-                <div className="flex items-center justify-between">
-                  <div>
+            <div className="flex items-center justify-between">
+              <div>
                     <Statistic title={stat.label} value={stat.value} valueStyle={{ color: stat.color }} />
-                  </div>
+              </div>
                   <div className={`p-3 rounded-full`} style={{ backgroundColor: stat.bgColor }}>
                     <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
-                  </div>
-                </div>
+              </div>
+            </div>
               </Card>
             </motion.div>
           </Col>

@@ -26,7 +26,7 @@ router.post(
 router.get(
   "/",
   verifyToken,
-  authorizeRoles(["HR", "MANAGER"]),
+  authorizeRoles(["HR", "MANAGER", "ORG_ADMIN", "SUPER_ADMIN"]),
   getLeaveRequests
 );
 
