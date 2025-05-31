@@ -20,7 +20,14 @@ const EmployeeDashboard = () => {
     setLoadingBalance(true);
     try {
       const res = await axios.get(`/api/leave/balance/${currentUser.id}`);
-      if (res.data.success) setLeaveBalance(res.data.data);
+      if (res.data.success) {
+        // Convert the object returned by the API into an array for rendering
+        const balanceArray = Object.keys(res.data.data).map(key => ({
+          type: key,
+          ...res.data.data[key]
+        }));
+        setLeaveBalance(balanceArray);
+      }
     } catch (error) {
       notification.error({ message: "Error fetching leave balance" });
     } finally {

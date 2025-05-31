@@ -45,7 +45,12 @@ const EmployeeLeave = () => {
       try {
         const response = await axios.get(`/api/leave/balance/${user.id}`);
         if (response.data.success) {
-          setLeaveBalance(response.data.data);
+          // Convert the object returned by the API into an array for rendering
+          const balanceArray = Object.keys(response.data.data).map(key => ({
+            type: key,
+            ...response.data.data[key]
+          }));
+          setLeaveBalance(balanceArray);
         }
       } catch (error) {
         console.error("Error fetching leave balance:", error);
@@ -131,14 +136,20 @@ const EmployeeLeave = () => {
               </div>
               <div className="text-right">
                 <p className="text-sm text-gray-500">
-                  Used: {leave.used}/{leave.total}
+                  Used: {leave.taken}/{leave.limit === "No Limit" ? "-" : leave.limit}
                 </p>
               </div>
             </div>
             <div className="mt-4 w-full bg-gray-200 rounded-full h-2">
               <div
                 className="bg-blue-600 rounded-full h-2"
-                style={{ width: `${(leave.used / leave.total) * 100}%` }}
+                style={{
+                  width: `${
+                    leave.limit === "No Limit"
+                      ? 0
+                      : (leave.taken / leave.limit) * 100
+                  }%`,
+                }}
               ></div>
             </div>
           </div>
