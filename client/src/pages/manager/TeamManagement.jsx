@@ -58,6 +58,7 @@ const ManagerTeam = () => {
 
   const handleAddEmployee = async (values) => {
     setAddLoading(true);
+    console.log(currentUser);
     try {
       const payload = {
         ...values,
@@ -67,6 +68,8 @@ const ManagerTeam = () => {
         // We don't need to pass departmentId explicitly if the user is being added under a manager in their team.
         // The user should automatically inherit the manager's department if not explicitly set.
         managerAssignedId: currentUser.id,
+        departmentId: currentUser.departmentId,
+        teamId: currentUser.teamId,
       };
       const res = await axios.post('/api/users', payload);
       if (res.data.success) {
